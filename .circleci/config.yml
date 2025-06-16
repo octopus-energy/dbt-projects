@@ -1,0 +1,55 @@
+version: 2.1
+
+setup: true
+
+orbs:
+  ci-orb-dbt-repository: octopus-energy/ci-orb-dbt-repository@volatile
+  ci-orb-data-utils: octopus-energy/ci-orb-data-utils@volatile
+  continuation: circleci/continuation@1.0.0
+
+commands:
+  make-test:
+    steps:
+      - run: echo "Not implemented yet"
+  make-lint:
+    steps:
+      - run: make lint
+
+jobs:
+  run-lint:
+    executor: ci-orb-data-utils/standard
+    steps:
+      - ci-orb-data-utils/checkout_source
+      - ci-orb-data-utils/update_virtualenv
+      - make-lint
+  run-tests:
+    executor: ci-orb-data-utils/standard
+    steps:
+      - ci-orb-data-utils/checkout_source
+      - ci-orb-data-utils/update_virtualenv
+      - make-test
+
+workflows:
+  initial-setup:
+    jobs:
+      - run-lint:
+          context: DATA_TEAM_GITHUB_TOKEN
+      - run-tests:
+          context: DATA_TEAM_GITHUB_TOKEN
+          requires:
+            - run-lint
+      - ci-orb-dbt-repository/generate_projects_config:
+          name: generate-projects-config
+          context: DATA_TEAM_GITHUB_TOKEN
+          projects_root: 'packages'
+          configuration_path: 'tmp/projects_config.yml'
+          requires:
+            - run-lint
+      - continuation/continue:
+          pre-steps:
+            - attach_workspace:
+                at: .
+          configuration_path: tmp/projects_config.yml
+          requires:
+            - generate-projects-config
+            - run-tests666

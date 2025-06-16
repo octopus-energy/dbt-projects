@@ -1,0 +1,10 @@
+jaffle_shop:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      threads: {{ env_var('DATABRICKS_THREADS') }}
+      schema: {{ env_var('DATABRICKS_SCHEMA') }}
+      host: {{ env_var('DATABRICKS_HOST') }}
+      http_path: {{ env_var('DATABRICKS_HTTP_PATH') }}
+      auth_type: oauth
