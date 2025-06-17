@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: src_information_schema
+    catalog: "{{ env_var('PROD_CATALOG' ) }}"
+    schema: information_schema
+    tables:
+      - name: tables 
+

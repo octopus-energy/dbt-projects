@@ -1,0 +1,74 @@
+version: 2
+
+macros:
+  - name: concat_affix
+    description: Concatenate a list together
+    arguments:
+      - name: list
+        type: list
+        description: The input column or expression to nullify strings from
+      - name: delim
+        type: string
+        description: delimiter character to be insterted between each list item, default ', '
+      - name: prefix
+        type: string
+        description: Optional prefix to be added to each list item
+      - name: suffix
+        type: string
+        description: Optional suffix to be added to each list item
+  - name: distinct_on
+    description: >
+      A macro to emulate the postgres SELECT DISTINCT ON () construct
+      (https://www.geekytidbits.com/postgres-distinct-on/), which returns a single row for each
+      unique combination of columns in the brackets. For example, a table may have many agreements
+      for a single account, and using SELECT DISTINCT ON can return only the _latest_ agreement for
+      each account.
+    arguments:
+      - name: table
+        type: string or relation
+        description: The base table. Either the string name of a CTE or ref('name_of_table')
+      - name: grouping_columns
+        type: list of strings
+        description: >
+          The columns to group by, ie return a single row for each unique combination. Equivalent
+          to the columns inside the brackets in postgres.
+      - name: validation_columns
+        type: list of strings
+        description: >
+          The columns to order the results by, returning only the first or last row within each
+          group according to that ordering.  Equivalent to the ORDER BY columns in postgres
+          (excluding the `grouping_columns`).
+      - name: value_columns
+        type: list of strings
+        description: The non-grouping or validation columns to return in the output.
+      - name: method
+        type: string
+        description: >
+          Whether to return the row that corresponds to the MAX value of the validation_columns or
+          the MIN value of the validation_columns. Default 'MAX'
+      - name: to_filter
+        type: bool
+        description: >
+          Whether to filter out nulls from distinct max_/min by. Default behaviour is False.
+  - name: string_to_array
+    description: |
+      Turn a string that looks like an aray into an actual array. Usually, this is for strings that
+      look like the way that SparkSQL displays strings, ie '["VALUE_1", "VALUE_2"]'.
+    arguments:
+      - name: value
+        type: string
+        description: The string to turn into an array
+      - name: left_trim
+        type: string
+        description: |
+          A value to strip from the left hand side of the string before splitting. Default is '["'.
+      - name: right_trim
+        type: string
+        description: |
+          A value to strip from the left hand side of the string before splitting. Default is '"]'.
+      - name: separator
+        type: string
+        description: the string separating values in the list to split on. Default is '","'.
+      - name: empty_value
+        type: string
+        description: The string representing an empty list. Default is "[]".

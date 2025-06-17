@@ -1,0 +1,21 @@
+version: 2
+
+macros:
+  - name: refresh_shares
+    description: |
+      Macro to refresh the schemas and tables in deltashares.
+      This is needed as the tables in deltashares are not refreshed automatically.
+      Run as a pre-hook on each production dbt run in the central account.
+      Should not be used elsewhere as it takes a long time to run.
+  - name: share_table_hook
+    description: |
+      Macro to add a table to a delta share, given a share_name_suffix.
+      This macro first checks if the table is already in the share, and if not
+      it tries to add the table. This macro is designed to be run as a model post
+      hook rather than an on run-end hook.
+    arguments:
+      - name: share_name_suffix
+        type: string
+        description: |
+          Suffix of of delta share name to add the table to. Prefix will be generated
+          based on the environment the package is run in.

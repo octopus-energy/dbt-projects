@@ -1,0 +1,14 @@
+version: 2
+models:
+  - name: stg_information_schema_tables
+    group: databricks
+    access: private
+    meta:
+      owner: 'evelyn.byer@octoenergy.com'
+      team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+    description: |
+      Tables from regional prod catalog information_schema
+    columns:
+      - name: information_schema_tables_id
+        description: Primary key
+    

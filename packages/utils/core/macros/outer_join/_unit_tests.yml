@@ -1,0 +1,41 @@
+unit_tests:
+  - name: test_merge_sequential_intervals_only_keeps_left_intervals
+    description: >
+      Test that the merge of two sequential intervals only keeps the left intervals.
+      This means that if a period does not exist in the left table, any periods that are not overlapping
+      in the right table should be dropped.
+    model: test_merge_sequential_intervals_left_intervals_only
+    given: []
+    expect:
+      rows:
+        - {'account_id': 1, 'left_val': 'Business', 'right_val': 'Big', 'interval_start': '2020-01-01 00:00:00', 'interval_end': '2020-01-05 00:00:00'}
+        - {'account_id': 1, 'left_val': 'Domestic', 'right_val': 'Small', 'interval_start': '2020-01-05 00:00:00', 'interval_end': '2020-01-10 00:00:00'}
+    overrides:
+      macros:
+        is_incremental: false
+  - name: test_merge_sequential_intervals_keeps_all_intervals
+    description: >
+      Test that the merge of two sequential intervals keeps all intervals.
+      This means that you will get null values for either the right or left table if the period does not
+      exist in the other table so not periods are lost.
+    model: test_merge_sequential_intervals_all_intervals
+    given: []
+    expect:
+      rows:
+        - {'account_id': 1, 'left_val': 'Business', 'right_val': 'Big', 'interval_start': '2020-01-01 00:00:00', 'interval_end': '2020-01-05 00:00:00'}
+        - {'account_id': 1, 'left_val': 'Domestic', 'right_val': 'Small', 'interval_start': '2020-01-05 00:00:00', 'interval_end': '2020-01-10 00:00:00'}
+        - {'account_id': 1, 'left_val': NULL, 'right_val': 'Small', 'interval_start': '2020-01-10 00:00:00', 'interval_end': '2020-01-15 00:00:00'}
+    overrides:
+      macros:
+        is_incremental: false
+
+  - name: test_flatten_sequential_rows_mixed_datatypes_returns_correct_vals
+    description: >
+      Test that the flatten_sequential_rows macro returns the correct values when the input tables have mixed datatypes.
+    model: test_flatten_sequential_rows_mixed_datatypes
+    given: []
+    expect:
+      rows:
+        - {'account_id': 1, 'string_val': 'Business', 'int_val': 10, 'bool_val': True, 'valid_from': '2020-01-01 00:00:00', 'valid_to': '2020-01-10 00:00:00'}
+        - {'account_id': 2, 'string_val': 'Big', 'int_val': 16, 'bool_val': True, 'valid_from': '2020-01-01 00:00:00', 'valid_to': '2020-01-05 00:00:00'}
+        - {'account_id': 2, 'string_val': 'Small', 'int_val': 7, 'bool_val': False, 'valid_from': '2020-01-05 00:00:00', 'valid_to': '2020-01-15 00:00:00'}

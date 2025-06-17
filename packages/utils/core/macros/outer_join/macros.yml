@@ -1,0 +1,205 @@
+version: 2
+
+macros:
+  - name: flatten_sequential_rows
+    description: >
+      This macro is used to combine sequential interval rows where values match.
+      For reference see https://bertwagner.com/posts/gaps-and-islands/
+    arguments:
+      - name: table
+        type: string
+        description: Name of the table containing sequential intervals to be flattened.
+      - name: grouping_columns
+        type: string
+        description: List of grouping columns when flattening sequential rows.
+      - name: interval_start_column
+        type: string
+        description: Name of the column to be treated as the start of the interval.
+      - name: interval_end_column
+        type: string
+        description: Name of the column to be treated as the end of the interval.
+      - name: value_columns
+        type: string
+        description: >
+          List of all columns where the value is unique to that row and
+          is important when grouping rows
+      - name: exclude_value_columns
+        type: string
+        description: >
+          List of all columns where the value is unique to that row but
+          are not important when grouping rows - e.g. row updated timestamps -
+          these will be omitted from the resulting combined dataset.
+  - name: flatten_sequential_rows_no_value_cols
+    description: >
+      This macro is used to combine sequential interval rows where values match.
+      For reference see https://bertwagner.com/posts/gaps-and-islands/
+    arguments:
+      - name: table
+        type: string
+        description: Name of the table containing sequential intervals to be flattened.
+      - name: grouping_columns
+        type: string
+        description: List of grouping columns when flattening sequential rows.
+      - name: interval_start_column
+        type: string
+        description: Name of the column to be treated as the start of the interval.
+      - name: interval_end_column
+        type: string
+        description: Name of the column to be treated as the end of the interval.
+  - name: flatten_sequential_rows_mixed_datatypes
+    description: >
+      This macro is used to combine sequential interval rows where values match,
+      and value columns can have mixed datatypes.
+      For reference see https://bertwagner.com/posts/gaps-and-islands/
+    arguments:
+      - name: table
+        type: string
+        description: Name of the table containing sequential intervals to be flattened.
+      - name: grouping_columns
+        type: string
+        description: List of grouping columns when flattening sequential rows.
+      - name: interval_start_column
+        type: string
+        description: Name of the column to be treated as the start of the interval.
+      - name: interval_end_column
+        type: string
+        description: Name of the column to be treated as the end of the interval.
+      - name: exclude_value_columns
+        type: list
+        description: >
+          List of all columns where the value is unique to that row but
+          are not important when grouping rows - e.g. row updated timestamps -
+          these will be omitted from the resulting combined dataset.
+      - name: value_columns
+        type: list
+        description: >
+          List of explicitly selected value columns to use from a table with mixed datatypes.
+  - name: get_overlap_detail
+    description: >
+      This macro checks and provides detail for overlapping intervals in line
+      with the 'sequentialize_intervals' macro.
+    arguments:
+      - name: table
+        type: string
+        description: Name of the table containing sequential intervals.
+      - name: grouping_columns
+        type: string
+        description: List of grouping columns when checking for interval overlaps.
+      - name: interval_start_column
+        type: string
+        description: Name of the column to be treated as the start of the interval.
+      - name: interval_end_column
+        type: string
+        description: Name of the column to be treated as the end of the interval.
+      - name: validation_columns
+        type: string
+        description: >
+          List of columns used to choose the most appropriate values where
+          intervals overlap.
+  - name: merge_sequential_intervals
+    description: >
+      This macro is used to combine sequential interval rows where values match.
+      For reference see https://bertwagner.com/posts/gaps-and-islands/
+    arguments:
+      - name: left_table
+        type: string
+        description: Name of the first table containing sequential intervals to be merged.
+      - name: merging_columns
+        type: string
+        description: List of columns matching between the two tables used for the join.
+      - name: left_interval_start_column
+        type: string
+        description: Name of the column in the first table that represents the interval start.
+      - name: left_interval_end_column
+        type: string
+        description: Name of the column in the first table that represents the interval start.
+      - name: left_columns
+        type: string
+        description: List of columns from the first table that should be kept in the output.
+      - name: right_table
+        type: string
+        description: Name of the second table containing sequential intervals to be merged.
+      - name: right_interval_start_column
+        type: string
+        description: Name of the column in the second table that represents the interval start.
+      - name: right_interval_end_column
+        type: string
+        description: Name of the column in the second table that represents the interval start.
+      - name: right_columns
+        type: string
+        description: List of columns from the second table that should be kept in the output.
+      - name: common_column_strategy
+        type: string
+        description: >
+          Sets whether to keep left, right or both columns where there a duplicate column names.
+      - name: left_table_common_prefix
+        type: string
+        description: >
+          Where common_column_strategy is set to 'both', this adds a prefix to common
+          columns on the left side.
+      - name: right_table_common_prefix
+        type: string
+        description: >
+          Where common_column_strategy is set to 'both', this adds a prefix to common
+          columns on the right side.
+      - name: left_incremental_timestamp
+        type: string
+        description: >
+          Where the model is incremental type, this sets the column on the left side to
+          check if the new rows should be inserted based on the given timestamp.
+      - name: right_incremental_timestamp
+        type: string
+        description: >
+          Where the model is incremental type, this sets the column on the right side to
+          check if the new rows should be inserted based on the given timestamp.
+      - name: merged_incremental_timestamp
+        type: string
+        description: >
+          Where the model is incremental type, this sets the common column that new rows are
+          checked against on both sides.
+      - name: join_type
+        type: string
+        description: >
+          Sets the type of join to be used when merging the two tables. Either 'left' or 'outer'.
+          Left only keeps periods that exist in the left table. Outer keeps all periods but
+          will give null values where periods do not exist in the other table.
+  - name: sequentialize_table
+    description: >
+      This macro breaks down a table with overlapping time periods into sequential intervals.
+    arguments:
+      - name: table
+        type: string
+        description: Name of the table containing sequential intervals to be broken down.
+      - name: grouping_columns
+        type: string
+        description: List of grouping columns when sequentialising intervals.
+      - name: interval_start_column
+        type: string
+        description: Name of the column to be treated as the start of the interval.
+      - name: interval_end_column
+        type: string
+        description: Name of the column to be treated as the end of the interval.
+      - name: validation_columns
+        type: string
+        description: >
+          List of columns used to choose the most appropriate values where
+          intervals overlap.
+      - name: pre_filter
+        type: string
+        description: |
+          Set the pre_filter argument like `"WHERE valid_from < '2023-08-01'"` to filter out
+          intervals that shouldn't be accounted for when sequentialising.
+      - name: value_columns
+        type: list
+        description: |
+          List of columns to be included in the output table that are not in grouping_columns
+          or interval_start_column/interval_end_column. If this argument is not set,
+          all columns from the upstream model being referenced will be included.
+      - name: has_value_columns
+        type: boolean
+        description: |
+          Set to true if the value_columns argument is set, false otherwise.
+      - name: flag_overlaps_column_name
+        type: string
+        description: >
+          Name of the output column flagging where there was an overlap between intervals.

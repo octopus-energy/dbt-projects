@@ -1,0 +1,189 @@
+version: 2
+models:
+  - name: fct_databricks_discounts
+    group: databricks
+    access: public
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Table containing contractual discounts we get from Databricks
+    columns:
+      - name: id
+        description: Primary key
+        constraints:
+          - type: not_null
+        tests:
+          - unique
+  - name: dim_databricks_group
+    group: databricks
+    access: public  
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Model run directly against the databricks workspace
+      to retrieve all groups available for use in that workspace.
+    columns:
+      - name: group
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+    config:
+      materialized: table
+      tags: ['daily']
+  - name: dim_databricks_groupuser
+    group: databricks
+    access: public  
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      All groups and users in the databricks workspace
+      with each user belonging to a group.
+    columns:
+      - name: group_user_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+    config:
+      materialized: table
+      tags: ['daily']   
+  - name: fct_databricks_prices
+    group: databricks
+    access: public
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Databricks UC table that keeps the base prices for their SKUs.
+    columns:
+      - name: price_id
+        description:  Primary key for the record
+        constraints:
+          - type: not_null
+        tests:
+          - unique
+      - name: account_id
+        description: ID of the account this report was generated for 
+      - name: price_start_time
+        description: Date when this price starts being valid
+      - name: price_ends_time
+        description: Date when this price stops being valid
+      - name: price_ends_time
+        description: Date when this price stops being valid
+      - name: sku_name
+        description: Name of the SKU 
+      - name: cloud
+        description:  Cloud this usage is relevant for. Possible values are AWS, AZURE, and GCP. 
+      - name: currency_code 
+        description:  Currency used for the pricing 
+      - name: price
+        description:  cost per dbu     
+  - name: fct_databricks_usage
+    group: databricks
+    access: public
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Databricks usage data from their system tables. It includes dbus, cluster types, custom metadata
+      we send when jobs and endpoint usage/up time.
+    columns:
+      - name: record_id
+        description: Primary key for the record
+        constraints:
+          - type: not_null
+        tests:
+          - unique
+      - name: account_id
+        description: ID of the account this report was generated for 
+      - name: workspace_id
+        description: ID of the Workspace this usage was associated with
+      - name: sku_name
+        description: Name of the SKU 
+      - name: cloud
+        description:  Cloud this usage is relevant for. Possible values are AWS, AZURE, and GCP. 
+      - name: usage_start_time
+        description: The start time relevant to this usage record  
+      - name: usage_end_time
+        description: The start time relevant to this usage record 
+      - name: usage_date
+        description: Date of the usage record, this field can be used for faster aggregation by date  
+      - name: custom_tags
+        description: Tags applied by the users to this usage  
+      - name: usage_unit
+        description: Unit this usage is measured in. Possible values include DBUs.  
+      - name: usage_quantity
+        description: Number of units consumed for this record.  
+      - name: usage_metadata
+        description: System-provided metadata about the usage, including IDs for compute resources and jobs (if applicable).  
+  - name: dim_databricks_user
+    group: databricks
+    access: public
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Model run directly against the databricks workspace
+      to retrieve all users with access to that workspace.
+    columns:
+      - name: user
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+    config:
+      materialized: table
+      tags: ['daily']
+  - name: dim_databricks_warehouses
+    group: databricks
+    access: public
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Relation of databricks sqlwarehouse ids to a human readable name
+    columns:
+      - name: warehouse_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: dim_information_schema_tables
+    group: databricks
+    access: public
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Tables from regional prod catalog information_schema
+    columns:
+      - name: information_schema_tables_id
+        description: Primary key
+  - name: fct_system_access_audit
+    group: databricks
+    access: public
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Databricks UC table system.access.audit holds info on events related to access to the workspace.
+    columns:
+      - name: system_access_audit_id
+        description:  Primary key 
+        tests:
+          - not_null
+  - name: dim_system_information_schema_catalog_provider_share_usage
+    group: databricks
+    access: public
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Tables from system catalog information_schema
+    columns:
+      - name: information_schema_catalog_provider_share_usage_id
+        description: Primary key
+  - name: dim_system_information_schema_tables
+    group: databricks
+    access: public
+    meta:
+      owner: 'josh.elston-green@octopus.energy'
+    description: |
+      Tables from system catalog information_schema
+    columns:
+      - name: information_schema_tables_id
+        description: Primary key

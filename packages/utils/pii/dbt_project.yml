@@ -1,0 +1,50 @@
+name: 'utils_pii'
+version: '1.0.0'
+config-version: 2
+
+# These configurations specify where dbt should look for different types of files.
+# Anything out of the ordinary should have a comment explaining what it does.
+# If a directory is not required for a package it should be removed from the list and the directory should be deleted
+model-paths:
+  # Although the groups direcory doesn't contain any models its required for dbt to find the yml file for groups  
+  - groups
+macro-paths:
+  - macros
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - dbt_packages
+  - state
+  - target
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  utils_pii:
+    staging:
+      +materialized: view
+    tags:
+      - package:utils_pii      
+
+seeds:
+  utils_pii:
+    tags:
+      - package:utils_pii
+
+snapshots:
+  utils_pii:
+    tags:
+      - package:utils_pii
+
+tests:
+  utils_pii:
+    tags:
+      - package:utils_pii  
+vars:
+  # Elementary Variables
+  disable_dbt_artifacts_autoupload: "{{ target.name != 'prod' }}"
+  disable_dbt_columns_autoupload: "{{ target.name != 'prod' }}"
+  disable_run_results: "{{ target.name != 'prod' }}"
+  disable_tests_results: "{{ target.name != 'prod' }}"
+  disable_dbt_invocation_autoupload: "{{ target.name != 'prod' }}"
+

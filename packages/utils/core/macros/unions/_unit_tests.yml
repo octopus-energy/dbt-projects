@@ -1,0 +1,17 @@
+unit_tests:
+  - name: test_union_cte_union_all
+    description: Ensure the `union_cte` macro works correctly with UNION ALL
+    model: test_union_cte_all
+    given: []
+    expect:
+      rows:
+        - {'id': 1, 'name': 'Alice'}
+        - {'id': 2, 'name': 'Bob'}
+
+  - name: test_union_cte_union_distinct
+    description: Ensure the `union_cte` macro works correctly with UNION DISTINCT
+    model: test_union_cte_distinct
+    given: []
+    expect:
+      rows:
+        - {'id': 1, 'name': 'Alice'}

@@ -1,0 +1,12 @@
+version: 2
+
+macros:
+  - name: nullify_empty_strings
+    description: Turn empty strings in a column into NULL.
+    arguments:
+      - name: value
+        type: string
+        description: The input column or expression to nullify strings from
+      - name: new_col_name
+        type: string
+        description: The new column name to alias the output as

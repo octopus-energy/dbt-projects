@@ -1,0 +1,134 @@
+version: 2
+
+macros:
+  - name: current_date
+    description: |
+      Returns the current date in the chosen timezone (default is the project's local timezone).
+    arguments:
+      - name: timezone
+        type: string
+        description: |
+          A valid timezone string, e.g. 'JST' or 'Asia/Tokyo'. Default is `var('local_timezone')`.
+  - name: current_timestamp_local
+    description: |
+      Returns the current timestamp in the chosen timezone (default is the project's local timezone).
+
+      Note: we have two separate macros (`current_timestamp_local()` & `current_timestamp_utc()`),
+      as implementing our own `current_timestamp()` macro would conflict with dbt-core's internal
+      `current_timestamp()` macro.
+    arguments:
+      - name: timezone
+        type: string
+        description: |
+          A valid timezone string, e.g. 'JST' or 'Asia/Tokyo'. Default is `var('local_timezone')`.
+  - name: current_timestamp_utc
+    description: |
+      Returns the current timestamp in 'UTC' time.
+
+      See note above in `current_timestamp_local()`'s description for why we have two separate
+      current timestamp macros.
+  - name: date_between
+    description: '{{ doc("date_between") }}'
+    arguments:
+      - name: date
+        type: string
+        description: The column with the single date to check is contained in the interval
+      - name: below
+        type: string
+        description: The column the earlier date in the interval
+      - name: above
+        type: string
+        description: The column the later date in the interval
+  - name: date_spine
+    description: '{{ doc("date_spine") }}'
+    arguments:
+      - name: datepart
+        type: string
+        description: >
+          The interval, expressed as an interval string, between each row. For eg, set to "DAY" to
+          create a daily spine.
+      - name: start_date
+        type: string
+        description: The start date of the spine, inclusive.
+      - name: end_date
+        type: string
+        description: The end date of the spine, inclusive.
+      - name: granularity
+        type: integer
+        description: >
+          The number of `dateparts` between each row. Default is 1
+  - name: generate_regional_timezones
+    description: Covert a utc timestamp to all regions local timestamps (NZ, LDN, PARIS, TOKYO, GER, SPAIN, TEXAS)
+    arguments:
+      - name: field_name
+        type: string
+        description: |
+          The field name that you want to convert into the different regions timestamps
+  - name: localize
+    description: Convert a UTC timestamp to the time in the local timezone.
+    arguments:
+      - name: timestamp
+        type: string
+        description: The column name with the UTC timestamp
+      - name: timezone
+        type: string
+        description: The timezone to convert from UTC to. Default is the local_timezone var
+  - name: local_midnight_timestamp
+    description: '{{ doc("local_midnight_timestamp") }}'
+    arguments:
+      - name: timestamp
+        type: string
+        description: The column with the timestamp to convert to local midnight timestamp
+      - name: timezone
+        type: string
+        description: The timezone to convert from UTC to. Default is the local_timezone var
+  - name: ms_int_to_time_column
+    description: >
+      Turning milliseconds int column into a UTC time-only date-time interval column. Databricks does not format time-only columns in the
+      standard time format; any table ingested from consumer that contained a time-only column will be converted into an millisecond integer.
+      This millisecond value needs to be converted into a timestamp by adding the millisecond value to a default timestamp of '1970-01-01 00:00:00'.
+    arguments:
+      - name: ms_int_column
+        type: string
+        description: The millisecond column you wish to convert into a time-only column
+      - name: reference_00_ms_int
+        type: integer
+        description: >
+          The integer in your column that refers to a time of 00:00:00. -1462009856 is the
+          default value applicable to tables ingested into the datalake with time-only columns.
+          Some models may have the ms value defined differently; therefore, we need to use reference_00_ms_int to normalise the data.
+      - name: time_format
+        type: string
+        description: The time format you would like the output to be in. Default is HH:mm:ss
+  - name: to_date
+    description: >
+      Cast a timestamp to a date. By default, localizes the timestamp from UTC to the project's
+      local timezone before casting, but this behaviour can be altered.
+    arguments:
+      - name: timestamp
+        type: string
+        description: The column with the timestamp to convert to date
+      - name: localize
+        type: bool
+        description: Whether to localize the timestamp before casting. Default True
+      - name: timezone
+        type: string
+        description: >
+          Timezone to convert from before casting, if `localize` is True. Defaults to the project's
+          `local_timezone` variable.
+  - name: to_report_date
+    description: >
+      Convert a date to a report date. That is: the last day of the month for past months, or the
+      current date for the current month.
+    arguments:
+      - name: date
+        type: string
+        description: The date to be converted to a report date.
+  - name: date_detail_end_date
+    description: End date for wh_date_detail.
+  - name: kraken_timestamp_to_utc
+    description: Convert a utc kraken timestamp that has lost its timezone to a utc timestamp
+    arguments:
+      - name: timestamp
+        type: string
+        description: The name of the timestamp column to convert

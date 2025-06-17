@@ -52,4 +52,4 @@ workflows:
           configuration_path: tmp/projects_config.yml
           requires:
             - generate-projects-config
-            - run-tests666
+            - run-tests

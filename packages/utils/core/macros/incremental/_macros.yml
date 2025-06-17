@@ -1,0 +1,7 @@
+version: 2
+
+macros:
+  - name: verify_full_refresh
+    description: |
+      Ensures the variable `allow_full_refresh` is set to true in the dbt invocation before allowing the full refresh of an incremental model.
+

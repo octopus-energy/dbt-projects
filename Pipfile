@@ -8,6 +8,7 @@ dbt-core = "*"
 dbt-databricks = "*"
 
 [dev-packages]
+dbt-autofix = "*"
 
 [requires]
 python_version = "3.13"

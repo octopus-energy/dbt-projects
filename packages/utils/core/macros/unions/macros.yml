@@ -1,0 +1,21 @@
+version: 2
+
+macros:
+  - name: union_cte
+    description: |
+      This macro will allow you to UNION cte's similar to the DBT union ref. It will put cols in the right order.
+      It will fail if all cols are not in both tables and for now cannot handle nulls.
+    arguments:
+      - name: cte1
+        type: string
+        description: First CTE name
+      - name: cte2
+        type: string
+        description: Second CTE name
+      - name: union_type
+        type: string
+        description: Whether you want to do a UNION ALL or DISTINCT. Has to be one of those two.
+      - name: column_names
+        type: list
+        description: The columns from each CTE you want to union.
+

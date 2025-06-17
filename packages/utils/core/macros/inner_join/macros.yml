@@ -1,0 +1,44 @@
+version: 2
+
+macros:
+  - name: intervals_overlap
+    description: '{{ doc("intervals_overlap") }}'
+    arguments:
+      - name: below
+        type: List[string]
+        description: >
+          A list of of column names, with the earlier date in the interval for each table
+      - name: above
+        type: List[string]
+        description: >
+          A list of of column names, with the later date in the interval for each table
+  - name: merged_interval_above
+    description: '{{ doc("merged_interval_above") }}'
+    arguments:
+      - name: above
+        type: List[string]
+        description: >
+          A list of of column names, with the earlier date in the interval for each table
+  - name: merged_interval_below
+    description: '{{ doc("merged_interval_below") }}'
+    arguments:
+      - name: below
+        type: List[string]
+        description: >
+          A list of of column names, with the earlier date in the interval for each table
+      - name: extend_back
+        type: boolean
+        description: >
+          Whether to extend backwards the first interval for each entity to be sure to cover to the
+          first interval start
+      - name: id_col
+        type: string
+        description: >
+          When `extend_back` is true, this column is used to differentiate between each entity when
+          extending back the first interval
+      - name: primary_below
+        type: string
+        description: >
+          The column name of the interval start of the \"primary\" interval column, as described in
+          `extend_back` description and the macro docs. Eg if `id_col` is `account_id`, then
+          `primary_below` is likely to be `account.dbt_valid_from`

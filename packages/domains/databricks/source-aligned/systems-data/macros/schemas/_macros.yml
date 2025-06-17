@@ -1,0 +1,17 @@
+version: 2
+
+macros:
+  - name: generate_schema_name
+    description: |
+      An override for the built-in macro that uses a custom schema where given in production environments, 
+      and the default schema in development environments.
+      This is included in all ktl dbt packages and projects as a standard way to manage schema names.
+    arguments:
+      - name: custom_schema_name
+        type: string
+        description: |
+          The configured value of schema in the specified node, or none if a value is not supplied
+      - name: node
+        type: string
+        description: |
+          The node that is currently being processed by dbt
