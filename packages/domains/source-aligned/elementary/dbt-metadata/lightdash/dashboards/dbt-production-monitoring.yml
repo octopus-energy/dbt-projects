@@ -1,0 +1,46 @@
+name: dbt Production Monitoring
+description: A dashboard for insight on dbt node performance at the client level
+updatedAt: "2025-02-04T15:58:03.032Z"
+tiles:
+  - x: 0
+    "y": 1
+    h: 8
+    w: 36
+    tabUuid: null
+    type: saved_chart
+    properties:
+      title: ""
+      hideTitle: false
+      chartSlug: dbt-production-runtime-history
+  - x: 0
+    "y": 9
+    h: 8
+    w: 36
+    tabUuid: null
+    type: saved_chart
+    properties:
+      title: ""
+      hideTitle: false
+      chartSlug: model-runtime-history
+filters:
+  metrics: []
+  dimensions:
+    - id: 4114964f-734e-4c22-9708-efe17188ec47
+      target:
+        fieldId: share_dbt_run_results_unique_id
+        fieldName: unique_id
+        tableName: share_dbt_run_results
+      values: []
+      disabled: true
+      operator: equals
+      required: false
+      tileTargets:
+        f93ca156-78bc-43b2-a9a4-263901ba213c:
+          fieldId: share_dbt_run_results_unique_id
+          tableName: share_dbt_run_results
+  tableCalculations: []
+tabs: []
+slug: dbt-production-monitoring
+spaceSlug: data-platform
+version: 1
+downloadedAt: "2025-02-04T16:03:45.675Z"

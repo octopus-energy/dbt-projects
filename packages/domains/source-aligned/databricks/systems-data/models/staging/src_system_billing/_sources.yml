@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: src_system_billing
+    catalog: "system"
+    schema: "billing"
+    tables:
+      - name: usage
+      - name: list_prices

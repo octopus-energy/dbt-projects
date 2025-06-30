@@ -1,0 +1,69 @@
+name: Model Runtime History
+description: >-
+  A chart showing how long a model has taken to run in each production
+  invocation. 
+tableName: share_dbt_run_results
+updatedAt: "2025-02-04T15:59:29.870Z"
+metricQuery:
+  exploreName: share_dbt_run_results
+  dimensions:
+    - share_dbt_invocations_short_cosmos_invocation_id_hour
+  metrics:
+    - share_dbt_run_results_sum_node_execution_time_minutes
+  filters:
+    dimensions:
+      id: 94954d55-0def-4eeb-9883-00f0dad3988f
+      and:
+        - id: 1d71cdb1-b70c-4cd5-9c93-97604f27dff7
+          target:
+            fieldId: share_dbt_run_results_unique_id
+          values:
+            - model.kraken_analytics_core.inter_bill_charge_periods
+          operator: equals
+          required: false
+        - id: f279cd0c-3311-4794-8a23-fc04b1e0f9b7
+          target:
+            fieldId: share_dbt_invocations_short_cosmos_invocation_id
+          values:
+            - 7
+          operator: inThePast
+          required: false
+          settings:
+            completed: false
+            unitOfTime: days
+  sorts:
+    - fieldId: share_dbt_invocations_short_cosmos_invocation_id_hour
+      descending: true
+  limit: 500
+  metricOverrides: {}
+  tableCalculations: []
+  additionalMetrics: []
+  customDimensions: []
+chartConfig:
+  type: cartesian
+  config:
+    layout:
+      xField: share_dbt_invocations_short_cosmos_invocation_id_hour
+      yField:
+        - share_dbt_run_results_sum_node_execution_time_minutes
+    eChartsConfig:
+      xAxis:
+        - rotate: 45
+      series:
+        - type: bar
+          color: "#3ba272"
+          stack: stack-all-series
+          encode:
+            xRef:
+              field: share_dbt_invocations_short_cosmos_invocation_id_hour
+            yRef:
+              field: share_dbt_run_results_sum_node_execution_time_minutes
+          yAxisIndex: 0
+slug: model-runtime-history
+tableConfig:
+  columnOrder:
+    - share_dbt_invocations_short_cosmos_invocation_id_hour
+    - share_dbt_run_results_sum_node_execution_time_minutes
+spaceSlug: data-platform
+version: 1
+downloadedAt: "2025-02-04T16:03:45.762Z"

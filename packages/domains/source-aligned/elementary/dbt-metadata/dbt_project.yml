@@ -1,0 +1,74 @@
+name: 'elementary_dbt_metadata'
+version: '1.0.0'
+config-version: 2
+
+flags:
+  require_explicit_package_overrides_for_builtin_materializations: false
+
+# These configurations specify where dbt should look for different types of files.
+# Anything out of the ordinary should have a comment explaining what it does.
+# If a directory is not required for a package it should be removed from the list and the directory should be deleted
+model-paths:
+  - models
+  # Although the groups direcory doesn't contain any models its required for dbt to find the yml file for groups  
+  - groups
+analysis-paths:
+  - analyses
+test-paths:
+  - tests
+seed-paths:
+  - seeds
+macro-paths:
+  - macros
+snapshot-paths:
+  - snapshots
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - dbt_packages
+  - state
+  - target
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  elementary:
+    +group: elementary
+    +schema: elementary
+    +access: private    
+  data_platform_elementary_client:
+    +group: elementary
+    +schema: elementary
+    +access: private
+    tags:
+      - package:data_platform_elementary_client
+
+seeds:
+  data_platform_elementary_client:
+    tags:
+      - package:data_platform_elementary_client
+
+snapshots:
+  data_platform_elementary_client:
+    tags:
+      - package:data_platform_elementary_client
+
+tests:
+  data_platform_elementary_client:
+    tags:
+      - package:data_platform_elementary_client  
+
+vars:
+  kraken_dbt:
+    fabric: 'severntrent-kap-prod'
+    local_adapter: 'databricks'
+    # Used for deploying docker images and services for the project. Should be deactivated in dbt packages designed for import elsewhere. 
+    run_deployment: 'false'
+  distant_future_timestamp: "to_utc_timestamp('2099-12-31 23:59:59','UTC')"
+  local_timezone: "UTC"
+  # Elementary Variables
+  disable_dbt_artifacts_autoupload: "{{ target.name != 'prod' }}"
+  disable_dbt_columns_autoupload: "{{ target.name != 'prod' }}"
+  disable_run_results: "{{ target.name != 'prod' }}"
+  disable_tests_results: "{{ target.name != 'prod' }}"
+  disable_dbt_invocation_autoupload: "{{ target.name != 'prod' }}"

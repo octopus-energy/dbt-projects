@@ -1,0 +1,26 @@
+version: 2
+models:
+  - name: stg_system_information_schema_catalog_provider_share_usage
+    config:
+      meta:
+        owner: 'evelyn.byer@octoenergy.com'
+        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+      group: databricks
+      access: private
+    description: |
+      Tables from system catalog information_schema
+    columns:
+      - name: information_schema_catalog_provider_share_usage_id
+        description: Primary key
+  - name: stg_system_information_schema_tables
+    config:
+      meta:
+        owner: 'evelyn.byer@octoenergy.com'
+        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+      group: databricks
+      access: private
+    description: |
+      Tables from system catalog information_schema
+    columns:
+      - name: information_schema_tables_id
+        description: Primary key

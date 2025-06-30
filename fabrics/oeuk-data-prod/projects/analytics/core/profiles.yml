@@ -1,0 +1,13 @@
+oeuk_data_prod_analytics_core:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      threads: 16
+      catalog: octoenergy_data_prod_test
+      schema: infra_testing
+      host: octoenergy-oeuk.cloud.databricks.com
+      http_path: /sql/1.0/warehouses/2dd88afcfda0f60f
+      auth_type: oauth
+      client_id: '{{ env_var("DATABRICKS_M2M_CLIENT_ID") }}'
+      client_secret: '{{ env_var("DATABRICKS_M2M_CLIENT_SECRET") }}'

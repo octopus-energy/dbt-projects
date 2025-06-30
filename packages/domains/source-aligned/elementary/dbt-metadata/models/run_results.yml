@@ -1,0 +1,431 @@
+version: 2
+models:
+  - name: share_cosmos_invocations
+    description: |
+      Aggregates of dbt invocations by cosmos invocation id.
+    config:
+      tags:
+        - lightdash
+    meta:
+      spotlight:
+        categories:
+          - verified
+          - source_elementary
+          - product_analytics_engineering_platform
+          - domain_data_platform_observability
+          - domain_data_platform_performance
+    columns:
+      - name: short_cosmos_invocation_id
+        data_type: timestamp
+        description: |
+          A shortened version of the cosmos invocation id for visualisation
+          purposes.
+        meta:
+          dimension:
+            type: timestamp
+            time_intervals: ['DAY', 'WEEK', 'MONTH', 'YEAR', 'QUARTER', 'HOUR']
+      - name: run_started_at
+        data_type: timestamp
+        description: The minimum run started at.
+        meta:
+          dimension:
+            type: timestamp
+          metrics:
+            min_run_started_at:
+              description: |
+                The earliest timestamp a dbt invocation started at
+              label: Minimum dbt Invocation Started At
+              type: min
+      - name: run_completed_at
+        data_type: timestamp
+        description: The maximum run completed at.
+        meta:
+          dimension:
+            type: timestamp
+          metrics:
+            max_run_completed_at:
+              description: |
+                The latest timestamp a dbt invocation completed at
+              label: Maximum dbt Invocation Completed At
+              type: max
+      - name: invocation_duration_seconds
+        data_type: integer
+        description: The duration of the invocation in seconds.
+        meta:
+          dimension:
+            type: number
+          metrics:
+            sum_invocation_duration_seconds:
+              description: |
+                The total duration of all dbt invocations in seconds.
+              label: Total duration of dbt invocations (seconds)
+              type: sum
+      - name: invocation_duration_minutes
+        data_type: integer
+        description: The duration of the invocation in minutes.
+        meta:
+          dimension:
+            type: number
+          metrics:
+            sum_invocation_duration_minutes:
+              description: |
+                The total duration of all dbt invocations in minutes.
+              label: Total duration of dbt invocations (minutes)
+              type: sum
+  - name: share_dbt_invocations
+    description: >
+      Attributes associated with each dbt invocation. Inserted at the end of
+      each invocation.
+    config:
+      tags:
+        - lightdash
+    meta:
+      spotlight:
+        categories:
+          - verified
+          - source_elementary
+          - product_analytics_engineering_platform  
+          - domain_data_platform_observability
+          - domain_data_platform_performance                       
+    columns:
+      - name: invocation_id
+        data_type: string
+        description: Primary key of this table.
+        meta:
+          dimension:
+            type: string
+      - name: short_cosmos_invocation_id
+        data_type: timestamp
+        description: |
+          A shortened version of the cosmos invocation id for visualisation
+          purposes.
+        meta:
+          dimension:
+            type: timestamp
+            time_intervals: ['DAY', 'WEEK', 'MONTH', 'YEAR', 'QUARTER', 'HOUR']            
+      - name: run_started_at
+        data_type: string
+        description: Timestamp the invocation was started.
+        meta:
+          dimension:
+            type: timestamp
+          metrics:
+            min_run_started_at:
+              description: |
+                The earliest timestamp a dbt invocation started at
+              label: Minimum dbt Invocation Started At
+              type: min
+      - name: run_completed_at
+        data_type: string
+        description: Timestamp the invocation was completed
+        meta:
+          dimension:
+            type: timestamp
+          metrics:
+            max_run_completed_at:
+              description: |
+                The latest timestamp a dbt invocation completed at
+              label: Maximum dbt Invocation Completed At
+              type: max
+      - name: generated_at
+        data_type: string
+        description: The time this invocation was uploaded to the database.
+      - name: command
+        data_type: string
+        description: dbt command that was used. For example, run.
+      - name: dbt_version
+        data_type: string
+        description: Version of dbt that was used in this invocation.
+      - name: elementary_version
+        data_type: string
+        description: Version of the elementary package that was used in this invocation.
+      - name: full_refresh
+        data_type: boolean
+        description: Whether or not this invocation was executed as a full-refresh.
+      - name: invocation_vars
+        data_type: string
+        description: >-
+          Dictionary of the variables (and values) that were declared in the
+          invocation.
+      - name: vars
+        data_type: string
+        description: >-
+          Dictionary of all variables (and values) in the dbt project. If none
+          were declared at runtime, these are the variables declared in
+          dbt_project yml
+      - name: target_name
+        data_type: string
+        description: Name of the target used in this invocation.
+      - name: target_database
+        data_type: string
+        description: Name of the target database that was used in this invocation.
+      - name: target_schema
+        data_type: string
+        description: Name of the target schema that was used in this invocation.
+      - name: target_profile_name
+        data_type: string
+        description: Name of the dbt profile that was used in this invocation.
+      - name: threads
+        data_type: integer
+        description: >-
+          Number of threads that were used to run this dbt invocation. (This
+          number could impact the performance of a dbt invocation).
+      - name: selected
+        data_type: string
+        description: >-
+          The selected resources in the dbt command. While this is a string in
+          the database, this can easily be converted to an array.
+      - name: yaml_selector
+        data_type: string
+        description: The yaml selector that was passed in this invocation.
+      - name: job_id
+        data_type: string
+        description: >-
+          The ID of a job, defined in the `job_id` var or in the `JOB_ID` env
+          var or by the orchestrator (dbt Cloud, GitHub Actions, etc).
+      - name: job_name
+        data_type: string
+        description: >-
+          The name of a job, defined in the `job_name` var or in the `JOB_NAME`
+          env var.
+      - name: job_run_id
+        data_type: string
+        description: >-
+          The run ID of a job, defined in the `job_run_id` var or in the
+          `DBT_JOB_RUN_ID` env var or by the orchestrator (dbt Cloud, GitHub
+          Actions, etc).
+      - name: env
+        data_type: string
+        description: The environment's name, defined in the `DBT_ENV` env var.
+      - name: env_id
+        data_type: string
+        description: The ID of an environment, defined in the `DBT_ENV_ID` env var.
+      - name: project_id
+        data_type: string
+        description: >-
+          The ID of a project, defined in the `DBT_PROJECT_ID` env var or by the
+          orchestrator (dbt Cloud, GitHub Actions, etc).
+      - name: cause_category
+        data_type: string
+        description: >
+          The category of the cause of the invocation. For example, if the
+          invocation was triggered by a schedule, the cause category would be
+          schedule.
+
+          Defined in the `DBT_CAUSE_CATEGORY` env var or by the orchestrator
+          (dbt Cloud, GitHub Actions, etc).
+      - name: cause
+        data_type: string
+        description: >
+          The cause of the invocation. For example, if the invocation was
+          triggered by a manual run, the cause would be _"Kicked off by Joe."_.
+
+          Defined in the `DBT_CAUSE` env var or by the orchestrator (dbt Cloud,
+          GitHub Actions, etc).
+      - name: pull_request_id
+        data_type: string
+        description: >-
+          The ID of a pull request, defined in the `DBT_PULL_REQUEST_ID` env var
+          or by the orchestrator (dbt Cloud, GitHub Actions, etc).
+      - name: git_sha
+        data_type: string
+        description: >-
+          The git SHA of the commit that was used in this invocation, defined in
+          the `DBT_GIT_SHA` env var or by the orchestrator (dbt Cloud, GitHub
+          Actions, etc).
+      - name: orchestrator
+        data_type: string
+        description: >-
+          The orchestrator that was used to run this invocation, defined in the
+          `orchestrator` var or in the `ORCHESTRATOR` env var or by the
+          orchestrator env vars. For example, dbt Cloud, GitHub Actions, etc.
+      - name: job_url
+        data_type: string
+        description: >-
+          The name of a job, defined in the `job_url` var or in the `JOB_URL`
+          env var or by the orchestrator. For GitHub Actions orchestrator, the
+          value is calculated.
+      - name: account_id
+        data_type: string
+        description: >-
+          The ID of the account, defined in the `account_id` var or in the
+          `ACCOUNT_ID` env var or by the orchestrator.
+      - name: target_adapter_specific_fields
+        data_type: string
+        description: >
+          A JSON object that contains adapter-specific fields.
+
+          For instance in Databricks, it contains the http_path of the
+          warehouse.
+      - name: cosmos_invocation_id
+        data_type: string
+        description: |
+          The invocation ID of the Cosmos job that triggered the dbt invocation.
+        meta:
+          dimension:
+            type: string
+  - name: share_dbt_run_results
+    description: >
+      Run results of dbt invocations, inserted at the end of each invocation.
+      Each row is the invocation result of a single resource (model, test,
+      snapshot, etc). New data is loaded to this model on an on-run-end hook
+      named 'elementary.upload_run_results' from each invocation that produces a
+      result object. This is an incremental model.
+    config:
+      tags:
+        - SEV-2
+        - lightdash
+    meta:
+      deprecated_columns:
+        - name: compiled_sql
+          data_type: string
+          description: The compiled SQL executed against the database.
+      joins:
+        - join: share_dbt_invocations
+          type: left
+          sql_on: >-
+            ${share_dbt_invocations.invocation_id} =
+            ${share_dbt_run_results.invocation_id}
+          fields:
+            - run_started_at
+            - run_completed_at
+            - short_cosmos_invocation_id
+            - min_run_started_at
+            - max_run_completed_at
+      spotlight:
+        categories:
+          - verified
+          - source_elementary
+          - product_analytics_engineering_platform
+          - domain_data_platform_observability
+          - domain_data_platform_performance
+    columns:
+      - name: model_execution_id
+        data_type: string
+        description: >-
+          Execution id generated by joining the unique_id of the resource and
+          the invocation_id. This is the unique key of each row in this model.
+      - name: unique_id
+        data_type: string
+        description: >-
+          The unique id of the resource (would be similar for all executions of
+          the same resource).
+        meta:
+          dimension:
+            type: string
+      - name: invocation_id
+        data_type: string
+        description: >-
+          The unique id of the invocation (would be similar for all resources
+          executed on the same invocation). FK to dbt_invocations.
+        meta:
+          dimension:
+            type: string
+      - name: generated_at
+        data_type: string
+        description: ""
+      - name: name
+        data_type: string
+        description: Resource name.
+        meta:
+          dimension:
+            type: string
+      - name: message
+        data_type: string
+        description: Execution results message returned by dbt.
+      - name: status
+        data_type: string
+        description: Execution result status (success, error, pass, fail)
+        meta:
+          dimension:
+            type: string
+      - name: resource_type
+        data_type: string
+        description: Resource type (model, test, snapshot, seed, etc)
+        meta:
+          dimension:
+            type: string
+      - name: execution_time
+        data_type: float
+        description: Resource execution duration in seconds.
+        meta:
+          metrics:
+            sum_node_execution_time_minutes:
+              description: |
+                The total duration of all dbt nodes in minutes.
+              label: Total duration of dbt nodes (minutes)
+              type: sum
+              sql: ${execution_time} / 60
+      - name: execute_started_at
+        data_type: string
+        description: Start time of the execution.
+        meta:
+          dimension:
+            type: timestamp
+          metrics:
+            min_node_started_at:
+              description: |
+                The earliest timestamp a dbt node started at
+              label: Minimum timestamp of a dbt node started at
+              type: min
+      - name: execute_completed_at
+        data_type: string
+        description: End time of the execution.
+        meta:
+          dimension:
+            type: timestamp
+          metrics:
+            max_node_completed_at:
+              description: |
+                The latest timestamp a dbt node completed at
+              label: Maximum timestamp of a dbt node completed at
+              type: max
+      - name: compile_completed_at
+        data_type: string
+        description: End time of resource compile action.
+      - name: rows_affected
+        data_type: int
+        description: ""
+      - name: full_refresh
+        data_type: boolean
+        description: Was this a full refresh execution.
+      - name: compiled_code
+        data_type: string
+        description: The compiled code (SQL / Python) executed against the database.
+      - name: failures
+        data_type: int
+        description: Number of failures in this run.
+      - name: query_id
+        data_type: string
+        description: >-
+          Query ID in the data warehouse, if returned by the adapter (currently
+          only supported in Snowflake, is null for any other adapter).
+      - name: thread_id
+        data_type: string
+        description: Id of the thread of this resource run.
+      - name: adapter_response
+        data_type: string
+        description: >-
+          Response returned by the adapter (Fields will be different for each
+          adapters).
+  - name: share_elementary_test_results
+    description: >
+      Run results of all dbt tests, with fields and metadata needed to produce
+      the Elementary report UI. Each row is the result of a single test,
+      including native dbt tests, packages tests and elementary tests. New data
+      is loaded to this model on an on-run-end hook named
+      `elementary.handle_tests_results`.
+  - name: share_model_run_results
+    description: >
+      Run results of dbt models, enriched with models metadata. Each row is the
+      result of a single model. This is a view that joins data from
+      `dbt_run_results` and `dbt_models`.
+  - name: share_snapshot_run_results
+    description: >
+      Run results of dbt snapshots, enriched with snapshots metadata. Each row
+      is the result of a single snapshot. This is a view that joins data from
+      `dbt_run_results` and `dbt_snapshots`.
+  - name: share_job_run_results
+    description: >
+      Run results of dbt invocations, enriched with jobs metadata. Each row is
+      the result of a single job. This is a view on `dbt_invocations`.

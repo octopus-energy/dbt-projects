@@ -1,0 +1,28 @@
+version: 2
+
+
+models:
+  - name: stg_databricks_discounts
+    config:
+      meta:
+        owner: 'javier.asensio@octoenergy.com'
+        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+      group: databricks
+      access: private
+    description: |
+      Table containing contractual discounts we get from Databricks
+    columns:
+      - name: id
+        description: Primary key
+  - name: stg_databricks_warehouses
+    config:
+      meta:
+        owner: 'javier.asensio@octoenergy.com'
+        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+      group: databricks
+      access: private
+    description: |
+      Relation of databricks sqlwarehouse ids to a human readable name
+    columns:
+      - name: warehouse_id
+        description: Primary key

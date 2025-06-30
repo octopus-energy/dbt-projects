@@ -1,0 +1,14 @@
+version: 2
+models:
+  - name: stg_system_access_audit
+    config:
+      meta:
+        owner: 'evelyn.byer@octoenergy.com'
+        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+      group: databricks
+      access: private
+    description: |
+      Databricks UC table system.access.audit holds info on events related to access to the workspace.
+    columns:
+      - name: system_access_audit_id
+        description: Primary key

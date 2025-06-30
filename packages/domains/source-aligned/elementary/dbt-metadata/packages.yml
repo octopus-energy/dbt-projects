@@ -1,0 +1,7 @@
+packages:
+  - package: elementary-data/elementary
+    version: '>=0.16.4'
+  - git: "https://{{ env_var('DBT_ENV_SECRET_GIT_CREDENTIAL') }}@github.com/octoenergy/shared-dbt-packages"
+    subdirectory: "packages/utils/core"
+    revision: "{{ env_var('SHARED_DBT_PACKAGES_KRAKEN_DBT_BRANCH_NAME', 'main') }}"
+    warn-unpinned: false

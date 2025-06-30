@@ -1,0 +1,8 @@
+version: 2
+groups:
+  - name: databricks
+    owner:
+      name: Data Platform
+    config:
+      meta:
+        slack: data-platform

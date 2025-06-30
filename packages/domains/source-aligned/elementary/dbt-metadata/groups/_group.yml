@@ -1,0 +1,10 @@
+version: 2
+groups:
+  - name: elementary
+    owner:
+      name: Data Platform
+      slack: data-platform
+      members:
+        - josh.elston-green@kraken.tech
+        - maja.cernja@kraken.tech
+      subscribers:

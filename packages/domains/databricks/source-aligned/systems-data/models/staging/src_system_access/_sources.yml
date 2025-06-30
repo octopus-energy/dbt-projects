@@ -1,8 +1,0 @@
-version: 2
-
-sources:
-  - name: src_databricks_system_access
-    catalog: "system"
-    schema: "access"
-    tables:
-      - name: audit

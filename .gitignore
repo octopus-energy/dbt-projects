@@ -151,3 +151,7 @@ logs/
 **/.DS_Store
 ._.DS_Store
 **/._.DS_Store
+
+**/dbt_packages/
+
+**/.user.yml
