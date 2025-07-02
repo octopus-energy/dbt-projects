@@ -10,6 +10,13 @@ dbt-adapters = "1.15.3"
 
 [dev-packages]
 dbt-autofix = "*"
+pytest = "*"
+pytest-cov = "*"
+black = "*"
+isort = "*"
+flake8 = "*"
+mypy = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.13"
