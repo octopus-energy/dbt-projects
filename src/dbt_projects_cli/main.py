@@ -10,7 +10,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from .commands import descriptions, projects, models, utils, scaffold, migrate
+from .commands import scaffold, migrate
 
 console = Console()
 
@@ -41,37 +41,10 @@ def cli(ctx: click.Context, verbose: bool) -> None:
         console.print("[bold blue]dbt-projects-cli[/bold blue] - Debug mode enabled", style="dim")
 
 
-@cli.command()
-def info() -> None:
-    """Show information about the current dbt projects repository."""
-    from .core.project_discovery import ProjectDiscovery
-    
-    discovery = ProjectDiscovery()
-    projects_info = discovery.discover_all_projects()
-    
-    table = Table(title="dbt Projects Overview")
-    table.add_column("Type", style="cyan")
-    table.add_column("Project", style="magenta")
-    table.add_column("Location", style="green")
-    table.add_column("Models", justify="right", style="blue")
-    
-    for project_type, projects_list in projects_info.items():
-        for project in projects_list:
-            table.add_row(
-                project_type.title(),
-                project["name"],
-                project["path"],
-                str(project.get("model_count", "N/A"))
-            )
-    
-    console.print(table)
+# Info command removed - requires project_discovery which is in core infrastructure
 
 
 # Add command groups
-cli.add_command(descriptions.descriptions)
-cli.add_command(projects.projects)
-cli.add_command(models.models)
-cli.add_command(utils.utils)
 cli.add_command(scaffold.scaffold)
 cli.add_command(migrate.migrate)
 
