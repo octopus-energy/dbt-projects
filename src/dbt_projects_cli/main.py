@@ -10,7 +10,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from .commands import descriptions, projects, models, utils, scaffold, migrate
+from .commands import descriptions, projects, models, utils
 
 console = Console()
 
@@ -72,8 +72,6 @@ cli.add_command(descriptions.descriptions)
 cli.add_command(projects.projects)
 cli.add_command(models.models)
 cli.add_command(utils.utils)
-cli.add_command(scaffold.scaffold)
-cli.add_command(migrate.migrate)
 
 
 if __name__ == "__main__":
