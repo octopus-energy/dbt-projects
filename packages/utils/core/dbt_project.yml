@@ -1,48 +1,54 @@
-name: 'utils_core'
-version: '1.0.0'
+name: utils_core
+version: 1.0.0
 config-version: 2
-
-
-# These configurations specify where dbt should look for different types of files.
-# Anything out of the ordinary should have a comment explaining what it does.
-# If a directory is not required for a package it should be removed from the list and the directory should be deleted
 model-paths:
-  - models
-  # Although the groups direcory doesn't contain any models its required for dbt to find the yml file for groups
-  - groups
+- models
+- groups
 analysis-paths:
-  - analyses
+- analyses
 test-paths:
-  - tests
+- tests
 seed-paths:
-  - seeds
+- seeds
 macro-paths:
-  - macros
-  - materializations
+- macros
 snapshot-paths:
-  - snapshots
-
-clean-targets:         # directories to be removed by `dbt clean`
-  - dbt_packages
-  - state
-  - target
-
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
-
+- snapshots
+clean-targets:
+- dbt_packages
+- state
+- target
 models:
   utils_core:
     +materialized: table
     staging:
       +materialized: view
+      +tags:
+      - utils_core
+      - staging
     macro_tests:
       +materialized: ephemeral
-
+      +tags:
+      - utils_core
+      - tests
+    +group: data_platform
+    +access: public
+    +tags:
+    - utils_core
+    - utils
+  +persist_docs:
+    relation: true
+    columns: true
+  +tags:
+  - utils_core
 vars:
-  # Elementary Variables
   disable_dbt_artifacts_autoupload: "{{ target.name != 'prod' }}"
   disable_dbt_columns_autoupload: "{{ target.name != 'prod' }}"
   disable_run_results: "{{ target.name != 'prod' }}"
   disable_tests_results: "{{ target.name != 'prod' }}"
   disable_dbt_invocation_autoupload: "{{ target.name != 'prod' }}"
-  distant_future_timestamp: 'TIMESTAMP("9999-12-31 23:59:59")'
+  distant_future_timestamp: to_utc_timestamp('2099-12-31 23:59:59','UTC')
+  PROD_CATALOG: octoenergy_data_prod_prod
+  DATABRICKS_WORKSPACE_ID: '337210421809158'
+  local_timezone: UTC
+profile: utils_core

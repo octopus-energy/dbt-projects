@@ -1,6 +1,8 @@
 version: 2
 groups:
-  - name: data_platform
+  - name: utils
     owner:
       name: Data Platform
-      slack: data-platform
+    config:
+      meta:
+        slack: data-platform
