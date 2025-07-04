@@ -183,6 +183,44 @@ class LLMDescriptionGenerator:
             prompt_parts.append(f"**Source Table:** {sample_data['source_table']}\n")
             if sample_data.get("sample_rows"):
                 prompt_parts.append("**Sample Data (first 3 rows):**\n")
+
+                # Add important context about PII protection
+                protection_info = sample_data.get("pii_protection", {})
+                if protection_info.get("protection_applied"):
+                    method = protection_info.get("method", "unknown")
+                    if method == "hash":
+                        prompt_parts.append(
+                            "**IMPORTANT:** Values in format [PII_PLACEHOLDER:xxxxxxxx] "
+                            "are temporary placeholders created for this analysis only. "
+                            "They are NOT actual values stored in the database. "
+                            "Do not describe these as 'hashed identifiers' or refer to "
+                            "privacy protection - instead describe the column's actual "
+                            "business purpose.\n\n"
+                        )
+                    elif method == "exclude":
+                        prompt_parts.append(
+                            "**IMPORTANT:** Values showing '[REDACTED]' are privacy-protected "
+                            "placeholders created for this analysis only. They are NOT actual "
+                            "values stored in the database. Do not describe these as 'redacted' "
+                            "or refer to privacy protection - instead describe the column's "
+                            "actual business purpose.\n\n"
+                        )
+                    elif method == "mask":
+                        prompt_parts.append(
+                            "**IMPORTANT:** Some values appear masked (e.g., 't***@e******.com', "
+                            "'**********67') for privacy protection during this analysis. These "
+                            "are NOT the actual values stored in the database. Do not describe "
+                            "these as 'masked' or refer to privacy protection - instead describe "
+                            "the column's actual business purpose.\n\n"
+                        )
+                    else:
+                        prompt_parts.append(
+                            "**IMPORTANT:** Some values may be privacy-protected placeholders "
+                            "created for this analysis only. They are NOT actual values stored "
+                            "in the database. Focus on describing the column's actual business "
+                            "purpose.\n\n"
+                        )
+
                 for i, row in enumerate(sample_data["sample_rows"]):
                     prompt_parts.append(f"Row {i+1}: {row}\n")
                 prompt_parts.append("\n")
@@ -246,7 +284,12 @@ class LLMDescriptionGenerator:
                 "10. **CRITICAL:** You must preserve column names EXACTLY as "
                 "they appear in the data/SQL. Do not alter underscores, "
                 "capitalization, or any characters. Column names are database "
-                "identifiers that must remain unchanged.\n\n",
+                "identifiers that must remain unchanged.\n",
+                "11. **CRITICAL:** Privacy-protected values in sample data "
+                "(including [PII_PLACEHOLDER:xxxxxxxx], [REDACTED], or masked "
+                "values like 't***@e******.com') are temporary placeholders, NOT "
+                "actual database values. Focus on the column's business purpose "
+                "based on its name and SQL context, not these placeholders.\n\n",
                 "**Response Format:**\n",
                 "MODEL_DESCRIPTION: [Your model description here - do not "
                 "include column details]\n\n",
@@ -292,7 +335,11 @@ class LLMDescriptionGenerator:
                         "documenting data models. CRITICAL: Preserve all database "
                         "column names exactly as provided in the input; do not "
                         "alter them in any way. Column names are identifiers that "
-                        "must match the database schema precisely."
+                        "must match the database schema precisely. IMPORTANT: "
+                        "Privacy-protected values (including [PII_PLACEHOLDER:xxxxxxxx], "
+                        "[REDACTED], or masked values) are temporary placeholders, not "
+                        "actual data - focus on the column's business meaning from "
+                        "context, not these placeholder values."
                     ),
                 },
                 {"role": "user", "content": prompt},

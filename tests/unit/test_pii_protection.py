@@ -69,7 +69,7 @@ def test_sanitize_value_hash():  # Sanitization logic
     result = detector._sanitize_value(
         "test@example.com", detector._detect_pii_in_value("test@example.com")
     )
-    assert result.startswith("[HASH:")
+    assert result.startswith("[PII_PLACEHOLDER:")
 
 
 def test_sanitize_value_mask():
@@ -190,7 +190,7 @@ class TestPIIDetector:
 
         assert len(result["sample_rows"]) == 2
         # Email should be hashed
-        assert result["sample_rows"][0][0].startswith("[HASH:")
+        assert result["sample_rows"][0][0].startswith("[PII_PLACEHOLDER:")
         # Age should remain unchanged
         assert result["sample_rows"][0][1] == 25
 

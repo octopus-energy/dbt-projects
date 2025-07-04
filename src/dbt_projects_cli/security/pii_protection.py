@@ -340,7 +340,7 @@ class PIIDetector:
 
         value_str = str(value)
         hash_obj = hashlib.sha256(value_str.encode())
-        return f"[HASH:{hash_obj.hexdigest()[:8]}]"
+        return f"[PII_PLACEHOLDER:{hash_obj.hexdigest()[:8]}]"
 
     def _mask_value(self, value: Any, pii_types: Set[PIIType]) -> Optional[str]:
         """Mask the value while preserving some structure."""

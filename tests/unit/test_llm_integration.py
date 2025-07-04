@@ -120,6 +120,161 @@ class TestLLMDescriptionGenerator:
         assert "expand and improve" in prompt
 
     @patch("openai.OpenAI")
+    def test_build_description_prompt_with_hash_pii_protection(self, mock_openai):
+        """Test building description prompt with hash-based PII protection."""
+        generator = LLMDescriptionGenerator(provider=LLMProvider.OPENAI)
+
+        context = ModelContext(
+            name="test_model",
+            sql_content="SELECT * FROM source_table",
+        )
+
+        # Mock sample data with hash PII protection applied
+        mock_sample_data = {
+            "source_table": "catalog.schema.table",
+            "sample_rows": [
+                {"user_id": "123", "name": "[PII_PLACEHOLDER:abc12345]"},
+                {"user_id": "456", "name": "[PII_PLACEHOLDER:def67890]"},
+            ],
+            "pii_protection": {
+                "protection_applied": True,
+                "method": "hash",
+                "high_risk_columns": 1,
+            },
+        }
+
+        with patch.object(
+            generator, "_get_databricks_sample_data", return_value=mock_sample_data
+        ):
+            prompt = generator._build_description_prompt(context, expand_existing=True)
+
+        # Check that hash-specific PII context is included
+        assert "PII_PLACEHOLDER:xxxxxxxx" in prompt
+        assert "temporary placeholders created for this analysis only" in prompt
+        assert "NOT actual values stored in the database" in prompt
+        assert "describe the column's actual business purpose" in prompt
+        assert "hashed identifiers" in prompt
+
+        # Check that the actual placeholder values are present
+        assert "[PII_PLACEHOLDER:abc12345]" in prompt
+        assert "[PII_PLACEHOLDER:def67890]" in prompt
+
+        # Check that critical instruction about all protection types is included
+        assert "Privacy-protected values in sample data" in prompt
+        assert "temporary placeholders, NOT actual database values" in prompt
+
+    @patch("openai.OpenAI")
+    def test_build_description_prompt_with_mask_pii_protection(self, mock_openai):
+        """Test building description prompt with mask-based PII protection."""
+        generator = LLMDescriptionGenerator(provider=LLMProvider.OPENAI)
+
+        context = ModelContext(
+            name="test_model",
+            sql_content="SELECT * FROM source_table",
+        )
+
+        # Mock sample data with mask PII protection applied
+        mock_sample_data = {
+            "source_table": "catalog.schema.table",
+            "sample_rows": [
+                {"user_id": "123", "email": "t***@e******.com"},
+                {"user_id": "456", "phone": "**********67"},
+            ],
+            "pii_protection": {
+                "protection_applied": True,
+                "method": "mask",
+                "high_risk_columns": 2,
+            },
+        }
+
+        with patch.object(
+            generator, "_get_databricks_sample_data", return_value=mock_sample_data
+        ):
+            prompt = generator._build_description_prompt(context, expand_existing=True)
+
+        # Check that mask-specific PII context is included
+        assert "masked (e.g., 't***@e******.com'" in prompt
+        assert "'**********67')" in prompt
+        assert "privacy protection during this analysis" in prompt
+        assert "NOT the actual values stored in the database" in prompt
+        assert "Do not describe these as 'masked'" in prompt
+
+        # Check that the actual masked values are present
+        assert "t***@e******.com" in prompt
+        assert "**********67" in prompt
+
+    @patch("openai.OpenAI")
+    def test_build_description_prompt_with_exclude_pii_protection(self, mock_openai):
+        """Test building description prompt with exclude-based PII protection."""
+        generator = LLMDescriptionGenerator(provider=LLMProvider.OPENAI)
+
+        context = ModelContext(
+            name="test_model",
+            sql_content="SELECT * FROM source_table",
+        )
+
+        # Mock sample data with exclude PII protection applied
+        mock_sample_data = {
+            "source_table": "catalog.schema.table",
+            "sample_rows": [
+                {"user_id": "123", "email": "[REDACTED]"},
+                {"user_id": "456", "ssn": "[REDACTED]"},
+            ],
+            "pii_protection": {
+                "protection_applied": True,
+                "method": "exclude",
+                "high_risk_columns": 2,
+            },
+        }
+
+        with patch.object(
+            generator, "_get_databricks_sample_data", return_value=mock_sample_data
+        ):
+            prompt = generator._build_description_prompt(context, expand_existing=True)
+
+        # Check that exclude-specific PII context is included
+        assert "Values showing '[REDACTED]'" in prompt
+        assert "privacy-protected placeholders" in prompt
+        assert "NOT actual values stored in the database" in prompt
+        assert "Do not describe these as 'redacted'" in prompt
+
+        # Check that the actual redacted values are present
+        assert "[REDACTED]" in prompt
+
+    @patch("openai.OpenAI")
+    def test_build_description_prompt_with_unknown_pii_protection(self, mock_openai):
+        """Test building description prompt with unknown PII protection method."""
+        generator = LLMDescriptionGenerator(provider=LLMProvider.OPENAI)
+
+        context = ModelContext(
+            name="test_model",
+            sql_content="SELECT * FROM source_table",
+        )
+
+        # Mock sample data with unknown PII protection method
+        mock_sample_data = {
+            "source_table": "catalog.schema.table",
+            "sample_rows": [
+                {"user_id": "123", "data": "some_protected_value"},
+            ],
+            "pii_protection": {
+                "protection_applied": True,
+                "method": "custom_method",
+                "high_risk_columns": 1,
+            },
+        }
+
+        with patch.object(
+            generator, "_get_databricks_sample_data", return_value=mock_sample_data
+        ):
+            prompt = generator._build_description_prompt(context, expand_existing=True)
+
+        # Check that generic PII context is included for unknown methods
+        assert "privacy-protected placeholders" in prompt
+        assert "NOT actual values stored in the database" in prompt
+        assert "Focus on describing the column's actual business purpose" in prompt
+
+    @patch("openai.OpenAI")
     def test_parse_response_valid(self, mock_openai):
         """Test parsing valid LLM response."""
         generator = LLMDescriptionGenerator(provider=LLMProvider.OPENAI)
