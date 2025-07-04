@@ -380,6 +380,20 @@ class ModelParser:
             # Simple string that doesn't need quoting
             return f"'{text}'"
 
+    def _escape_yaml_value(self, value: Any) -> str:
+        """Properly escape any YAML value, including special dbt tags."""
+        if isinstance(value, str):
+            # Check if it's a special dbt tag (starts with ! and contains ^)
+            if value.startswith("!") and "^" in value:
+                # Quote the entire tag to preserve it as-is
+                return f'"{value}"'
+            else:
+                # Use regular string escaping
+                return self._escape_yaml_string(value)
+        else:
+            # For non-string values, convert to string
+            return str(value)
+
     def _write_yaml_with_proper_indentation(self, file_handle: Any, data: Any) -> None:
         """Write YAML with proper dbt-style indentation using template approach."""
 
@@ -434,13 +448,19 @@ class ModelParser:
                         if key == "meta" and isinstance(value, dict):
                             file_handle.write("      meta:\n")
                             for meta_key, meta_value in value.items():
-                                file_handle.write(f"        {meta_key}: {meta_value}\n")
+                                # Properly escape meta values with special chars
+                                escaped_value = self._escape_yaml_value(meta_value)
+                                file_handle.write(
+                                    f"        {meta_key}: {escaped_value}\n"
+                                )
                         elif key == "tags" and isinstance(value, list):
                             file_handle.write("      tags:\n")
                             for tag in value:
                                 file_handle.write(f"        - {tag}\n")
                         else:
-                            file_handle.write(f"      {key}: {value}\n")
+                            # Properly escape all config values
+                            escaped_value = self._escape_yaml_value(value)
+                            file_handle.write(f"      {key}: {escaped_value}\n")
 
                 # Add blank line between models
                 file_handle.write("\n")

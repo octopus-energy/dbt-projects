@@ -323,7 +323,7 @@ class TestPIIDetector:
         # Hash method
         detector = PIIDetector(anonymization_method="hash")
         result = detector._sanitize_value("test@example.com", analysis)
-        assert result.startswith("[HASH:")
+        assert result.startswith("[PII_PLACEHOLDER:")
 
         # Mask method
         detector = PIIDetector(anonymization_method="mask")
@@ -360,8 +360,8 @@ class TestPIIDetector:
 
         # Normal value
         result = detector._hash_value("test_value")
-        assert result.startswith("[HASH:")
-        assert len(result) == 15  # [HASH: + 8 chars + ]
+        assert result.startswith("[PII_PLACEHOLDER:")
+        assert len(result) == 26  # [PII_PLACEHOLDER: + 8 chars + ]
 
         # None value
         result = detector._hash_value(None)

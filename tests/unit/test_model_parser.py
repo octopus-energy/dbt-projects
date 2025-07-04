@@ -173,6 +173,23 @@ class TestModelParser:
         result = self.parser._escape_yaml_string("")
         assert result == "''"
 
+    def test_escape_yaml_value_dbt_tag(self):
+        """Test YAML value escaping for dbt tags with special characters."""
+        # Test dbt team tag with caret character
+        result = self.parser._escape_yaml_value("!subteam^S02GPV1135F")
+        assert result == '"!subteam^S02GPV1135F"'
+
+        # Test regular string without special dbt tag syntax
+        result = self.parser._escape_yaml_value("regular string")
+        assert result == "'regular string'"
+
+        # Test non-string values
+        result = self.parser._escape_yaml_value(123)
+        assert result == "123"
+
+        result = self.parser._escape_yaml_value(True)
+        assert result == "True"
+
     def test_is_valid_column_name_valid(self):
         """Test valid column name validation."""
         assert self.parser._is_valid_column_name("valid_column")
@@ -264,3 +281,40 @@ class TestModelParser:
             assert "Test model description" in content
             assert "col1" in content
             assert "Column 1 description" in content
+
+    def test_yaml_write_with_dbt_tags(self):
+        """Test YAML writing with dbt tags containing special characters."""
+        test_data = {
+            "version": 2,
+            "models": [
+                {
+                    "name": "test_model",
+                    "description": "Test model",
+                    "config": {
+                        "meta": {
+                            "owner": "test@example.com",
+                            "team_owner": "!subteam^S02GPV1135F",
+                        },
+                        "group": "test_group",
+                        "access": "private",
+                    },
+                }
+            ],
+        }
+
+        schema_file = self.temp_dir / "_models.yml"
+        with open(schema_file, "w") as f:
+            self.parser._write_yaml_with_proper_indentation(f, test_data)
+
+        # Verify the file can be parsed by standard YAML parser
+        with open(schema_file, "r") as f:
+            parsed_data = yaml.safe_load(f)
+
+        # Verify the tag value is preserved correctly
+        team_owner = parsed_data["models"][0]["config"]["meta"]["team_owner"]
+        assert team_owner == "!subteam^S02GPV1135F"
+
+        # Verify the content has proper quotes
+        with open(schema_file, "r") as f:
+            content = f.read()
+            assert '"!subteam^S02GPV1135F"' in content
