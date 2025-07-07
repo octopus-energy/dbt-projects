@@ -10,7 +10,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from .commands import descriptions, migrate, models, projects, scaffold, utils
+from .commands import descriptions, fabric, migrate, models, projects, scaffold, utils
 
 console = Console()
 
@@ -75,6 +75,7 @@ def info() -> None:
 
 # Add command groups
 cli.add_command(descriptions.descriptions)
+cli.add_command(fabric.fabric)
 cli.add_command(projects.projects)
 cli.add_command(models.models)
 cli.add_command(utils.utils)

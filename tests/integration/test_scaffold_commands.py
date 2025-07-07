@@ -46,6 +46,8 @@ class TestScaffoldCommands:
                 "test-data",
                 "--description",
                 "Test source-aligned package",
+                "--group-from-catalog",
+                "data_platform",
             ],
         )
 
@@ -86,6 +88,8 @@ class TestScaffoldCommands:
                 "customer-analytics",
                 "--description",
                 "Test consumer-aligned package",
+                "--group-from-catalog",
+                "marketing",
             ],
         )
 
@@ -133,6 +137,8 @@ class TestScaffoldCommands:
                 "test-utils",
                 "--description",
                 "Test utils package",
+                "--group-from-catalog",
+                "data_platform",
             ],
         )
 
@@ -172,6 +178,8 @@ class TestScaffoldCommands:
                 "test-data",
                 "--description",
                 "Test source-aligned package",
+                "--group-from-catalog",
+                "data_platform",
             ],
         )
         assert result.exit_code == 0
@@ -190,6 +198,8 @@ class TestScaffoldCommands:
                 "test-data",
                 "--description",
                 "Test duplicate package",
+                "--group-from-catalog",
+                "data_platform",
             ],
         )
         assert result.exit_code == 1

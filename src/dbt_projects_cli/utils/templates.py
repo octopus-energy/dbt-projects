@@ -13,11 +13,13 @@ def get_template_path(template_name: str) -> Path:
 def load_template(template_name: str) -> str:
     """Load a template file and return its contents as a string."""
     template_path = get_template_path(template_name)
-    
+
     if not template_path.exists():
-        raise FileNotFoundError(f"Template '{template_name}' not found at {template_path}")
-    
-    with open(template_path, 'r', encoding='utf-8') as f:
+        raise FileNotFoundError(
+            f"Template '{template_name}' not found at {template_path}"
+        )
+
+    with open(template_path, "r", encoding="utf-8") as f:
         return f.read()
 
 
@@ -31,5 +33,5 @@ def load_template_safe(template_name: str, fallback: Optional[str] = None) -> st
 
 # Template name constants for easier refactoring
 SCHEMA_EXAMPLE = "schema_example.yml"
-MULTI_FABRIC_EXAMPLE = "multi_fabric_example.json" 
+MULTI_FABRIC_EXAMPLE = "multi_fabric_example.json"
 PROFILES_EXAMPLE = "profiles_example.yml"
