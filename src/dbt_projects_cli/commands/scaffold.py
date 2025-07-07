@@ -12,6 +12,7 @@ from rich.prompt import Confirm, Prompt
 from rich.table import Table
 
 from dbt_projects_cli.core.template_engine import create_template_engine
+from dbt_projects_cli.core.group_catalog import get_group_config, GroupCatalog
 
 console = Console()
 
@@ -161,21 +162,73 @@ def info() -> None:
 @click.option("--business-area", help="Business area (for consumer-aligned domains)")
 @click.option("--domain-name", help="Domain or use case name")
 @click.option("--description", "-d", help="Description of the domain package")
+@click.option("--group-name", help="Name of the dbt group")
+@click.option("--group-description", help="Description of the group")
+@click.option("--group-owner", help="Name of the group owner")
+@click.option("--group-email", help="Email of the group owner")
+@click.option("--group-team", help="Team associated with the group")
+@click.option("--group-contact", help="Contact information for the group")
+@click.option("--group-from-catalog", help="Use existing group from catalog by name")
 def domain(
     alignment: Optional[str],
     source_system: Optional[str],
     business_area: Optional[str],
     domain_name: Optional[str],
     description: Optional[str],
+    group_name: Optional[str],
+    group_description: Optional[str],
+    group_owner: Optional[str],
+    group_email: Optional[str],
+    group_team: Optional[str],
+    group_contact: Optional[str],
+    group_from_catalog: Optional[str],
 ) -> None:
     """Create a new domain-aligned package following data mesh principles.
 
+    The dbt-cli now supports configurable group content with a persistent catalog system.
+    Groups can be shared and reused across packages, configured via CLI arguments, catalog
+    selection, or interactive prompts.
+
+    KEY FEATURES:
+    - Group Catalog: Persistent storage of reusable group configurations
+    - Multiple Input Methods: CLI args, catalog selection, or interactive prompts  
+    - Automatic Catalog Growth: New groups are automatically saved for reuse
+    - Configurable Templates: Dynamic _group.yml generation with real group data
+
+    GROUP PRIORITY SYSTEM:
+    1. CLI arguments (highest priority) - All required fields provided
+    2. Catalog selection - Use --group-from-catalog <group_name>
+    3. Interactive prompts - Default behavior with group selection menu
+
+    AVAILABLE CLI GROUP OPTIONS:
+    --group-name               Name of the dbt group
+    --group-description        Description of the group
+    --group-owner              Name of the group owner
+    --group-email              Email of the group owner
+    --group-team               Team associated with the group (optional)
+    --group-contact            Contact information for the group (optional)
+    --group-from-catalog       Use existing group from catalog by name
+
     Examples:
+        # Use existing group from catalog
         dbt-cli scaffold domain --alignment source-aligned \
-            --source-system databricks --domain-name systems-data
+            --source-system databricks --domain-name systems-data \
+            --group-from-catalog data_platform
+        
+        # Create custom group via CLI args
         dbt-cli scaffold domain --alignment consumer-aligned \
-            --business-area marketing --domain-name customer-analytics
+            --business-area marketing --domain-name customer-analytics \
+            --group-name marketing --group-description "Marketing analytics team" \
+            --group-owner "Marketing Team" --group-email "marketing@octopusenergy.com" \
+            --group-team "Marketing" --group-contact "Marketing Team Lead"
+        
+        # Interactive group selection (default behavior)
         dbt-cli scaffold domain --alignment utils --domain-name core
+        # Will show available groups and "Create new group" option
+
+    View catalog:
+        dbt-cli scaffold groups          # Show detailed group table
+        dbt-cli scaffold groups --help   # Show comprehensive help
     """
 
     # Show guidance if no alignment specified
@@ -305,12 +358,30 @@ def domain(
         f"at {package_path}[/bold green]"
     )
 
+    # Get group configuration from various sources
+    group_config = get_group_config(
+        group_name=group_name,
+        group_description=group_description, 
+        group_owner=group_owner,
+        group_email=group_email,
+        group_team=group_team,
+        group_contact=group_contact,
+        group_from_catalog=group_from_catalog,
+        interactive=True
+    )
+
     # Create the domain package structure with full context for templates
     template_context = {
         "package_name": package_name,
         "alignment": alignment,
         "domain_name": domain_name,
         "description": description or f"Data domain package for {alignment} alignment",
+        "group_name": group_config.name,
+        "group_description": group_config.description,
+        "owner_name": group_config.owner_name,
+        "owner_email": group_config.owner_email,
+        "group_team": group_config.team,
+        "group_contact": group_config.contact,
     }
 
     # Add alignment-specific context
@@ -318,27 +389,18 @@ def domain(
         template_context.update(
             {
                 "source_system": source_system,
-                "group_name": source_system,
-                "group_description": (
-                    f"{(source_system or 'unknown').title()} system data group"
-                ),
             }
         )
     elif alignment == "consumer-aligned":
         template_context.update(
             {
                 "business_area": business_area,
-                "group_name": business_area,
-                "group_description": (
-                    f"{(business_area or 'unknown').title()} analytics group"
-                ),
             }
         )
     elif alignment == "utils":
         template_context.update(
             {
-                "group_name": "data_platform",
-                "group_description": "Data platform utilities group",
+                # utils-specific context can be added here if needed
             }
         )
 
@@ -418,6 +480,99 @@ def fabric(
     console.print(f"  1. cd {fabric_path}")
     console.print("  2. Configure your Databricks connection")
     console.print("  3. Start building your models in models/")
+
+
+@scaffold.command()
+def groups() -> None:
+    """View and manage the group catalog used for configurable dbt scaffolding.
+    
+    The group catalog allows you to store and manage reusable configurations that
+    can be used to scaffold new dbt packages with consistent settings. This is
+    helpful for standardizing group configurations across different packages, 
+    maintaining consistency, and improving collaboration within teams.
+
+    🔧 CONFIGURABLE GROUP SYSTEM
+
+    The dbt-cli supports configurable group content during package scaffolding 
+    with a persistent catalog system. Groups can be shared and reused across 
+    packages, improving consistency and team collaboration.
+
+    KEY FEATURES:
+    📚 Group Catalog: Persistent storage of reusable group configurations
+    🔄 Multiple Input Methods: CLI args, catalog selection, or interactive prompts
+    📈 Automatic Catalog Growth: New groups are automatically saved for reuse
+    🔧 Configurable Templates: Dynamic _group.yml generation with real group data
+
+    PRIORITY SYSTEM:
+    The system follows this priority order:
+    1. CLI arguments (highest priority) - All required fields provided
+    2. Catalog selection - Use --group-from-catalog <group_name>
+    3. Interactive prompts - Default behavior with group selection menu
+
+    CLI GROUP OPTIONS (for 'scaffold domain' command):
+    --group-name               Name of the dbt group
+    --group-description        Description of the group
+    --group-owner              Name of the group owner
+    --group-email              Email of the group owner
+    --group-team               Team associated with the group (optional)
+    --group-contact            Contact information for the group (optional)
+    --group-from-catalog       Use existing group from catalog by name
+
+    USAGE EXAMPLES:
+
+    1. Use existing group from catalog:
+       dbt-cli scaffold domain --alignment source-aligned \
+           --source-system databricks --domain-name systems-data \
+           --group-from-catalog data_platform
+
+    2. Create custom group via CLI args:
+       dbt-cli scaffold domain --alignment consumer-aligned \
+           --business-area marketing --domain-name customer-analytics \
+           --group-name marketing --group-description 'Marketing analytics team' \
+           --group-owner 'Marketing Team' --group-email 'marketing@octopusenergy.com'
+
+    3. Interactive group selection (default):
+       dbt-cli scaffold domain --alignment utils --domain-name core
+       # Will prompt with numbered list of available groups plus 'Create new group' option
+
+    4. View catalog groups:
+       dbt-cli scaffold groups          # Show detailed group table
+
+    GENERATED _group.yml STRUCTURE:
+    The system generates configurable groups/_group.yml files with this structure:
+
+    version: 2
+    groups:
+      - name: marketing
+        owner:
+          name: "Marketing Team"
+          email: "marketing@octopusenergy.com"
+        description: |
+          Marketing analytics and campaign data
+        config:
+          meta:
+            team: "Marketing"
+            contact: "Marketing Team Lead"
+
+    BENEFITS:
+    ✅ Eliminates Manual Cleanup: No more editing hardcoded group content after scaffolding
+    ♻️ Promotes Reuse: Teams build up a shared catalog of group configurations over time
+    🎯 Reduces Duplication: Same group can be used across multiple packages
+    📈 Automatic Growth: Catalog grows organically as teams create new groups
+    🔀 Multiple Workflows: Supports both quick CLI usage and interactive exploration
+
+    STORAGE LOCATIONS (priority order):
+    1. groups-catalog.yml        # Project level (committed with repo)
+    2. .dbt/groups.yml          # Project .dbt folder
+    3. ~/dbt-groups.yml         # User level (visible in home directory)
+    4. ~/.dbt-cli/groups.yml    # User level (hidden folder)
+    
+    The system automatically uses the highest priority catalog found.
+    New catalogs are created at project level by default.
+    """
+    # Show the catalog table
+    catalog = GroupCatalog()
+    catalog.show_catalog()
 
 
 def _create_package_structure(
