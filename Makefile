@@ -37,20 +37,13 @@ sync: ## Install dependencies as per the lock file
 # Testing
 .PHONY: test test-unit test-integration test-migration test-template test-coverage test-fast
 
-test: ## Run all tests
-	pipenv run pytest -v
+test: test-unit test-integration ## Run all tests
 
 test-unit: ## Run unit tests only
 	pipenv run pytest tests/unit -v --tb=short
 
 test-integration: ## Run integration tests only
 	pipenv run pytest tests/integration -v --tb=short
-
-test-migration: ## Run migration tests only
-	pipenv run pytest tests/integration/test_migration_commands.py -v --tb=short
-
-test-template: ## Run template engine tests only
-	pipenv run pytest tests/unit/test_template_engine.py -v --tb=short
 
 test-coverage: ## Run tests with coverage report
 	pipenv run pytest --cov=src/dbt_projects_cli --cov-report=html --cov-report=term-missing
