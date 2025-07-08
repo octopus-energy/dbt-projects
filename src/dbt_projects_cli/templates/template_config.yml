@@ -139,7 +139,7 @@ templates:
             name: "{{ owner_name | default('Data Platform Team') }}"
             email: "{{ owner_email | default('data-platform@octopusenergy.com') }}"
           description: |
-            {{ group_description | default(alignment + ' domain for ' + package_name) }}
+            {{ group_description | default('Data domain for ' + package_name) }}
           config:
             meta:
               team: "{{ team_name | default('data_platform') }}"

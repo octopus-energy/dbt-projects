@@ -46,7 +46,7 @@ class TestScaffoldCommands:
                 "test-data",
                 "--description",
                 "Test source-aligned package",
-                "--group-from-catalog",
+                "--team-from-catalog",
                 "data_platform",
             ],
         )
@@ -88,7 +88,7 @@ class TestScaffoldCommands:
                 "customer-analytics",
                 "--description",
                 "Test consumer-aligned package",
-                "--group-from-catalog",
+                "--team-from-catalog",
                 "marketing",
             ],
         )
@@ -137,7 +137,7 @@ class TestScaffoldCommands:
                 "test-utils",
                 "--description",
                 "Test utils package",
-                "--group-from-catalog",
+                "--team-from-catalog",
                 "data_platform",
             ],
         )
@@ -178,7 +178,7 @@ class TestScaffoldCommands:
                 "test-data",
                 "--description",
                 "Test source-aligned package",
-                "--group-from-catalog",
+                "--team-from-catalog",
                 "data_platform",
             ],
         )

@@ -109,10 +109,10 @@ class TestScaffoldBasicCommands:
                 "--source-system", "salesforce",
                 "--domain-name", "customer_data",
                 "--description", "Customer data from Salesforce",
-                "--group-name", "data_team",
-                "--group-description", "Data team group",
-                "--group-owner", "data-team",
-                "--group-email", "data-team@company.com"
+                "--team-name", "data_team",
+                "--team-description", "Data team group",
+                "--team-owner", "data-team",
+                "--team-email", "data-team@company.com"
             ])
 
         assert result.exit_code == 0
@@ -129,10 +129,10 @@ class TestScaffoldBasicCommands:
                 "--business-area", "marketing",
                 "--domain-name", "customer_analytics",
                 "--description", "Customer analytics for marketing",
-                "--group-name", "marketing_team",
-                "--group-description", "Marketing team group",
-                "--group-owner", "marketing-team",
-                "--group-email", "marketing@company.com"
+                "--team-name", "marketing_team",
+                "--team-description", "Marketing team group",
+                "--team-owner", "marketing-team",
+                "--team-email", "marketing@company.com"
             ])
 
         assert result.exit_code == 0
@@ -148,10 +148,10 @@ class TestScaffoldBasicCommands:
                 "--alignment", "utils",
                 "--domain-name", "core",
                 "--description", "Core utilities",
-                "--group-name", "platform_team",
-                "--group-description", "Platform team group",
-                "--group-owner", "platform-team",
-                "--group-email", "platform@company.com"
+                "--team-name", "platform_team",
+                "--team-description", "Platform team group",
+                "--team-owner", "platform-team",
+                "--team-email", "platform@company.com"
             ])
 
         assert result.exit_code == 0
@@ -166,10 +166,12 @@ class TestScaffoldBasicCommands:
             "salesforce",      # source system
             "customers",       # domain name
             "Customer data from Salesforce",  # description
-            "data_team",       # group name
-            "Data Team",       # group description
-            "data-team",       # group owner
-            "data@company.com"
+            "data_team",       # team name
+            "Data Team",       # team description  
+            "database,analytics", # team domains
+            "data-team",       # team owner
+            "data@company.com", # team email
+            ""                  # team contact (optional)
         ]
         
         with runner.isolated_filesystem(temp_dir=tmp_path):
@@ -189,10 +191,10 @@ class TestScaffoldBasicCommands:
                 "--source-system", "salesforce",
                 "--domain-name", "customers",
                 "--description", "Customer data",
-                "--group-name", "test_group",
-                "--group-description", "Test group",
-                "--group-owner", "test-owner",
-                "--group-email", "test@example.com"
+                "--team-name", "test_group",
+                "--team-description", "Test group",
+                "--team-owner", "test-owner",
+                "--team-email", "test@example.com"
             ])
 
         # Test should succeed or fail gracefully

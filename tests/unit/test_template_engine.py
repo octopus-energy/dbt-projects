@@ -260,13 +260,22 @@ class TestConfigTemplateEngine:
     def test_generate_group_yml_content(self, template_engine):
         """Test group.yml generation with template content."""
         context = {
-            "group_name": "marketing",
+            "package_name": "marketing_customer_analytics",
+            "group_name": "marketing_customer_analytics",
             "group_description": "Marketing analytics group",
+            "owner_name": "Marketing Team",
+            "owner_email": "marketing@example.com",
+            "team_name": "marketing",
+            "team_description": "Marketing analytics team",
+            "team_contact": "Marketing Team Lead",
+            "team_domains": ["marketing", "campaigns"]
         }
 
         result = template_engine.generate_group_yml(context)
-        assert "marketing" in result
+        assert "marketing_customer_analytics" in result
         assert "Marketing analytics group" in result
+        assert "marketing" in result  # team name
+        assert "Marketing Team" in result  # owner name
 
     def test_get_migrations_returns_list(self, template_engine):
         """Test that get_migrations returns a list."""
