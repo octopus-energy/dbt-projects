@@ -67,7 +67,7 @@ templates:
       
       source-aligned:
         '{{ package_name }}':
-          +group: "{{ source_system | default('data_platform') }}"
+          +group: "{{ group_name }}"
           +schema: "{{ source_system }}"
           +materialized: table
           +access: public
@@ -79,7 +79,7 @@ templates:
       
       consumer-aligned:
         '{{ package_name }}':
-          +group: "{{ business_area | default('analytics') }}"
+          +group: "{{ group_name }}"
           +schema: "{{ business_area }}_{{ domain_name | replace('-', '_') }}"
           +materialized: table
           +access: public
@@ -95,7 +95,7 @@ templates:
       
       utils:
         '{{ package_name }}':
-          +group: data_platform
+          +group: "{{ group_name }}"
           +materialized: table
           +access: public
           +tags: ["{{ package_name }}", "utils"]
@@ -138,7 +138,14 @@ templates:
           owner:
             name: "{{ owner_name | default('Data Platform Team') }}"
             email: "{{ owner_email | default('data-platform@octopusenergy.com') }}"
-            description: "{{ group_description }}"
+          description: |
+            {{ group_description | default(alignment + ' domain for ' + package_name) }}
+          config:
+            meta:
+              team: "{{ team_name | default('data_platform') }}"
+              team_description: "{{ team_description | default('Data platform infrastructure and utilities') }}"
+              contact: "{{ team_contact }}"
+              domains: {{ team_domains | default(['databricks']) | tojson }}
 
 # Directory structure templates
 directory_structures:

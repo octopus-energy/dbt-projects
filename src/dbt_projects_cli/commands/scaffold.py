@@ -11,7 +11,7 @@ from rich.console import Console
 from rich.prompt import Confirm, Prompt
 from rich.table import Table
 
-from dbt_projects_cli.core.group_catalog import GroupCatalog, get_group_config
+from dbt_projects_cli.core.team_catalog import TeamCatalog, get_team_config
 from dbt_projects_cli.core.template_engine import create_template_engine
 
 console = Console()
@@ -162,77 +162,77 @@ def info() -> None:
 @click.option("--business-area", help="Business area (for consumer-aligned domains)")
 @click.option("--domain-name", help="Domain or use case name")
 @click.option("--description", "-d", help="Description of the domain package")
-@click.option("--group-name", help="Name of the dbt group")
-@click.option("--group-description", help="Description of the group")
-@click.option("--group-owner", help="Name of the group owner")
-@click.option("--group-email", help="Email of the group owner")
-@click.option("--group-team", help="Team associated with the group")
-@click.option("--group-contact", help="Contact information for the group")
-@click.option("--group-from-catalog", help="Use existing group from catalog by name")
+@click.option("--team-name", help="Name of the team that owns this domain")
+@click.option("--team-description", help="Description of the team")
+@click.option("--team-domains", help="Comma-separated list of domains the team owns")
+@click.option("--team-owner", help="Name of the team owner")
+@click.option("--team-email", help="Email of the team owner")
+@click.option("--team-contact", help="Contact information for the team")
+@click.option("--team-from-catalog", help="Use existing team from catalog by name")
 def domain(
     alignment: Optional[str],
     source_system: Optional[str],
     business_area: Optional[str],
     domain_name: Optional[str],
     description: Optional[str],
-    group_name: Optional[str],
-    group_description: Optional[str],
-    group_owner: Optional[str],
-    group_email: Optional[str],
-    group_team: Optional[str],
-    group_contact: Optional[str],
-    group_from_catalog: Optional[str],
+    team_name: Optional[str],
+    team_description: Optional[str],
+    team_domains: Optional[str],
+    team_owner: Optional[str],
+    team_email: Optional[str],
+    team_contact: Optional[str],
+    team_from_catalog: Optional[str],
 ) -> None:
     """Create a new domain-aligned package following data mesh principles.
 
-    The dbt-cli now supports configurable group content with a persistent
-    catalog system. Groups can be shared and reused across packages, configured
-    via CLI arguments, catalog
-    selection, or interactive prompts.
+    The dbt-cli now supports team-based package creation where each package
+    gets its own unique group configuration, but the team information is 
+    managed through a teams catalog. This ensures domain isolation while
+    providing team ownership tracking.
 
     KEY FEATURES:
-    - Group Catalog: Persistent storage of reusable group configurations
+    - Team Catalog: Persistent storage of team configurations
+    - Unique Groups Per Package: Each package gets its own group (not shared)
+    - Team Ownership: Teams are assigned to group meta tags for tracking
     - Multiple Input Methods: CLI args, catalog selection, or interactive prompts
-    - Automatic Catalog Growth: New groups are automatically saved for reuse
-    - Configurable Templates: Dynamic _group.yml generation with real group data
 
-    GROUP PRIORITY SYSTEM:
+    TEAM PRIORITY SYSTEM:
     1. CLI arguments (highest priority) - All required fields provided
-    2. Catalog selection - Use --group-from-catalog <group_name>
-    3. Interactive prompts - Default behavior with group selection menu
+    2. Catalog selection - Use --team-from-catalog <team_name>
+    3. Interactive prompts - Default behavior with team selection menu
 
-    AVAILABLE CLI GROUP OPTIONS:
-    --group-name               Name of the dbt group
-    --group-description        Description of the group
-    --group-owner              Name of the group owner
-    --group-email              Email of the group owner
-    --group-team               Team associated with the group (optional)
-    --group-contact            Contact information for the group (optional)
-    --group-from-catalog       Use existing group from catalog by name
+    AVAILABLE CLI TEAM OPTIONS:
+    --team-name               Name of the team that owns this domain
+    --team-description        Description of the team
+    --team-domains            Comma-separated list of domains the team owns
+    --team-owner              Name of the team owner
+    --team-email              Email of the team owner
+    --team-contact            Contact information for the team (optional)
+    --team-from-catalog       Use existing team from catalog by name
 
     Examples:
-        # Use existing group from catalog
+        # Use existing team from catalog
         dbt-cli scaffold domain --alignment source-aligned \
             --source-system databricks --domain-name systems-data \
-            --group-from-catalog data_platform
+            --team-from-catalog data_platform
 
-        # Create custom group via CLI args
+        # Create custom team via CLI args
         dbt-cli scaffold domain --alignment consumer-aligned \
             --business-area marketing --domain-name customer-analytics \
-            --group-name marketing \
-            --group-description "Marketing analytics team" \
-            --group-owner "Marketing Team" \
-            --group-email "marketing@octopusenergy.com" \
-            --group-team "Marketing" \
-            --group-contact "Marketing Team Lead"
+            --team-name marketing \
+            --team-description "Marketing analytics team" \
+            --team-domains "marketing,campaigns" \
+            --team-owner "Marketing Team" \
+            --team-email "marketing@octopusenergy.com" \
+            --team-contact "Marketing Team Lead"
 
-        # Interactive group selection (default behavior)
+        # Interactive team selection (default behavior)
         dbt-cli scaffold domain --alignment utils --domain-name core
-        # Will show available groups and "Create new group" option
+        # Will show available teams and "Create new team" option
 
     View catalog:
-        dbt-cli scaffold groups          # Show detailed group table
-        dbt-cli scaffold groups --help   # Show comprehensive help
+        dbt-cli scaffold teams          # Show detailed team table
+        dbt-cli scaffold teams --help   # Show comprehensive help
     """
 
     # Show guidance if no alignment specified
@@ -362,17 +362,20 @@ def domain(
         f"at {package_path}[/bold green]"
     )
 
-    # Get group configuration from various sources
-    group_config = get_group_config(
-        group_name=group_name,
-        group_description=group_description,
-        group_owner=group_owner,
-        group_email=group_email,
-        group_team=group_team,
-        group_contact=group_contact,
-        group_from_catalog=group_from_catalog,
+    # Get team configuration from various sources
+    team_config = get_team_config(
+        team_name=team_name,
+        team_description=team_description,
+        team_domains=team_domains.split(',') if team_domains else None,
+        team_owner=team_owner,
+        team_email=team_email,
+        team_contact=team_contact,
+        team_from_catalog=team_from_catalog,
         interactive=True,
     )
+    
+    # Generate unique group name for this package (groups are not shared)
+    group_name = package_name
 
     # Create the domain package structure with full context for templates
     template_context = {
@@ -380,12 +383,14 @@ def domain(
         "alignment": alignment,
         "domain_name": domain_name,
         "description": description or f"Data domain package for {alignment} alignment",
-        "group_name": group_config.name,
-        "group_description": group_config.description,
-        "owner_name": group_config.owner_name,
-        "owner_email": group_config.owner_email,
-        "group_team": group_config.team,
-        "group_contact": group_config.contact,
+        "group_name": group_name,  # Unique group per package
+        "group_description": f"{alignment} domain for {package_name}",
+        "owner_name": team_config.owner_name,
+        "owner_email": team_config.owner_email,
+        "team_name": team_config.name,
+        "team_description": team_config.description,
+        "team_contact": team_config.contact,
+        "team_domains": team_config.domains,
     }
 
     # Add alignment-specific context
@@ -487,99 +492,97 @@ def fabric(
 
 
 @scaffold.command()
-def groups() -> None:
-    """View and manage the group catalog used for configurable dbt scaffolding.
+def teams() -> None:
+    """View and manage the teams catalog used for domain ownership tracking.
 
-    The group catalog allows you to store and manage reusable configurations that
-    can be used to scaffold new dbt packages with consistent settings. This is
-    helpful for standardizing group configurations across different packages,
-    maintaining consistency, and improving collaboration within teams.
+    The teams catalog allows you to store and manage team configurations that
+    are used for domain ownership tracking. Each package gets its own unique
+    group, but teams are tracked via the meta tag for organizational purposes.
 
-    🔧 CONFIGURABLE GROUP SYSTEM
+    🏢 TEAM-BASED OWNERSHIP SYSTEM
 
-    The dbt-cli supports configurable group content during package scaffolding
-    with a persistent catalog system. Groups can be shared and reused across
-    packages, improving consistency and team collaboration.
+    The dbt-cli supports team-based domain ownership where:
+    - Each package gets its own unique group (not shared)
+    - Teams own multiple domains/packages
+    - Team information is stored in group meta tags
+    - Teams catalog provides persistent team configurations
 
     KEY FEATURES:
-    📚 Group Catalog: Persistent storage of reusable group configurations
+    📚 Team Catalog: Persistent storage of team information
     🔄 Multiple Input Methods: CLI args, catalog selection, or interactive prompts
-    📈 Automatic Catalog Growth: New groups are automatically saved for reuse
-    🔧 Configurable Templates: Dynamic _group.yml generation with real group data
+    📈 Automatic Catalog Growth: New teams are automatically saved for reuse
+    🎯 Domain Isolation: Each package has unique group, preventing cross-domain access
+    🏢 Team Ownership: Teams are tracked in meta tags for organizational clarity
 
     PRIORITY SYSTEM:
     The system follows this priority order:
     1. CLI arguments (highest priority) - All required fields provided
-    2. Catalog selection - Use --group-from-catalog <group_name>
-    3. Interactive prompts - Default behavior with group selection menu
+    2. Catalog selection - Use --team-from-catalog <team_name>
+    3. Interactive prompts - Default behavior with team selection menu
 
-    CLI GROUP OPTIONS (for 'scaffold domain' command):
-    --group-name               Name of the dbt group
-    --group-description        Description of the group
-    --group-owner              Name of the group owner
-    --group-email              Email of the group owner
-    --group-team               Team associated with the group (optional)
-    --group-contact            Contact information for the group (optional)
-    --group-from-catalog       Use existing group from catalog by name
+    CLI TEAM OPTIONS (for 'scaffold domain' command):
+    --team-name               Name of the team that owns this domain
+    --team-description        Description of the team
+    --team-domains            Comma-separated list of domains the team owns
+    --team-owner              Name of the team owner
+    --team-email              Email of the team owner
+    --team-contact            Contact information for the team (optional)
+    --team-from-catalog       Use existing team from catalog by name
 
     USAGE EXAMPLES:
 
-    1. Use existing group from catalog:
+    1. Use existing team from catalog:
        dbt-cli scaffold domain --alignment source-aligned \
            --source-system databricks --domain-name systems-data \
-           --group-from-catalog data_platform
+           --team-from-catalog data_platform
 
-    2. Create custom group via CLI args:
+    2. Create custom team via CLI args:
        dbt-cli scaffold domain --alignment consumer-aligned \
            --business-area marketing --domain-name customer-analytics \
-           --group-name marketing \
-           --group-description 'Marketing analytics team' \
-           --group-owner 'Marketing Team' \
-           --group-email 'marketing@octopusenergy.com'
+           --team-name marketing \
+           --team-description 'Marketing analytics team' \
+           --team-domains 'marketing,campaigns' \
+           --team-owner 'Marketing Team' \
+           --team-email 'marketing@octopusenergy.com'
 
-    3. Interactive group selection (default):
+    3. Interactive team selection (default):
        dbt-cli scaffold domain --alignment utils --domain-name core
-       # Will prompt with numbered list of available groups plus
-       # 'Create new group' option
+       # Will prompt with numbered list of available teams plus
+       # 'Create new team' option
 
-    4. View catalog groups:
-       dbt-cli scaffold groups          # Show detailed group table
+    4. View catalog teams:
+       dbt-cli scaffold teams          # Show detailed team table
 
     GENERATED _group.yml STRUCTURE:
-    The system generates configurable groups/_group.yml files with this structure:
+    The system generates unique groups per package with team info in meta:
 
     version: 2
     groups:
-      - name: marketing
+      - name: marketing_customer_analytics  # Unique to this package
         owner:
           name: "Marketing Team"
           email: "marketing@octopusenergy.com"
         description: |
-          Marketing analytics and campaign data
+          Consumer-aligned domain for marketing_customer_analytics
         config:
           meta:
             team: "Marketing"
+            team_description: "Marketing analytics team"
             contact: "Marketing Team Lead"
+            domains: ["marketing", "campaigns"]
 
     BENEFITS:
-    ✅ Eliminates Manual Cleanup: No more editing hardcoded group content
-       after scaffolding
-    ♻️ Promotes Reuse: Teams build up a shared catalog of group configurations over time
-    🎯 Reduces Duplication: Same group can be used across multiple packages
-    📈 Automatic Growth: Catalog grows organically as teams create new groups
+    🎯 Domain Isolation: Each package has unique group preventing cross-access
+    🏢 Team Tracking: Clear team ownership via meta tags
+    ♻️ Team Reuse: Teams can be reused across multiple domains
+    📈 Automatic Growth: Catalog grows organically as teams create new domains
     🔀 Multiple Workflows: Supports both quick CLI usage and interactive exploration
 
-    STORAGE LOCATIONS (priority order):
-    1. groups-catalog.yml        # Project level (committed with repo)
-    2. .dbt/groups.yml          # Project .dbt folder
-    3. ~/dbt-groups.yml         # User level (visible in home directory)
-    4. ~/.dbt-cli/groups.yml    # User level (hidden folder)
-
-    The system automatically uses the highest priority catalog found.
-    New catalogs are created at project level by default.
+    STORAGE:
+    Teams catalog is stored at: teams-catalog.yml (project level)
     """
     # Show the catalog table
-    catalog = GroupCatalog()
+    catalog = TeamCatalog()
     catalog.show_catalog()
 
 
