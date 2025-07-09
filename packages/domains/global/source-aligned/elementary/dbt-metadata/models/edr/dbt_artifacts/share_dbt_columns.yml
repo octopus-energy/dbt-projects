@@ -1,26 +1,42 @@
-version: 2
 models:
-  - name: stg_information_schema_tables
-    config:
-      meta:
-        owner: 'evelyn.byer@octoenergy.com'
-        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
-      group: databricks
-      access: private
-    description: |
-      Tables from regional prod catalog information_schema
+  - name: share_dbt_columns
     columns:
-      - name: information_schema_tables_id
-        description: Primary key
-        meta:
-          dimension:
-            type: string
-      - name: table_catalog
+      - name: unique_id
         description: ""
         meta:
           dimension:
             type: string
-      - name: table_schema
+      - name: parent_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: meta
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
         description: ""
         meta:
           dimension:
@@ -30,57 +46,22 @@ models:
         meta:
           dimension:
             type: string
-      - name: table_type
+      - name: description
         description: ""
         meta:
           dimension:
             type: string
-      - name: is_insertable_into
+      - name: resource_type
         description: ""
         meta:
           dimension:
             type: string
-      - name: commit_action
+      - name: generated_at
         description: ""
         meta:
           dimension:
             type: string
-      - name: table_owner
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: comment
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: created
-        description: ""
-        meta:
-          dimension:
-            type: timestamp
-      - name: created_by
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: last_altered
-        description: ""
-        meta:
-          dimension:
-            type: timestamp
-      - name: last_altered_by
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: data_source_format
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: storage_sub_directory
+      - name: metadata_hash
         description: ""
         meta:
           dimension:

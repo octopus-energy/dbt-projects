@@ -36,39 +36,24 @@ models:
     +group: elementary
     +schema: elementary
     +access: private    
-  data_platform_elementary_client:
+  elementary_dbt_metadata:
     +group: elementary
     +schema: elementary
     +access: private
     tags:
-      - package:data_platform_elementary_client
+      - package:elementary_dbt_metadata
 
 seeds:
-  data_platform_elementary_client:
+  elementary_dbt_metadata:
     tags:
-      - package:data_platform_elementary_client
+      - package:elementary_dbt_metadata
 
 snapshots:
-  data_platform_elementary_client:
+  elementary_dbt_metadata:
     tags:
-      - package:data_platform_elementary_client
+      - package:elementary_dbt_metadata
 
 tests:
-  data_platform_elementary_client:
+  elementary_dbt_metadata:
     tags:
-      - package:data_platform_elementary_client  
-
-vars:
-  kraken_dbt:
-    fabric: 'severntrent-kap-prod'
-    local_adapter: 'databricks'
-    # Used for deploying docker images and services for the project. Should be deactivated in dbt packages designed for import elsewhere. 
-    run_deployment: 'false'
-  distant_future_timestamp: "to_utc_timestamp('2099-12-31 23:59:59','UTC')"
-  local_timezone: "UTC"
-  # Elementary Variables
-  disable_dbt_artifacts_autoupload: "{{ target.name != 'prod' }}"
-  disable_dbt_columns_autoupload: "{{ target.name != 'prod' }}"
-  disable_run_results: "{{ target.name != 'prod' }}"
-  disable_tests_results: "{{ target.name != 'prod' }}"
-  disable_dbt_invocation_autoupload: "{{ target.name != 'prod' }}"
+      - package:elementary_dbt_metadata  

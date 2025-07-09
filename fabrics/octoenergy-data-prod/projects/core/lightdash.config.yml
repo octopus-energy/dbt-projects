@@ -1,0 +1,49 @@
+spotlight:
+  default_visibility: show
+  categories:
+ # Categories for the Metric Spotlight feature of lightdash should be defined here. 
+  # List 1 - Data Sources: This section details the origin of the data used for each metric. It indicates where the information was sourced.
+    data_source_kraken:
+      label: "Data Source: Kraken"
+      color: "gray"
+    data_source_elementary:
+      label: "Data Source: Elementary"
+      color: "gray"
+    data_source_ink:
+      label: "Data Source: Ink"
+      color: "gray"
+    data_source_databricks:
+      label: "Data Source: Databricks"
+      color: "gray"
+    data_source_circleci:
+      label: "Data Source: CircleCI"
+      color: "gray"
+    data_source_github:
+      label: "Data Source: GitHub"
+      color: "gray"
+    data_source_slack:
+      label: "Data Source: Slack"
+      color: "gray"
+    data_source_hibob:
+      label: "Data Source: Hibob"
+      color: "gray"  
+  # List 2-  Databases - Analytics replicas 
+    database_krakencore:
+      label: "Database: KrakenCore"
+      color: "violet" 
+    database_ink:
+      label: "Database: Ink"
+      color: "violet"
+    database_voice:
+      label: "Database: Voice"
+      color: "violet"
+    database_messaging:
+      label: "Database: Messaging"
+      color: "violet"         
+  # List 3 - Verification Status: This section indicates the verification status of each metric, showing whether it has been verified or not.
+    verified:
+      label: "Verified"
+      color: "green"
+    unverified:
+      label: "Unverified"
+      color: "red"

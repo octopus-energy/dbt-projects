@@ -28,6 +28,7 @@ models:
       - staging
     macro_tests:
       +materialized: ephemeral
+      +access: private
       +tags:
       - utils_core
       - tests

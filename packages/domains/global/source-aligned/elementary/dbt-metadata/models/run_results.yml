@@ -10,10 +10,7 @@ models:
       spotlight:
         categories:
           - verified
-          - source_elementary
-          - product_analytics_engineering_platform
-          - domain_data_platform_observability
-          - domain_data_platform_performance
+          - data_source_elementary
     columns:
       - name: short_cosmos_invocation_id
         data_type: timestamp
@@ -23,7 +20,7 @@ models:
         meta:
           dimension:
             type: timestamp
-            time_intervals: ['DAY', 'WEEK', 'MONTH', 'YEAR', 'QUARTER', 'HOUR']
+            time_intervals: [ 'DAY', 'WEEK', 'MONTH', 'YEAR', 'QUARTER', 'HOUR' ]
       - name: run_started_at
         data_type: timestamp
         description: The minimum run started at.
@@ -83,10 +80,7 @@ models:
       spotlight:
         categories:
           - verified
-          - source_elementary
-          - product_analytics_engineering_platform  
-          - domain_data_platform_observability
-          - domain_data_platform_performance                       
+          - data_source_elementary
     columns:
       - name: invocation_id
         data_type: string
@@ -102,13 +96,13 @@ models:
         meta:
           dimension:
             type: timestamp
-            time_intervals: ['DAY', 'WEEK', 'MONTH', 'YEAR', 'QUARTER', 'HOUR']            
+            time_intervals: [ 'DAY', 'WEEK', 'MONTH', 'YEAR', 'QUARTER', 'HOUR' ]
       - name: run_started_at
         data_type: string
         description: Timestamp the invocation was started.
         meta:
           dimension:
-            type: timestamp
+            type: string
           metrics:
             min_run_started_at:
               description: |
@@ -120,7 +114,7 @@ models:
         description: Timestamp the invocation was completed
         meta:
           dimension:
-            type: timestamp
+            type: string
           metrics:
             max_run_completed_at:
               description: |
@@ -130,81 +124,141 @@ models:
       - name: generated_at
         data_type: string
         description: The time this invocation was uploaded to the database.
+        meta:
+          dimension:
+            type: string
       - name: command
         data_type: string
         description: dbt command that was used. For example, run.
+        meta:
+          dimension:
+            type: string
       - name: dbt_version
         data_type: string
         description: Version of dbt that was used in this invocation.
+        meta:
+          dimension:
+            type: string
       - name: elementary_version
         data_type: string
         description: Version of the elementary package that was used in this invocation.
+        meta:
+          dimension:
+            type: string
       - name: full_refresh
         data_type: boolean
         description: Whether or not this invocation was executed as a full-refresh.
+        meta:
+          dimension:
+            type: boolean
       - name: invocation_vars
         data_type: string
         description: >-
           Dictionary of the variables (and values) that were declared in the
           invocation.
+        meta:
+          dimension:
+            type: string
       - name: vars
         data_type: string
         description: >-
           Dictionary of all variables (and values) in the dbt project. If none
           were declared at runtime, these are the variables declared in
           dbt_project yml
+        meta:
+          dimension:
+            type: string
       - name: target_name
         data_type: string
         description: Name of the target used in this invocation.
+        meta:
+          dimension:
+            type: string
       - name: target_database
         data_type: string
         description: Name of the target database that was used in this invocation.
+        meta:
+          dimension:
+            type: string
       - name: target_schema
         data_type: string
         description: Name of the target schema that was used in this invocation.
+        meta:
+          dimension:
+            type: string
       - name: target_profile_name
         data_type: string
         description: Name of the dbt profile that was used in this invocation.
+        meta:
+          dimension:
+            type: string
       - name: threads
         data_type: integer
         description: >-
           Number of threads that were used to run this dbt invocation. (This
           number could impact the performance of a dbt invocation).
+        meta:
+          dimension:
+            type: number
       - name: selected
         data_type: string
         description: >-
           The selected resources in the dbt command. While this is a string in
           the database, this can easily be converted to an array.
+        meta:
+          dimension:
+            type: string
       - name: yaml_selector
         data_type: string
         description: The yaml selector that was passed in this invocation.
+        meta:
+          dimension:
+            type: string
       - name: job_id
         data_type: string
         description: >-
           The ID of a job, defined in the `job_id` var or in the `JOB_ID` env
           var or by the orchestrator (dbt Cloud, GitHub Actions, etc).
+        meta:
+          dimension:
+            type: string
       - name: job_name
         data_type: string
         description: >-
           The name of a job, defined in the `job_name` var or in the `JOB_NAME`
           env var.
+        meta:
+          dimension:
+            type: string
       - name: job_run_id
         data_type: string
         description: >-
           The run ID of a job, defined in the `job_run_id` var or in the
           `DBT_JOB_RUN_ID` env var or by the orchestrator (dbt Cloud, GitHub
           Actions, etc).
+        meta:
+          dimension:
+            type: string
       - name: env
         data_type: string
         description: The environment's name, defined in the `DBT_ENV` env var.
+        meta:
+          dimension:
+            type: string
       - name: env_id
         data_type: string
         description: The ID of an environment, defined in the `DBT_ENV_ID` env var.
+        meta:
+          dimension:
+            type: string
       - name: project_id
         data_type: string
         description: >-
           The ID of a project, defined in the `DBT_PROJECT_ID` env var or by the
           orchestrator (dbt Cloud, GitHub Actions, etc).
+        meta:
+          dimension:
+            type: string
       - name: cause_category
         data_type: string
         description: >
@@ -214,6 +268,9 @@ models:
 
           Defined in the `DBT_CAUSE_CATEGORY` env var or by the orchestrator
           (dbt Cloud, GitHub Actions, etc).
+        meta:
+          dimension:
+            type: string
       - name: cause
         data_type: string
         description: >
@@ -222,34 +279,52 @@ models:
 
           Defined in the `DBT_CAUSE` env var or by the orchestrator (dbt Cloud,
           GitHub Actions, etc).
+        meta:
+          dimension:
+            type: string
       - name: pull_request_id
         data_type: string
         description: >-
           The ID of a pull request, defined in the `DBT_PULL_REQUEST_ID` env var
           or by the orchestrator (dbt Cloud, GitHub Actions, etc).
+        meta:
+          dimension:
+            type: string
       - name: git_sha
         data_type: string
         description: >-
           The git SHA of the commit that was used in this invocation, defined in
           the `DBT_GIT_SHA` env var or by the orchestrator (dbt Cloud, GitHub
           Actions, etc).
+        meta:
+          dimension:
+            type: string
       - name: orchestrator
         data_type: string
         description: >-
           The orchestrator that was used to run this invocation, defined in the
           `orchestrator` var or in the `ORCHESTRATOR` env var or by the
           orchestrator env vars. For example, dbt Cloud, GitHub Actions, etc.
+        meta:
+          dimension:
+            type: string
       - name: job_url
         data_type: string
         description: >-
           The name of a job, defined in the `job_url` var or in the `JOB_URL`
           env var or by the orchestrator. For GitHub Actions orchestrator, the
           value is calculated.
+        meta:
+          dimension:
+            type: string
       - name: account_id
         data_type: string
         description: >-
           The ID of the account, defined in the `account_id` var or in the
           `ACCOUNT_ID` env var or by the orchestrator.
+        meta:
+          dimension:
+            type: string
       - name: target_adapter_specific_fields
         data_type: string
         description: >
@@ -257,10 +332,33 @@ models:
 
           For instance in Databricks, it contains the http_path of the
           warehouse.
+        meta:
+          dimension:
+            type: string
       - name: cosmos_invocation_id
         data_type: string
         description: |
           The invocation ID of the Cosmos job that triggered the dbt invocation.
+        meta:
+          dimension:
+            type: string
+      - name: created_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: project_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: dbt_user
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: job_run_url
+        description: ""
         meta:
           dimension:
             type: string
@@ -295,16 +393,16 @@ models:
       spotlight:
         categories:
           - verified
-          - source_elementary
-          - product_analytics_engineering_platform
-          - domain_data_platform_observability
-          - domain_data_platform_performance
+          - data_source_elementary
     columns:
       - name: model_execution_id
         data_type: string
         description: >-
           Execution id generated by joining the unique_id of the resource and
           the invocation_id. This is the unique key of each row in this model.
+        meta:
+          dimension:
+            type: string
       - name: unique_id
         data_type: string
         description: >-
@@ -324,6 +422,9 @@ models:
       - name: generated_at
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
       - name: name
         data_type: string
         description: Resource name.
@@ -333,6 +434,9 @@ models:
       - name: message
         data_type: string
         description: Execution results message returned by dbt.
+        meta:
+          dimension:
+            type: string
       - name: status
         data_type: string
         description: Execution result status (success, error, pass, fail)
@@ -356,12 +460,14 @@ models:
               label: Total duration of dbt nodes (minutes)
               type: sum
               sql: ${execution_time} / 60
+          dimension:
+            type: number
       - name: execute_started_at
         data_type: string
         description: Start time of the execution.
         meta:
           dimension:
-            type: timestamp
+            type: string
           metrics:
             min_node_started_at:
               description: |
@@ -373,7 +479,7 @@ models:
         description: End time of the execution.
         meta:
           dimension:
-            type: timestamp
+            type: string
           metrics:
             max_node_completed_at:
               description: |
@@ -383,31 +489,75 @@ models:
       - name: compile_completed_at
         data_type: string
         description: End time of resource compile action.
+        meta:
+          dimension:
+            type: string
       - name: rows_affected
         data_type: int
         description: ""
+        meta:
+          dimension:
+            type: number
       - name: full_refresh
         data_type: boolean
         description: Was this a full refresh execution.
+        meta:
+          dimension:
+            type: boolean
       - name: compiled_code
         data_type: string
         description: The compiled code (SQL / Python) executed against the database.
+        meta:
+          dimension:
+            type: string
       - name: failures
         data_type: int
         description: Number of failures in this run.
+        meta:
+          dimension:
+            type: number
       - name: query_id
         data_type: string
         description: >-
           Query ID in the data warehouse, if returned by the adapter (currently
           only supported in Snowflake, is null for any other adapter).
+        meta:
+          dimension:
+            type: string
       - name: thread_id
         data_type: string
         description: Id of the thread of this resource run.
+        meta:
+          dimension:
+            type: string
       - name: adapter_response
         data_type: string
         description: >-
           Response returned by the adapter (Fields will be different for each
           adapters).
+        meta:
+          dimension:
+            type: string
+      - name: created_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: compile_started_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: materialization
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: group_name
+        description: ""
+        meta:
+          dimension:
+            type: string
   - name: share_elementary_test_results
     description: >
       Run results of all dbt tests, with fields and metadata needed to produce
@@ -415,17 +565,476 @@ models:
       including native dbt tests, packages tests and elementary tests. New data
       is loaded to this model on an on-run-end hook named
       `elementary.handle_tests_results`.
+    columns:
+      - name: id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_issue_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_execution_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: model_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: invocation_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: detected_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: created_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_sub_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_results_description
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: owners
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_results_query
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: other
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_params
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: severity
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: status
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: failures
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: test_short_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_alias
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: result_rows
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: failed_row_count
+        description: ""
+        meta:
+          dimension:
+            type: number
   - name: share_model_run_results
     description: >
       Run results of dbt models, enriched with models metadata. Each row is the
       result of a single model. This is a view that joins data from
       `dbt_run_results` and `dbt_models`.
+    columns:
+      - name: model_execution_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: invocation_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: query_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: generated_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: status
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: full_refresh
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: message
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: execution_time
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: execute_started_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: execute_completed_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: compile_started_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: compile_completed_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: compiled_code
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: adapter_response
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: thread_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: group_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: materialization
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: package_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: original_path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: owner
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alias
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: model_invocation_reverse_index
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: is_the_first_invocation_of_the_day
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: is_the_last_invocation_of_the_day
+        description: ""
+        meta:
+          dimension:
+            type: boolean
   - name: share_snapshot_run_results
     description: >
       Run results of dbt snapshots, enriched with snapshots metadata. Each row
       is the result of a single snapshot. This is a view that joins data from
       `dbt_run_results` and `dbt_snapshots`.
+    columns:
+      - name: model_execution_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: invocation_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: query_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: generated_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: status
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: full_refresh
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: message
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: execution_time
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: execute_started_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: execute_completed_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: compile_started_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: compile_completed_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: compiled_code
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: adapter_response
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: thread_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: group_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: materialization
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: package_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: original_path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: owner
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alias
+        description: ""
+        meta:
+          dimension:
+            type: string
   - name: share_job_run_results
     description: >
       Run results of dbt invocations, enriched with jobs metadata. Each row is
       the result of a single job. This is a view on `dbt_invocations`.
+    columns:
+      - name: name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: run_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: run_started_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: run_completed_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: run_execution_time
+        description: ""
+        meta:
+          dimension:
+            type: number

@@ -3,6 +3,8 @@ groups:
   - name: databricks
     owner:
       name: Data Platform
-    config:
-      meta:
-        slack: data-platform
+      slack: data-platform
+      members:
+        - josh.elston-green@kraken.tech
+      subscribers:
+        - josh.elston-green@kraken.tech

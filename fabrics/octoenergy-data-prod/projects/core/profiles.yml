@@ -1,0 +1,11 @@
+octoenergy_data_prod:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      host: octoenergy-oeuk.cloud.databricks.com
+      catalog: octoenergy_data_prod_prod
+      http_path: /sql/1.0/warehouses/39b432db0d0811b4
+      schema: lightdash_testing
+      auth_type: token
+      token: '{{ env_var("DATABRICKS_TOKEN") }}'

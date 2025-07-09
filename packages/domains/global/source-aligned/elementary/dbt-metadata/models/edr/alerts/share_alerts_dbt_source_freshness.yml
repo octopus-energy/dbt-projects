@@ -1,116 +1,117 @@
-version: 2
 models:
-  - name: stg_system_information_schema_catalog_provider_share_usage
-    config:
-      meta:
-        owner: 'evelyn.byer@octoenergy.com'
-        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
-      group: databricks
-      access: private
-    description: |
-      Tables from system catalog information_schema
+  - name: share_alerts_dbt_source_freshness
     columns:
-      - name: information_schema_catalog_provider_share_usage_id
-        description: Primary key
-        meta:
-          dimension:
-            type: string
-      - name: catalog_name
+      - name: alert_id
         description: ""
         meta:
           dimension:
             type: string
-      - name: provider_name
+      - name: max_loaded_at
         description: ""
         meta:
           dimension:
             type: string
-      - name: share_name
+      - name: snapshotted_at
         description: ""
         meta:
           dimension:
             type: string
-  - name: stg_system_information_schema_tables
-    config:
-      meta:
-        owner: 'evelyn.byer@octoenergy.com'
-        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
-      group: databricks
-      access: private
-    description: |
-      Tables from system catalog information_schema
-    columns:
-      - name: information_schema_tables_id
-        description: Primary key
-        meta:
-          dimension:
-            type: string
-      - name: table_catalog
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: table_schema
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: table_name
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: table_type
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: is_insertable_into
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: commit_action
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: table_owner
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: comment
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: created
+      - name: detected_at
         description: ""
         meta:
           dimension:
             type: timestamp
-      - name: created_by
+      - name: max_loaded_at_time_ago_in_s
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: status
         description: ""
         meta:
           dimension:
             type: string
-      - name: last_altered
-        description: ""
-        meta:
-          dimension:
-            type: timestamp
-      - name: last_altered_by
+      - name: error
         description: ""
         meta:
           dimension:
             type: string
-      - name: data_source_format
+      - name: warn_after
         description: ""
         meta:
           dimension:
             type: string
-      - name: storage_sub_directory
+      - name: error_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: filter
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: source_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: identifier
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: meta
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: owner
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: package_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: freshness_error_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: freshness_warn_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: freshness_filter
         description: ""
         meta:
           dimension:

@@ -1,5 +1,2 @@
 packages:
-  - git: "https://{{ env_var('DBT_ENV_SECRET_GIT_CREDENTIAL') }}@github.com/octopus-energy/dbt-projects"
-    subdirectory: "packages/utils/core"
-    revision: main
-    warn-unpinned: false
+  - local: ./../../../../packages/utils/core

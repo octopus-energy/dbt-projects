@@ -13,28 +13,67 @@ models:
     columns:
       - name: record_id
         description: Primary key for the record
+        meta:
+          dimension:
+            type: string
       - name: account_id
         description: ID of the account this report was generated for
+        meta:
+          dimension:
+            type: string
       - name: workspace_id
         description: ID of the Workspace this usage was associated with
+        meta:
+          dimension:
+            type: string
       - name: sku_name
         description: Name of the SKU
+        meta:
+          dimension:
+            type: string
       - name: cloud
-        description: Cloud this usage is relevant for. Possible values are AWS, AZURE, and GCP.
+        description: Cloud this usage is relevant for. Possible values are AWS, AZURE,
+          and GCP.
+        meta:
+          dimension:
+            type: string
       - name: usage_start_time
         description: The start time relevant to this usage record
+        meta:
+          dimension:
+            type: timestamp
       - name: usage_end_time
         description: The start time relevant to this usage record
+        meta:
+          dimension:
+            type: timestamp
       - name: usage_date
-        description: Date of the usage record, this field can be used for faster aggregation by date
+        description: Date of the usage record, this field can be used for faster
+          aggregation by date
+        meta:
+          dimension:
+            type: date
       - name: custom_tags
         description: Tags applied by the users to this usage
+        meta:
+          dimension:
+            type: string
       - name: usage_unit
         description: Unit this usage is measured in. Possible values include DBUs.
+        meta:
+          dimension:
+            type: string
       - name: usage_quantity
         description: Number of units consumed for this record.
+        meta:
+          dimension:
+            type: number
       - name: usage_metadata
-        description: System-provided metadata about the usage, including IDs for compute resources and jobs (if applicable).
+        description: System-provided metadata about the usage, including IDs for compute
+          resources and jobs (if applicable).
+        meta:
+          dimension:
+            type: string
   - name: stg_databricks_prices
     config:
       meta:
@@ -47,19 +86,47 @@ models:
     columns:
       - name: price_id
         description: Primary key for the record
+        meta:
+          dimension:
+            type: string
       - name: account_id
         description: ID of the account this report was generated for
+        meta:
+          dimension:
+            type: string
       - name: price_start_time
         description: Date when this price starts being valid
-      - name: price_ends_time
-        description: Date when this price stops being valid
-      - name: price_ends_time
-        description: Date when this price stops being valid
+        meta:
+          dimension:
+            type: timestamp
       - name: sku_name
         description: Name of the SKU
+        meta:
+          dimension:
+            type: string
       - name: cloud
-        description: Cloud this usage is relevant for. Possible values are AWS, AZURE, and GCP.
+        description: Cloud this usage is relevant for. Possible values are AWS, AZURE,
+          and GCP.
+        meta:
+          dimension:
+            type: string
       - name: currency_code
         description: Currency used for the pricing
+        meta:
+          dimension:
+            type: string
       - name: price
         description: cost per dbu
+        meta:
+          dimension:
+            type: number
+      - name: price_end_time
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: usage_unit
+        description: ""
+        meta:
+          dimension:
+            type: string

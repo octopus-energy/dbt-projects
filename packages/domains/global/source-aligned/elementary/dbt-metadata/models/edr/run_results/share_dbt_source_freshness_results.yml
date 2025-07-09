@@ -1,86 +1,87 @@
-version: 2
 models:
-  - name: stg_information_schema_tables
-    config:
-      meta:
-        owner: 'evelyn.byer@octoenergy.com'
-        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
-      group: databricks
-      access: private
-    description: |
-      Tables from regional prod catalog information_schema
+  - name: share_dbt_source_freshness_results
     columns:
-      - name: information_schema_tables_id
-        description: Primary key
-        meta:
-          dimension:
-            type: string
-      - name: table_catalog
+      - name: source_freshness_execution_id
         description: ""
         meta:
           dimension:
             type: string
-      - name: table_schema
+      - name: unique_id
         description: ""
         meta:
           dimension:
             type: string
-      - name: table_name
+      - name: max_loaded_at
         description: ""
         meta:
           dimension:
             type: string
-      - name: table_type
+      - name: snapshotted_at
         description: ""
         meta:
           dimension:
             type: string
-      - name: is_insertable_into
+      - name: generated_at
         description: ""
         meta:
           dimension:
             type: string
-      - name: commit_action
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: table_owner
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: comment
-        description: ""
-        meta:
-          dimension:
-            type: string
-      - name: created
+      - name: created_at
         description: ""
         meta:
           dimension:
             type: timestamp
-      - name: created_by
+      - name: max_loaded_at_time_ago_in_s
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: status
         description: ""
         meta:
           dimension:
             type: string
-      - name: last_altered
-        description: ""
-        meta:
-          dimension:
-            type: timestamp
-      - name: last_altered_by
+      - name: error
         description: ""
         meta:
           dimension:
             type: string
-      - name: data_source_format
+      - name: compile_started_at
         description: ""
         meta:
           dimension:
             type: string
-      - name: storage_sub_directory
+      - name: compile_completed_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: execute_started_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: execute_completed_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: invocation_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: warn_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: error_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: filter
         description: ""
         meta:
           dimension:

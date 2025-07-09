@@ -133,9 +133,17 @@ packages/**/profiles.yml
 packages/**/selectors.yml
 packages/**/state/
 packages/**/target/
-
-packages/**/package-lock.yml
-
+fabrics/**/.sqlfluff
+fabrics/**/.sqlfluffignore
+fabrics/**/.user.yml
+fabrics/**/dbt_packages/
+fabrics/**/dbt_internal_packages/
+fabrics/**/logs/
+fabrics/**/profiles.yml
+fabrics/**/selectors.yml
+fabrics/**/state/
+fabrics/**/target/
+# 
 .python-version
 */**/__init__.py
 
@@ -153,6 +161,7 @@ logs/
 **/._.DS_Store
 
 **/dbt_packages/
+**/dbt_internal_packages/
 
 **/.user.yml
 

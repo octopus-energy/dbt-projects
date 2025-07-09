@@ -1,6 +1,5 @@
 version: 2
 
-
 models:
   - name: stg_databricks_discounts
     config:
@@ -14,6 +13,24 @@ models:
     columns:
       - name: id
         description: Primary key
+        meta:
+          dimension:
+            type: string
+      - name: discount
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: valid_from
+        description: ""
+        meta:
+          dimension:
+            type: date
+      - name: valid_to
+        description: ""
+        meta:
+          dimension:
+            type: date
   - name: stg_databricks_warehouses
     config:
       meta:
@@ -26,3 +43,16 @@ models:
     columns:
       - name: warehouse_id
         description: Primary key
+        meta:
+          dimension:
+            type: string
+      - name: workspace_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: warehouse_name
+        description: ""
+        meta:
+          dimension:
+            type: string

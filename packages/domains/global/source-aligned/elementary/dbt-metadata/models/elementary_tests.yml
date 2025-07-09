@@ -3,29 +3,342 @@ version: 2
 models:
   - name: share_data_monitoring_metrics
     description: >
-      Elementary anomaly detection tests monitor metrics such as volume, freshness and data quality metrics.
-      This incremental table is used to store the metrics over time.
-      On each anomaly detection test, the test queries this table for historical metrics, and compares to the latest values.
-      The table is updated with new metrics on the on-run-end named handle_test_results that is executed at the end of dbt test invocations.
+      Elementary anomaly detection tests monitor metrics such as volume,
+      freshness and data quality metrics. This incremental table is used to
+      store the metrics over time. On each anomaly detection test, the test
+      queries this table for historical metrics, and compares to the latest
+      values. The table is updated with new metrics on the on-run-end named
+      handle_test_results that is executed at the end of dbt test invocations.
+    columns:
+      - name: id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: full_table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metric_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metric_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metric_value
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: source_value
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: bucket_start
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: bucket_end
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: bucket_duration_hours
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: updated_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: dimension
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: dimension_value
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metric_properties
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: created_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
 
   - name: share_metrics_anomaly_score
     description: >
-      This is a view on `data_monitoring_metrics` that runs the same query the anomaly detection tests run to calculate anomaly scores.
-      The purpose of this view is to provide visibility to the results of anomaly detection tests.
+      This is a view on `data_monitoring_metrics` that runs the same query the
+      anomaly detection tests run to calculate anomaly scores. The purpose of
+      this view is to provide visibility to the results of anomaly detection
+      tests.
+    columns:
+      - name: id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: full_table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: dimension
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: dimension_value
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metric_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: anomaly_score
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: latest_metric_value
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: bucket_start
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: bucket_end
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: training_avg
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: training_stddev
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: training_start
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: training_end
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: training_set_size
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: updated_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: is_anomaly
+        description: ""
+        meta:
+          dimension:
+            type: boolean
 
   - name: share_anomaly_threshold_sensitivity
     description: >
-      This is a view on `metrics_anomaly_score` that calculates if values of metrics from latest runs would have been considered anomalies in different anomaly scores.
-      This can help you decide if there is a need to adjust the `anomaly_score_threshold`.
+      This is a view on `metrics_anomaly_score` that calculates if values of
+      metrics from latest runs would have been considered anomalies in different
+      anomaly scores. This can help you decide if there is a need to adjust the
+      `anomaly_score_threshold`.
+    columns:
+      - name: full_table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metric_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: latest_metric_value
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: metric_avg
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: metric_stddev
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: anomaly_score
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: is_anomaly_1_5
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: is_anomaly_2
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: is_anomaly_2_5
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: is_anomaly_3
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: is_anomaly_3_5
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: is_anomaly_4
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: is_anomaly_4_5
+        description: ""
+        meta:
+          dimension:
+            type: boolean
 
   - name: share_monitors_runs
     description: >
-      This is a view on `data_monitoring_metrics` that is used to determine when a specific anomaly detection test was last executed.
-      Each anomaly detection test queries this view to decide on a start time for collecting metrics.
+      This is a view on `data_monitoring_metrics` that is used to determine when
+      a specific anomaly detection test was last executed. Each anomaly
+      detection test queries this view to decide on a start time for collecting
+      metrics.
+    columns:
+      - name: full_table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metric_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metric_properties
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: last_bucket_end
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: first_bucket_end
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
 
   - name: share_schema_columns_snapshot
     description: >
-      Stores the schema details for tables that are monitored with elementary schema changes test.
-      In order to compare current schema to previous state, we must store the previous state.
-      The data is from a view that queries the data warehouse information schema.
-      This is an incremental table.
+      Stores the schema details for tables that are monitored with elementary
+      schema changes test. In order to compare current schema to previous state,
+      we must store the previous state. The data is from a view that queries the
+      data warehouse information schema. This is an incremental table.
+    columns:
+      - name: column_state_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: full_column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: full_table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: is_new
+        description: ""
+        meta:
+          dimension:
+            type: boolean
+      - name: detected_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: created_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp

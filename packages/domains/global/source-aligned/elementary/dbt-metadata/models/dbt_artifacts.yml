@@ -3,488 +3,966 @@ version: 2
 models:
   - name: share_dbt_models
     description: >
-      Metadata about models in the project, including configuration and properties from the dbt graph.
-      Each row contains information about a single model.
-      Data is loaded every time this model is executed.
-      It is recommended to execute the model every time a change is merged to the project.
+      Metadata about models in the project, including configuration and
+      properties from the dbt graph. Each row contains information about a
+      single model. Data is loaded every time this model is executed. It is
+      recommended to execute the model every time a change is merged to the
+      project.
     columns:
       - name: unique_id
         data_type: string
         description: The unique id of the model.
+        meta:
+          dimension:
+            type: string
 
       - name: alias
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: checksum
         data_type: string
         description: Model file checksum.
+        meta:
+          dimension:
+            type: string
 
       - name: materialization
         data_type: string
         description: The model materialization config.
+        meta:
+          dimension:
+            type: string
 
       - name: tags
         data_type: string
         description: Model tags property.
+        meta:
+          dimension:
+            type: string
 
       - name: meta
         data_type: string
         description: The content of 'meta' property key.
+        meta:
+          dimension:
+            type: string
 
       - name: owner
         data_type: string
         description: Model owner property (configured under 'meta' key).
+        meta:
+          dimension:
+            type: string
 
       - name: database_name
         data_type: string
         description: The model database name.
+        meta:
+          dimension:
+            type: string
 
       - name: schema_name
         data_type: string
         description: The model schema name.
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_macros
         data_type: string
         description: The macros the model directly depends on.
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_nodes
         data_type: string
         description: The nodes the model directly depends on.
+        meta:
+          dimension:
+            type: string
 
       - name: description
         data_type: string
         description: Model description.
+        meta:
+          dimension:
+            type: string
 
       - name: name
         data_type: string
         description: Model name.
+        meta:
+          dimension:
+            type: string
 
       - name: package_name
         data_type: string
         description: Package name of the model.
+        meta:
+          dimension:
+            type: string
 
       - name: original_path
         data_type: string
         description: Full path of the model file.
+        meta:
+          dimension:
+            type: string
 
       - name: path
         data_type: string
         description: Short path of the model file.
+        meta:
+          dimension:
+            type: string
 
       - name: generated_at
         data_type: string
         description: Update time of the table.
+        meta:
+          dimension:
+            type: string
+      - name: patch_path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metadata_hash
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: unique_key
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: incremental_strategy
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: group_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: access
+        description: ""
+        meta:
+          dimension:
+            type: string
 
   - name: share_dbt_tests
     description: >
-      Metadata about tests in the project, including configuration and properties from the dbt graph. Each row contains information about a single test.
-      Data is loaded every time this model is executed. It is recommended to execute the model every time a change is merged to the project.
+      Metadata about tests in the project, including configuration and
+      properties from the dbt graph. Each row contains information about a
+      single test. Data is loaded every time this model is executed. It is
+      recommended to execute the model every time a change is merged to the
+      project.
     columns:
       - name: unique_id
         data_type: string
         description: The unique id of the test.
+        meta:
+          dimension:
+            type: string
 
       - name: database_name
         data_type: string
         description: The tested model database name.
+        meta:
+          dimension:
+            type: string
 
       - name: schema_name
         data_type: string
         description: The tested model schema name.
+        meta:
+          dimension:
+            type: string
 
       - name: name
         data_type: string
         description: The test name.
+        meta:
+          dimension:
+            type: string
 
       - name: short_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: alias
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: test_column_name
         data_type: string
         description: The name of the tested column.
+        meta:
+          dimension:
+            type: string
 
       - name: severity
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: warn_if
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: error_if
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: test_params
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: test_namespace
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: tags
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: model_tags
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: model_owners
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: meta
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_macros
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_nodes
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: parent_model_unique_id
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: description
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: package_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: type
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: original_path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: generated_at
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_original_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metadata_hash
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: quality_dimension
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: group_name
+        description: ""
+        meta:
+          dimension:
+            type: string
 
   - name: share_dbt_sources
     description: >
-      Metadata about sources in the project, including configuration and properties from the dbt graph. Each row contains information about a single source.
-      Data is loaded every time this model is executed. It is recommended to execute the model every time a change is merged to the project.
+      Metadata about sources in the project, including configuration and
+      properties from the dbt graph. Each row contains information about a
+      single source. Data is loaded every time this model is executed. It is
+      recommended to execute the model every time a change is merged to the
+      project.
     columns:
       - name: unique_id
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: database_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: schema_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: source_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: identifier
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: loaded_at_field
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: freshness_warn_after
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: freshness_error_after
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: freshness_filter
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: relation_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: tags
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: meta
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: owner
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: package_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: original_path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: source_description
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: description
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: generated_at
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
+      - name: freshness_description
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metadata_hash
+        description: ""
+        meta:
+          dimension:
+            type: string
 
   - name: share_dbt_snapshots
     description: >
-      Metadata about snapshots in the project, including configuration and properties from the dbt graph. Each row contains information about a single snapshot.
-      Data is loaded every time this model is executed. It is recommended to execute the model every time a change is merged to the project.
+      Metadata about snapshots in the project, including configuration and
+      properties from the dbt graph. Each row contains information about a
+      single snapshot. Data is loaded every time this model is executed. It is
+      recommended to execute the model every time a change is merged to the
+      project.
     columns:
       - name: unique_id
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: alias
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: checksum
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: materialization
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: tags
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: meta
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: owner
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: database_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: schema_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_macros
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_nodes
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: description
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: package_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: original_path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: generated_at
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
+      - name: patch_path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metadata_hash
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: unique_key
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: incremental_strategy
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: group_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: access
+        description: ""
+        meta:
+          dimension:
+            type: string
 
   - name: share_dbt_metrics
     description: >
-      Metadata about metrics in the project, including configuration and properties from the dbt graph. Each row contains information about a single metric.
-      Data is loaded every time this model is executed. It is recommended to execute the model every time a change is merged to the project.
+      Metadata about metrics in the project, including configuration and
+      properties from the dbt graph. Each row contains information about a
+      single metric. Data is loaded every time this model is executed. It is
+      recommended to execute the model every time a change is merged to the
+      project.
     columns:
       - name: unique_id
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: label
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: model
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: type
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: sql
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: timestamp
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: filters
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: time_grains
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: dimensions
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_macros
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_nodes
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: description
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: tags
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: meta
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: package_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: original_path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: generated_at
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metadata_hash
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: group_name
+        description: ""
+        meta:
+          dimension:
+            type: string
 
   - name: share_dbt_exposures
     description: >
-      Metadata about exposures in the project, including configuration and properties from the dbt graph. Each row contains information about a single exposure.
-      Data is loaded every time this model is executed. It is recommended to execute the model every time a change is merged to the project.
+      Metadata about exposures in the project, including configuration and
+      properties from the dbt graph. Each row contains information about a
+      single exposure. Data is loaded every time this model is executed. It is
+      recommended to execute the model every time a change is merged to the
+      project.
     columns:
       - name: unique_id
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: maturity
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: type
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: owner_email
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: owner_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: url
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_macros
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: depends_on_nodes
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: description
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: tags
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: meta
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: package_name
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: original_path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: path
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
 
       - name: generated_at
         data_type: string
         description: ""
+        meta:
+          dimension:
+            type: string
+      - name: depends_on_columns
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metadata_hash
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: label
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: raw_queries
+        description: ""
+        meta:
+          dimension:
+            type: string

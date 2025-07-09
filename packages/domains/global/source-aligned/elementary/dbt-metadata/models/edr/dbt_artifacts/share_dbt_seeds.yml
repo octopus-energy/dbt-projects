@@ -1,86 +1,82 @@
-version: 2
 models:
-  - name: stg_information_schema_tables
-    config:
-      meta:
-        owner: 'evelyn.byer@octoenergy.com'
-        team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
-      group: databricks
-      access: private
-    description: |
-      Tables from regional prod catalog information_schema
+  - name: share_dbt_seeds
     columns:
-      - name: information_schema_tables_id
-        description: Primary key
-        meta:
-          dimension:
-            type: string
-      - name: table_catalog
+      - name: unique_id
         description: ""
         meta:
           dimension:
             type: string
-      - name: table_schema
+      - name: alias
         description: ""
         meta:
           dimension:
             type: string
-      - name: table_name
+      - name: checksum
         description: ""
         meta:
           dimension:
             type: string
-      - name: table_type
+      - name: tags
         description: ""
         meta:
           dimension:
             type: string
-      - name: is_insertable_into
+      - name: meta
         description: ""
         meta:
           dimension:
             type: string
-      - name: commit_action
+      - name: owner
         description: ""
         meta:
           dimension:
             type: string
-      - name: table_owner
+      - name: database_name
         description: ""
         meta:
           dimension:
             type: string
-      - name: comment
+      - name: schema_name
         description: ""
         meta:
           dimension:
             type: string
-      - name: created
-        description: ""
-        meta:
-          dimension:
-            type: timestamp
-      - name: created_by
+      - name: description
         description: ""
         meta:
           dimension:
             type: string
-      - name: last_altered
-        description: ""
-        meta:
-          dimension:
-            type: timestamp
-      - name: last_altered_by
+      - name: name
         description: ""
         meta:
           dimension:
             type: string
-      - name: data_source_format
+      - name: package_name
         description: ""
         meta:
           dimension:
             type: string
-      - name: storage_sub_directory
+      - name: original_path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: generated_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metadata_hash
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: group_name
         description: ""
         meta:
           dimension:
