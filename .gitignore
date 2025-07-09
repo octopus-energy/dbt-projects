@@ -157,3 +157,5 @@ logs/
 **/.user.yml
 
 *.bak
+
+coverage.json

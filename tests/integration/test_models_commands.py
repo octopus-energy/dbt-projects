@@ -4,6 +4,7 @@ Integration tests for models CLI commands.
 Tests the CLI commands end-to-end with real dbt projects.
 """
 
+import re
 from unittest.mock import patch
 
 import yaml
@@ -14,6 +15,10 @@ from dbt_projects_cli.commands.models import models
 
 class TestModelsCommands:
     """Test models CLI commands."""
+
+    def _clean_ansi_codes(self, text: str) -> str:
+        """Remove ANSI color codes from text for robust testing."""
+        return re.sub(r"\x1b\[[0-9;]*m", "", text)
 
     def create_test_dbt_project(self, tmp_path, project_name="test_project"):
         """Create a minimal dbt project for testing."""
@@ -94,9 +99,11 @@ where order_date >= '2023-01-01'
             result = runner.invoke(models, ["list", "--project", "test_project"])
 
         assert result.exit_code == 0
-        assert "Models in project 'test_project'" in result.output
-        assert "users.sql" in result.output
-        assert "orders.sql" in result.output
+        # Remove ANSI color codes for robust testing
+        clean_output = self._clean_ansi_codes(result.output)
+        assert "Models in project 'test_project'" in clean_output
+        assert "users.sql" in clean_output
+        assert "orders.sql" in clean_output
 
     def test_list_models_no_models_found(self, tmp_path):
         """Test listing models when no models are found."""
@@ -111,7 +118,9 @@ where order_date >= '2023-01-01'
             result = runner.invoke(models, ["list", "--project", "empty_project"])
 
         assert result.exit_code == 0
-        assert "No models found for project 'empty_project'" in result.output
+        # Remove ANSI color codes for robust testing
+        clean_output = self._clean_ansi_codes(result.output)
+        assert "No models found for project 'empty_project'" in clean_output
 
     def test_list_all_models(self, tmp_path):
         """Test listing all models across all projects."""
@@ -146,7 +155,9 @@ where order_date >= '2023-01-01'
             result = runner.invoke(models, ["list"])
 
         assert result.exit_code == 0
-        assert "All dbt Models" in result.output
+        # Remove ANSI color codes for robust testing
+        clean_output = self._clean_ansi_codes(result.output)
+        assert "All dbt Models" in clean_output
 
     def test_analyze_model_file_exists(self, tmp_path):
         """Test analyzing a model file that exists."""
@@ -175,15 +186,17 @@ order by created_at desc
         result = runner.invoke(models, ["analyze", str(test_model_path)])
 
         assert result.exit_code == 0
-        assert f"Analyzing model: {test_model_path.name}" in result.output
-        assert "Lines of code:" in result.output
-        assert "✓ Contains SELECT statements" in result.output
-        assert "✓ Contains FROM clauses" in result.output
-        assert "✓ Contains WHERE conditions" in result.output
-        assert "✓ Contains GROUP BY clauses" in result.output
-        assert "✓ Contains JOIN operations" in result.output
-        assert "✓ Contains dbt Jinja templating" in result.output
-        assert "✓ Contains dbt ref() functions" in result.output
+        # Remove ANSI color codes for robust testing
+        clean_output = self._clean_ansi_codes(result.output)
+        assert f"Analyzing model: {test_model_path.name}" in clean_output
+        assert "Lines of code:" in clean_output
+        assert "✓ Contains SELECT statements" in clean_output
+        assert "✓ Contains FROM clauses" in clean_output
+        assert "✓ Contains WHERE conditions" in clean_output
+        assert "✓ Contains GROUP BY clauses" in clean_output
+        assert "✓ Contains JOIN operations" in clean_output
+        assert "✓ Contains dbt Jinja templating" in clean_output
+        assert "✓ Contains dbt ref() functions" in clean_output
 
     def test_analyze_model_file_not_exists(self, tmp_path):
         """Test analyzing a model file that doesn't exist."""
@@ -193,10 +206,15 @@ order by created_at desc
         result = runner.invoke(models, ["analyze", str(nonexistent_path)])
 
         assert result.exit_code == 0
-        # The output may wrap, so just check for the key parts
-        assert "Model file" in result.output
-        assert "not found" in result.output
-        assert "nonexistent_model.sql" in result.output
+        # Remove ANSI color codes for robust testing
+        clean_output = self._clean_ansi_codes(result.output)
+        # The output may wrap in CI due to long paths, so check for key parts
+        # Remove newlines to handle line wrapping issues
+        output_no_newlines = clean_output.replace("\n", "")
+        assert "Model file" in output_no_newlines
+        assert "not found" in output_no_newlines
+        # Check that the filename appears in the output, even if split across lines
+        assert "nonexistent_model.sql" in output_no_newlines
 
     def test_analyze_model_with_sources(self, tmp_path):
         """Test analyzing a model that uses source() functions."""
@@ -219,13 +237,15 @@ where u.created_at > '2023-01-01'
         result = runner.invoke(models, ["analyze", str(test_model_path)])
 
         assert result.exit_code == 0
-        assert "✓ Contains SELECT statements" in result.output
-        assert "✓ Contains FROM clauses" in result.output
-        assert "✓ Contains JOIN operations" in result.output
-        assert "✓ Contains WHERE conditions" in result.output
-        assert "✓ Contains dbt Jinja templating" in result.output
-        assert "✓ Contains dbt ref() functions" in result.output
-        assert "✓ Contains dbt source() functions" in result.output
+        # Remove ANSI color codes for robust testing
+        clean_output = self._clean_ansi_codes(result.output)
+        assert "✓ Contains SELECT statements" in clean_output
+        assert "✓ Contains FROM clauses" in clean_output
+        assert "✓ Contains JOIN operations" in clean_output
+        assert "✓ Contains WHERE conditions" in clean_output
+        assert "✓ Contains dbt Jinja templating" in clean_output
+        assert "✓ Contains dbt ref() functions" in clean_output
+        assert "✓ Contains dbt source() functions" in clean_output
 
     def test_analyze_simple_model(self, tmp_path):
         """Test analyzing a simple model without complex features."""
@@ -240,12 +260,14 @@ where u.created_at > '2023-01-01'
         result = runner.invoke(models, ["analyze", str(test_model_path)])
 
         assert result.exit_code == 0
-        assert "✓ Contains SELECT statements" in result.output
+        # Remove ANSI color codes for robust testing
+        clean_output = self._clean_ansi_codes(result.output)
+        assert "✓ Contains SELECT statements" in clean_output
         # Should not contain complex features
-        assert "✓ Contains JOIN operations" not in result.output
-        assert "✓ Contains WHERE conditions" not in result.output
-        assert "✓ Contains GROUP BY clauses" not in result.output
-        assert "✓ Contains dbt Jinja templating" not in result.output
+        assert "✓ Contains JOIN operations" not in clean_output
+        assert "✓ Contains WHERE conditions" not in clean_output
+        assert "✓ Contains GROUP BY clauses" not in clean_output
+        assert "✓ Contains dbt Jinja templating" not in clean_output
 
     def test_analyze_model_with_ctes(self, tmp_path):
         """Test analyzing a model with CTEs."""
@@ -278,11 +300,13 @@ left join user_orders uo on uo.user_id = au.id
         result = runner.invoke(models, ["analyze", str(test_model_path)])
 
         assert result.exit_code == 0
-        assert "✓ Contains SELECT statements" in result.output
-        assert "✓ Contains FROM clauses" in result.output
-        assert "✓ Contains WHERE conditions" in result.output
-        assert "✓ Contains GROUP BY clauses" in result.output
-        assert "✓ Contains JOIN operations" in result.output
-        assert "✓ Contains dbt Jinja templating" in result.output
-        assert "✓ Contains dbt ref() functions" in result.output
-        assert "✓ Contains dbt source() functions" in result.output
+        # Remove ANSI color codes for robust testing
+        clean_output = self._clean_ansi_codes(result.output)
+        assert "✓ Contains SELECT statements" in clean_output
+        assert "✓ Contains FROM clauses" in clean_output
+        assert "✓ Contains WHERE conditions" in clean_output
+        assert "✓ Contains GROUP BY clauses" in clean_output
+        assert "✓ Contains JOIN operations" in clean_output
+        assert "✓ Contains dbt Jinja templating" in clean_output
+        assert "✓ Contains dbt ref() functions" in clean_output
+        assert "✓ Contains dbt source() functions" in clean_output

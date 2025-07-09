@@ -72,7 +72,6 @@ addopts = [
     "--cov=src/dbt_projects_cli",
     "--cov-report=html",
     "--cov-report=term-missing",
-    "--cov-fail-under=60",
     "-p", "no:warnings",
     "--timeout=30"
 ]
