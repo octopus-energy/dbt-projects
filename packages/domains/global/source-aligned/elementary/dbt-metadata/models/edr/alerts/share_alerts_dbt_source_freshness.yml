@@ -1,0 +1,118 @@
+models:
+  - name: share_alerts_dbt_source_freshness
+    columns:
+      - name: alert_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: max_loaded_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: snapshotted_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: detected_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: max_loaded_at_time_ago_in_s
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: status
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: error
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: warn_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: error_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: filter
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: source_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: identifier
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: meta
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: owner
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: package_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: freshness_error_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: freshness_warn_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: freshness_filter
+        description: ""
+        meta:
+          dimension:
+            type: string

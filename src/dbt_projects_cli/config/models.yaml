@@ -1,0 +1,26 @@
+# LLM Model Configuration
+# Update this file when new models become available
+
+providers:
+  openai:
+    default_model: "gpt-4o"
+    available_models:
+      - "gpt-4o"           # Latest GPT-4 Omni
+      - "gpt-4o-mini"      # Cost-effective option
+      - "gpt-4-turbo"      # Previous generation
+      - "gpt-4"            # Original GPT-4
+      - "gpt-3.5-turbo"    # Legacy option
+    
+  anthropic:
+    default_model: "claude-3-5-sonnet-20241022"
+    available_models:
+      - "claude-3-5-sonnet-20241022"  # Latest Claude 3.5 Sonnet
+      - "claude-3-5-haiku-20241022"   # Fast and efficient
+      - "claude-3-opus-20240229"      # Most capable (expensive)
+      - "claude-3-sonnet-20240229"    # Balanced performance
+      - "claude-3-haiku-20240307"     # Fast and cost-effective
+
+# Configuration notes:
+# - Update default_model when newer versions are released
+# - Add new models to available_models as they become available
+# - Consider cost vs performance trade-offs for your use case

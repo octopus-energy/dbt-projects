@@ -1,0 +1,13 @@
+models:
+  - name: share_dbt_artifacts_hashes
+    columns:
+      - name: artifacts_model
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metadata_hash
+        description: ""
+        meta:
+          dimension:
+            type: string

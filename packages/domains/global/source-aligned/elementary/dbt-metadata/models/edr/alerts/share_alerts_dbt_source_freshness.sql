@@ -1,6 +1,6 @@
 {{
   config(
-    materialized = 'shared_table',
+    materialized = 'table',
     share_name_suffix="ktl_data_services_share",
   )
 }}

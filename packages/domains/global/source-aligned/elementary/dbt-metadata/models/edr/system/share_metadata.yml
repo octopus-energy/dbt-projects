@@ -1,0 +1,8 @@
+models:
+  - name: share_metadata
+    columns:
+      - name: dbt_pkg_version
+        description: ""
+        meta:
+          dimension:
+            type: string

@@ -15,6 +15,24 @@ models:
           - type: not_null
         tests:
           - unique
+        meta:
+          dimension:
+            type: string
+      - name: discount
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: valid_from
+        description: ""
+        meta:
+          dimension:
+            type: date
+      - name: valid_to
+        description: ""
+        meta:
+          dimension:
+            type: date
   - name: dim_databricks_group
     description: |
       Model run directly against the databricks workspace
@@ -25,9 +43,12 @@ models:
         tests:
           - unique
           - not_null
+        meta:
+          dimension:
+            type: string
     config:
       materialized: table
-      tags: ['daily']
+      tags: [ 'daily' ]
       meta:
         owner: 'josh.elston-green@octopus.energy'
       group: databricks
@@ -42,9 +63,22 @@ models:
         tests:
           - unique
           - not_null
+        meta:
+          dimension:
+            type: string
+      - name: user_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: group
+        description: ""
+        meta:
+          dimension:
+            type: string
     config:
       materialized: table
-      tags: ['daily']
+      tags: [ 'daily' ]
       meta:
         owner: 'josh.elston-green@octopus.energy'
       group: databricks
@@ -64,22 +98,50 @@ models:
           - type: not_null
         tests:
           - unique
+        meta:
+          dimension:
+            type: string
       - name: account_id
         description: ID of the account this report was generated for
+        meta:
+          dimension:
+            type: string
       - name: price_start_time
         description: Date when this price starts being valid
-      - name: price_ends_time
-        description: Date when this price stops being valid
-      - name: price_ends_time
-        description: Date when this price stops being valid
+        meta:
+          dimension:
+            type: timestamp
       - name: sku_name
         description: Name of the SKU
+        meta:
+          dimension:
+            type: string
       - name: cloud
-        description: Cloud this usage is relevant for. Possible values are AWS, AZURE, and GCP.
+        description: Cloud this usage is relevant for. Possible values are AWS, AZURE,
+          and GCP.
+        meta:
+          dimension:
+            type: string
       - name: currency_code
         description: Currency used for the pricing
+        meta:
+          dimension:
+            type: string
       - name: price
         description: cost per dbu
+        meta:
+          dimension:
+            type: number
+      - name: price_end_time
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: usage_unit
+        description: ""
+        meta:
+          dimension:
+            type: string
   - name: fct_databricks_usage
     config:
       meta:
@@ -96,28 +158,147 @@ models:
           - type: not_null
         tests:
           - unique
+        meta:
+          dimension:
+            type: string
       - name: account_id
         description: ID of the account this report was generated for
+        meta:
+          dimension:
+            type: string
       - name: workspace_id
         description: ID of the Workspace this usage was associated with
+        meta:
+          dimension:
+            type: string
       - name: sku_name
         description: Name of the SKU
+        meta:
+          dimension:
+            type: string
       - name: cloud
-        description: Cloud this usage is relevant for. Possible values are AWS, AZURE, and GCP.
+        description: Cloud this usage is relevant for. Possible values are AWS, AZURE,
+          and GCP.
+        meta:
+          dimension:
+            type: string
       - name: usage_start_time
         description: The start time relevant to this usage record
+        meta:
+          dimension:
+            type: timestamp
       - name: usage_end_time
         description: The start time relevant to this usage record
+        meta:
+          dimension:
+            type: timestamp
       - name: usage_date
-        description: Date of the usage record, this field can be used for faster aggregation by date
+        description: Date of the usage record, this field can be used for faster
+          aggregation by date
+        meta:
+          dimension:
+            type: date
       - name: custom_tags
         description: Tags applied by the users to this usage
+        meta:
+          dimension:
+            type: string
       - name: usage_unit
         description: Unit this usage is measured in. Possible values include DBUs.
+        meta:
+          dimension:
+            type: string
       - name: usage_quantity
         description: Number of units consumed for this record.
+        meta:
+          dimension:
+            type: number
       - name: usage_metadata
-        description: System-provided metadata about the usage, including IDs for compute resources and jobs (if applicable).
+        description: System-provided metadata about the usage, including IDs for compute
+          resources and jobs (if applicable).
+        meta:
+          dimension:
+            type: string
+      - name: tag_job_dag_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_job_installation
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_job_environment
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_job_template
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_job_ingestion_command
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_aws_user_resource_source
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_aws_user_resource_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_aws_user_resource_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_ktl_product
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_ktl_product_group
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tag_ktl_service
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: usage_metadata_cluster_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: usage_metadata_job_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: usage_metadata_warehouse_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: usage_metadata_instance_pool_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: usage_metadata_node_type
+        description: ""
+        meta:
+          dimension:
+            type: string
   - name: dim_databricks_user
     description: |
       Model run directly against the databricks workspace
@@ -128,9 +309,12 @@ models:
         tests:
           - unique
           - not_null
+        meta:
+          dimension:
+            type: string
     config:
       materialized: table
-      tags: ['daily']
+      tags: [ 'daily' ]
       meta:
         owner: 'josh.elston-green@octopus.energy'
       group: databricks
@@ -149,6 +333,19 @@ models:
         tests:
           - unique
           - not_null
+        meta:
+          dimension:
+            type: string
+      - name: workspace_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: warehouse_name
+        description: ""
+        meta:
+          dimension:
+            type: string
   - name: dim_information_schema_tables
     config:
       meta:
@@ -160,6 +357,79 @@ models:
     columns:
       - name: information_schema_tables_id
         description: Primary key
+        meta:
+          dimension:
+            type: string
+      - name: table_catalog
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_schema
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: is_insertable_into
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: commit_action
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_owner
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: comment
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: created
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: created_by
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: last_altered
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: last_altered_by
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_source_format
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: storage_sub_directory
+        description: ""
+        meta:
+          dimension:
+            type: string
   - name: fct_system_access_audit
     config:
       meta:
@@ -184,6 +454,24 @@ models:
     columns:
       - name: information_schema_catalog_provider_share_usage_id
         description: Primary key
+        meta:
+          dimension:
+            type: string
+      - name: catalog_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: provider_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: share_name
+        description: ""
+        meta:
+          dimension:
+            type: string
   - name: dim_system_information_schema_tables
     config:
       meta:
@@ -195,3 +483,76 @@ models:
     columns:
       - name: information_schema_tables_id
         description: Primary key
+        meta:
+          dimension:
+            type: string
+      - name: table_catalog
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_schema
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: is_insertable_into
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: commit_action
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_owner
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: comment
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: created
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: created_by
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: last_altered
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: last_altered_by
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_source_format
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: storage_sub_directory
+        description: ""
+        meta:
+          dimension:
+            type: string

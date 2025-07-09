@@ -3,21 +3,445 @@ version: 2
 models:
   - name: share_alerts_dbt_models
     description: >
-      A view that is used by the Elementary CLI to generate models alerts, including all the fields the alert will include such as owner, tags, error message, etc.
-      It joins data about models and snapshots run results, and filters alerts according to configuration.
+      A view that is used by the Elementary CLI to generate models alerts,
+      including all the fields the alert will include such as owner, tags, error
+      message, etc. It joins data about models and snapshots run results, and
+      filters alerts according to configuration.
+    columns:
+      - name: alert_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: detected_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: materialization
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: original_path
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: message
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: owners
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alias
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: status
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: full_refresh
+        description: ""
+        meta:
+          dimension:
+            type: boolean
 
   - name: share_alerts_dbt_tests
     description: >
-      A view that is used by the Elementary CLI to generate dbt tests alerts, including all the fields the alert will include such as owner, tags, error message, etc.
-      This view includes data about all dbt tests except elementary tests.
-      It filters alerts according to configuration.
+      A view that is used by the Elementary CLI to generate dbt tests alerts,
+      including all the fields the alert will include such as owner, tags, error
+      message, etc. This view includes data about all dbt tests except
+      elementary tests. It filters alerts according to configuration.
+    columns:
+      - name: alert_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_issue_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_execution_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: model_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: detected_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alert_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: sub_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alert_description
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: owners
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alert_results_query
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: other
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_short_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_params
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: severity
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: status
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: result_rows
+        description: ""
+        meta:
+          dimension:
+            type: string
 
   - name: share_alerts_anomaly_detection
     description: >
-      A view that is used by the Elementary CLI to generate alerts on data anomalies detected using the elementary anomaly detection tests.
-      The view filters alerts according to configuration.
+      A view that is used by the Elementary CLI to generate alerts on data
+      anomalies detected using the elementary anomaly detection tests. The view
+      filters alerts according to configuration.
+    columns:
+      - name: alert_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_issue_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_execution_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: model_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: detected_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alert_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: sub_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alert_description
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: owners
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alert_results_query
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: other
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_short_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_params
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: severity
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: status
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: result_rows
+        description: ""
+        meta:
+          dimension:
+            type: string
 
   - name: share_alerts_schema_changes
     description: >
-      A view that is used by the Elementary CLI to generate alerts on schema changes detected using elementary tests.
-      The view filters alerts according to configuration.
+      A view that is used by the Elementary CLI to generate alerts on schema
+      changes detected using elementary tests. The view filters alerts according
+      to configuration.
+    columns:
+      - name: alert_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_issue_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_execution_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: model_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: detected_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: column_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alert_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: sub_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alert_description
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: owners
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: alert_results_query
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: other
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_short_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: test_params
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: severity
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: status
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: result_rows
+        description: ""
+        meta:
+          dimension:
+            type: string

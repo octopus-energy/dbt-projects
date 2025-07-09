@@ -1,0 +1,27 @@
+name: octoenergy_data_prod_core
+version: 1.0.0
+config-version: 2
+profile: octoenergy_data_prod
+model-paths:
+- models
+analysis-paths:
+- analyses
+test-paths:
+- tests
+seed-paths:
+- seeds
+macro-paths:
+- macros
+snapshot-paths:
+- snapshots
+clean-targets:
+- dbt_packages
+- target
+
+flags:
+  require_explicit_package_overrides_for_builtin_materializations: false
+
+vars:
+  debug_mode: false
+  source_catalog: octoenergy_data_prod_source
+  AWS_ACCOUNT_NUMBER: '337210421809158'

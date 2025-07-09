@@ -1,0 +1,68 @@
+models:
+  - name: share_dbt_columns
+    columns:
+      - name: unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: parent_unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: tags
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: meta
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: database_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: schema_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: description
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: resource_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: generated_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: metadata_hash
+        description: ""
+        meta:
+          dimension:
+            type: string

@@ -12,3 +12,76 @@ models:
     columns:
       - name: information_schema_tables_id
         description: Primary key
+        meta:
+          dimension:
+            type: string
+      - name: table_catalog
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_schema
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_name
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_type
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: is_insertable_into
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: commit_action
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: table_owner
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: comment
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: created
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: created_by
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: last_altered
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: last_altered_by
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_source_format
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: storage_sub_directory
+        description: ""
+        meta:
+          dimension:
+            type: string

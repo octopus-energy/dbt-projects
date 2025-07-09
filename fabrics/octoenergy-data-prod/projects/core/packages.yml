@@ -1,0 +1,5 @@
+packages:
+- package: elementary-data/elementary
+  version: '>=0.16.4'
+- local: ./../../../../packages/domains/global/source-aligned/databricks/systems-data
+- local: ./../../../../packages/domains/global/source-aligned/elementary/dbt-metadata

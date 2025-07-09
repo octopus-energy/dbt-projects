@@ -1,0 +1,45 @@
+{
+  "fabrics": {
+    "data-quality": {
+      "fabric": {
+        "name": "data-quality"
+      },
+      "databricks": {
+        "host": "workspace.cloud.databricks.com"
+      },
+      "projects": {
+        "monitoring": {
+          "description": "Data quality monitoring project",
+          "packages": [
+            {"package": "elementary-data/elementary", "version": ">=0.16.4"}
+          ],
+          "vars": []
+        }
+      }
+    },
+    "analytics": {
+      "fabric": {
+        "name": "analytics"
+      },
+      "databricks": {
+        "host": "workspace.cloud.databricks.com"
+      },
+      "projects": {
+        "core": {
+          "description": "Core analytics models",
+          "packages": [
+            {"git": "https://github.com/dbt-labs/dbt-utils.git", "revision": "1.0.0"}
+          ],
+          "vars": []
+        },
+        "staging": {
+          "description": "Staging data models",
+          "packages": [
+            {"package": "dbt-labs/dbt_utils", "version": "1.0.0"}
+          ],
+          "vars": []
+        }
+      }
+    }
+  }
+}

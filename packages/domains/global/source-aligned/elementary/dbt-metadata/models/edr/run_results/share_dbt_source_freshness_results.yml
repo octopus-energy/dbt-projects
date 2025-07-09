@@ -1,0 +1,88 @@
+models:
+  - name: share_dbt_source_freshness_results
+    columns:
+      - name: source_freshness_execution_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: unique_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: max_loaded_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: snapshotted_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: generated_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: created_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: max_loaded_at_time_ago_in_s
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: status
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: error
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: compile_started_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: compile_completed_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: execute_started_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: execute_completed_at
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: invocation_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: warn_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: error_after
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: filter
+        description: ""
+        meta:
+          dimension:
+            type: string

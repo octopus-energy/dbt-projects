@@ -1,0 +1,52 @@
+name: deploy-lightdash
+
+on:
+  push:
+    branches: [ "main", "test_deploy"]
+
+env:
+  DBT_VERSION: "1.9.8"
+  DBT_DATABRICKS_VERSION: "1.10.3"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.4.1
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.11.x"
+
+      - name: Locate dbt_project.yml
+        run: echo "PROJECT_DIR=fabrics/octoenergy-data-prod/projects/core" >> $GITHUB_ENV
+
+      - name: Get lightdash version 
+        uses: sergeysova/jq-action@v2
+        id: version 
+        env:
+          LIGHTDASH_URL: ${{ secrets.UK_LIGHTDASH_URL }}   
+        with: 
+          cmd: curl -s "${UK_LIGHTDASH_URL}/api/v1/health" | jq -r '.results.version'
+
+      - name: Copy profiles.yml
+        env:
+          config: ${{ secrets.UK_DBT_PROFILES }}          
+        run: echo -e "$config" > profiles.yml      
+
+      - name: Install dbt
+        run: |
+          pip install dbt-core==$DBT_VERSION dbt-databricks==$DBT_DATABRICKS_VERSION
+          dbt deps --project-dir "$PROJECT_DIR"
+
+      - name: Install lightdash CLI
+        run: npm install -g "@lightdash/cli@${{ steps.version.outputs.value }}" || npm install -g @lightdash/cli@latest
+
+      - name: Lightdash CLI deploy 
+        env:
+          LIGHTDASH_API_KEY: ${{ secrets.UK_LIGHTDASH_API_KEY }}          
+          LIGHTDASH_PROJECT: ${{ secrets.UK_LIGHTDASH_PROJECT }}          
+          LIGHTDASH_URL: ${{ secrets.UK_LIGHTDASH_URL }}
+
+        run: lightdash deploy --project-dir "$PROJECT_DIR" --profiles-dir . --profile prod || lightdash deploy --project-dir "$PROJECT_DIR" --profiles-dir .

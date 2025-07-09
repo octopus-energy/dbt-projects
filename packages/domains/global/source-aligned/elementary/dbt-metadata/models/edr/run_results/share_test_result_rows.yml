@@ -1,0 +1,23 @@
+models:
+  - name: share_test_result_rows
+    columns:
+      - name: elementary_test_results_id
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: result_row
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: detected_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp
+      - name: created_at
+        description: ""
+        meta:
+          dimension:
+            type: timestamp

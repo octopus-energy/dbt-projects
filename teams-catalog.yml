@@ -1,0 +1,19 @@
+teams:
+- config:
+    meta:
+      data_owner: Data Platform Team
+  description: Team responsible for data platform infrastructure and utilities
+  domains:
+  - databricks
+  name: data_platform
+  owner:
+    email: null
+- config:
+    meta:
+      data_owner: OCT-17 - Fix team schema in catalog: remove data_owner/owner, add members list
+  description: Low Carbon Tech
+  domains:
+  - low_carbon_tech
+  name: Low Carbon Tech
+  owner:
+    email: OCT-17 - Fix team schema in catalog: remove data_owner/owner, add members list
