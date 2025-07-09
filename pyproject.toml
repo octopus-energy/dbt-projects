@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dbt-projects-cli"
+version = "0.1.0"
+description = "CLI tool for managing dbt projects at Octopus Energy"
+authors = [
+    {name = "Octopus Energy Data Team", email = "data@octopusenergy.com"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "click>=8.0.0",
+    "rich>=13.0.0",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "jinja2>=3.0.0",
+    "databricks-cli>=0.17.0",
+    "databricks-sql-connector>=3.0.0",
+    "openai>=1.0.0",
+    "anthropic>=0.18.0",
+    "requests>=2.25.0",
+    "dbt-core>=1.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+]
+
+[project.scripts]
+dbt-cli = "dbt_projects_cli.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = [
+    "--verbose",
+    "--tb=short",
+    "--cov=src/dbt_projects_cli",
+    "--cov-report=html",
+    "--cov-report=term-missing",
+    "-p", "no:warnings",
+    "--timeout=30"
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "cli: CLI command tests",
+    "template: Template engine tests",
+    "migration: Migration tests",
+    "slow: Slow running tests"
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning"
+]

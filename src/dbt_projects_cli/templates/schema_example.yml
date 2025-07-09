@@ -1,0 +1,31 @@
+fabrics:
+  my-fabric:                          # Fabric name (key)
+    fabric:
+      name: my-fabric                 # Required: Fabric name
+    databricks:
+      host: workspace.cloud.databricks.com  # Required: Databricks hostname
+    projects:                         # Required: At least one project
+      core:                           # Project name (key)
+        description: Core transformations  # Optional: Project description
+        packages:                     # Required: At least one package per project
+          # Git package
+          - git: "https://github.com/owner/repo.git"
+            subdirectory: "path/to/package"    # Optional
+            revision: "v1.0.0"                 # Optional: branch/tag/commit
+            warn-unpinned: false               # Optional
+          
+          # Local package  
+          - local: "../packages/my-package"
+          
+          # dbt Hub package
+          - package: "elementary-data/elementary" 
+            version: ">=0.16.4"
+        
+        vars: []                      # Optional: Project-specific dbt variables (list format)
+      
+      analytics:                      # Additional project example
+        description: Analytics models
+        packages:
+          - package: "dbt-labs/dbt_utils"
+            version: "1.0.0"
+        vars: []
