@@ -13,17 +13,6 @@ variables:
     choices: ["source-aligned", "consumer-aligned", "utils"]
     required: true
     description: "Data mesh alignment type"
-  
-  source_system:
-    type: string
-    required_when: "alignment == 'source-aligned'"
-    description: "Source system name for source-aligned domains"
-  
-  business_area:
-    type: string
-    required_when: "alignment == 'consumer-aligned'"
-    description: "Business area for consumer-aligned domains"
-  
   domain_name:
     type: string
     required: true
@@ -33,6 +22,17 @@ variables:
     type: string
     required: false
     description: "Description of the package"
+  
+  source_system:
+    type: string
+    required: false
+    required_when: "alignment == 'source-aligned'"
+    description: "Source system name for source-aligned packages"
+  
+  business_area:
+    type: string
+    required: false
+    description: "Business area for consumer-aligned packages"
 
 # Template configurations for different files
 templates:
@@ -68,10 +68,9 @@ templates:
       source-aligned:
         '{{ package_name }}':
           +group: "{{ group_name }}"
-          +schema: "{{ source_system }}"
           +materialized: table
           +access: public
-          +tags: ["{{ package_name }}", "source-aligned", "{{ source_system }}"]
+          +tags: ["{{ package_name }}", "source-aligned"]
           staging:
             +materialized: view
             +access: private
@@ -80,10 +79,9 @@ templates:
       consumer-aligned:
         '{{ package_name }}':
           +group: "{{ group_name }}"
-          +schema: "{{ business_area }}_{{ domain_name | replace('-', '_') }}"
           +materialized: table
           +access: public
-          +tags: ["{{ package_name }}", "consumer-aligned", "{{ business_area }}"]
+          +tags: ["{{ package_name }}", "{{ business_area | default('analytics') }}", "consumer-aligned"]
           staging:
             +materialized: view
             +access: private

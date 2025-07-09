@@ -268,7 +268,7 @@ class TestConfigTemplateEngine:
             "team_name": "marketing",
             "team_description": "Marketing analytics team",
             "team_contact": "Marketing Team Lead",
-            "team_domains": ["marketing", "campaigns"]
+            "team_domains": ["marketing", "campaigns"],
         }
 
         result = template_engine.generate_group_yml(context)

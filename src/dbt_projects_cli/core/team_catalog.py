@@ -14,11 +14,12 @@ from rich.table import Table
 
 console = Console()
 
+
 @dataclass
 class TeamConfig:
     """
     Configuration for a dbt team.
-    Teams own multiple domains and are mapped in the meta tag for groups. 
+    Teams own multiple domains and are mapped in the meta tag for groups.
     """
 
     name: str
@@ -32,7 +33,7 @@ class TeamConfig:
 class TeamCatalog:
     """Manages a catalog of reusable team configurations."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.catalog_path = Path.cwd() / "teams-catalog.yml"
         self.catalog_path.parent.mkdir(parents=True, exist_ok=True)
         self._ensure_catalog_exists()
@@ -43,8 +44,11 @@ class TeamCatalog:
             default_teams = {
                 "data_platform": TeamConfig(
                     name="data_platform",
-                    description="Team responsible for data platform infrastructure and utilities",
-                    domains=["databricks", "bigquery"],
+                    description=(
+                        "Team responsible for data platform "
+                        "infrastructure and utilities"
+                    ),
+                    domains=["databricks"],
                     owner_name="Data Platform Team",
                     contact="Data Platform Team Lead",
                 )
@@ -59,22 +63,22 @@ class TeamCatalog:
 
             teams = {}
 
-            if 'teams' in data:
-                for team_data in data['teams']:
-                    name = team_data['name']
-                    config_meta = team_data.get('config', {}).get('meta', {})
+            if "teams" in data:
+                for team_data in data["teams"]:
+                    name = team_data["name"]
+                    config_meta = team_data.get("config", {}).get("meta", {})
                     teams[name] = TeamConfig(
                         name=name,
-                        description=team_data.get('description', ''),
-                        domains=team_data.get('domains', []),
-                        owner_name=config_meta.get('data_owner', ''),
-                        owner_email=team_data.get('owner', {}).get('email', ''),
-                        contact=config_meta.get('contact'),
+                        description=team_data.get("description", ""),
+                        domains=team_data.get("domains", []),
+                        owner_name=config_meta.get("data_owner", ""),
+                        owner_email=team_data.get("owner", {}).get("email", ""),
+                        contact=config_meta.get("contact"),
                     )
             else:
                 # Handle legacy format
                 for name, config in data.items():
-                    if isinstance(config, dict) and 'name' in config:
+                    if isinstance(config, dict) and "name" in config:
                         teams[name] = TeamConfig(**config)
 
             return teams
@@ -86,20 +90,15 @@ class TeamCatalog:
         """Save the team catalog to file."""
         try:
             data = {
-                'teams': [
+                "teams": [
                     {
-                        'name': config.name,
-                        'domains': config.domains,
-                        'owner': {
-                            'email': config.owner_email
-                        },
-                        'description': config.description,
-                        'config': {
-                            'meta': {
-                                'data_owner': config.owner_name
-                            }
-                        }
-                    } for config in teams.values()
+                        "name": config.name,
+                        "domains": config.domains,
+                        "owner": {"email": config.owner_email},
+                        "description": config.description,
+                        "config": {"meta": {"data_owner": config.owner_name}},
+                    }
+                    for config in teams.values()
                 ]
             }
             with open(self.catalog_path, "w") as f:
@@ -213,9 +212,7 @@ class TeamCatalog:
 
                 if 1 <= choice_num <= len(teams_list):
                     selected_team = teams_list[choice_num - 1]
-                    console.print(
-                        f"[green]Selected team: {selected_team.name}[/green]"
-                    )
+                    console.print(f"[green]Selected team: {selected_team.name}[/green]")
                     return selected_team
                 elif choice_num == len(teams_list) + 1:
                     return None  # User wants to create a new team
@@ -234,7 +231,7 @@ def collect_team_info_interactive() -> TeamConfig:
 
     name = Prompt.ask("[bold cyan]Team name[/bold cyan]")
     description = Prompt.ask("[bold cyan]Team description[/bold cyan]")
-    domains = Prompt.ask("[bold cyan]Domains (comma separated)[/bold cyan]").split(',')
+    domains = Prompt.ask("[bold cyan]Domains (comma separated)[/bold cyan]").split(",")
     owner_name = Prompt.ask("[bold cyan]Owner name[/bold cyan]")
     owner_email = Prompt.ask("[bold cyan]Owner email[/bold cyan]")
     contact = Prompt.ask("[bold cyan]Contact (optional)[/bold cyan]", default="")
@@ -289,9 +286,7 @@ def get_team_config(
             )
             return catalog_team
         else:
-            console.print(
-                f"[red]Team '{team_from_catalog}' not found in catalog[/red]"
-            )
+            console.print(f"[red]Team '{team_from_catalog}' not found in catalog[/red]")
 
     # Interactive mode
     if interactive:
@@ -314,4 +309,3 @@ def get_team_config(
         owner_name="Data Platform Team",
         owner_email="data-platform@octopusenergy.com",
     )
-

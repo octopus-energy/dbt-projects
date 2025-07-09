@@ -6,7 +6,9 @@ from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
 
-from dbt_projects_cli.commands.projects import info, list as list_projects, projects
+from dbt_projects_cli.commands.projects import info
+from dbt_projects_cli.commands.projects import list as list_projects
+from dbt_projects_cli.commands.projects import projects
 
 
 class TestProjectsCommand:

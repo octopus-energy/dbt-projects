@@ -73,7 +73,8 @@ addopts = [
     "--cov-report=html",
     "--cov-report=term-missing",
     "--cov-fail-under=60",
-    "-p", "no:warnings"
+    "-p", "no:warnings",
+    "--timeout=30"
 ]
 markers = [
     "unit: Unit tests",

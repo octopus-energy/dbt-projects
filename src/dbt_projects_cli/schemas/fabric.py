@@ -149,16 +149,22 @@ class FabricConfig(BaseModel):
 
         Returns:
             Formatted catalog name following the convention:
-            - prod: {fabric_name}_data_prod_prod
-            - source: {fabric_name}_data_prod_source
-            - dev/test: {fabric_name}_data_prod_test
+            - prod: {first_component}_data_prod_prod
+            - source: {first_component}_data_prod_source
+            - dev/test: {first_component}_data_prod_test
+
+        Note: Uses only the first component of the fabric name (before any hyphens)
+        to avoid catalog names becoming too long or complex.
         """
+        # Extract first component of fabric name (before first hyphen)
+        first_component = self.fabric.name.split("-")[0]
+
         if environment == "prod":
-            return f"{self.fabric.name}_data_prod_prod"
+            return f"{first_component}_data_prod_prod"
         elif environment == "source":
-            return f"{self.fabric.name}_data_prod_source"
+            return f"{first_component}_data_prod_source"
         else:  # dev/test
-            return f"{self.fabric.name}_data_prod_test"
+            return f"{first_component}_data_prod_test"
 
     class Config:
         """Pydantic configuration."""

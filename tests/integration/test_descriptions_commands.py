@@ -4,8 +4,6 @@ Integration tests for descriptions CLI commands.
 Tests the CLI commands end-to-end with real dbt projects.
 """
 
-import tempfile
-from pathlib import Path
 from unittest.mock import patch
 
 import yaml
@@ -21,7 +19,7 @@ class TestDescriptionsCommands:
         """Create a minimal dbt project for testing."""
         project_dir = tmp_path / project_name
         project_dir.mkdir()
-        
+
         # Create dbt_project.yml
         dbt_project = {
             "name": project_name,
@@ -36,14 +34,14 @@ class TestDescriptionsCommands:
             "target-path": "target",
             "clean-targets": ["target", "dbt_packages"],
         }
-        
+
         with open(project_dir / "dbt_project.yml", "w") as f:
             yaml.dump(dbt_project, f)
-        
+
         # Create models directory and a test model
         models_dir = project_dir / "models"
         models_dir.mkdir()
-        
+
         # Create a simple model
         test_model = """
 select
@@ -54,10 +52,10 @@ select
 from {{ source('raw', 'users') }}
 where status = 'active'
 """
-        
+
         with open(models_dir / "test_model.sql", "w") as f:
             f.write(test_model)
-        
+
         return project_dir
 
     def test_descriptions_command_group(self):
@@ -75,44 +73,64 @@ where status = 'active'
     def test_generate_command_missing_project(self, tmp_path):
         """Test generate command with missing project."""
         runner = CliRunner()
-        with patch("dbt_projects_cli.commands.descriptions.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.commands.descriptions.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery to return empty results
             mock_instance = mock_discovery.return_value
             mock_instance.get_project_by_name.return_value = None
-            
-            result = runner.invoke(descriptions, ["generate", "--project", "nonexistent"])
 
-        assert result.exit_code == 0  # The function returns instead of raising SystemExit
+            result = runner.invoke(
+                descriptions, ["generate", "--project", "nonexistent"]
+            )
+
+        assert (
+            result.exit_code == 0
+        )  # The function returns instead of raising SystemExit
         assert "Project nonexistent not found" in result.output
 
     def test_generate_command_dry_run(self, tmp_path):
         """Test generate command in dry-run mode."""
         # Create a test dbt project
         project_dir = self.create_test_dbt_project(tmp_path)
-        
+
         runner = CliRunner()
-        with patch("dbt_projects_cli.commands.descriptions.ProjectDiscovery") as mock_discovery, \
-             patch("dbt_projects_cli.commands.descriptions.LLMDescriptionGenerator") as mock_generator:
-            
+        with (
+            patch(
+                "dbt_projects_cli.commands.descriptions.ProjectDiscovery"
+            ) as mock_discovery,
+            patch(
+                "dbt_projects_cli.commands.descriptions.LLMDescriptionGenerator"
+            ) as mock_generator,
+        ):
+
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             from dbt_projects_cli.core.project_discovery import DbtProject
-            dbt_project = DbtProject(name="test_project", path=project_dir, config={}, project_type="package")
+
+            dbt_project = DbtProject(
+                name="test_project", path=project_dir, config={}, project_type="package"
+            )
             mock_instance.get_project_by_name.return_value = dbt_project
             mock_instance.list_models_in_project.return_value = [
                 project_dir / "models" / "test_model.sql"
             ]
-            
+
             # Mock LLM generator
             mock_gen_instance = mock_generator.return_value
             mock_gen_instance.model = "gpt-3.5-turbo"
-            
-            result = runner.invoke(descriptions, [
-                "generate", 
-                "--project", "test_project", 
-                "--dry-run",
-                "--provider", "openai"
-            ])
+
+            result = runner.invoke(
+                descriptions,
+                [
+                    "generate",
+                    "--project",
+                    "test_project",
+                    "--dry-run",
+                    "--provider",
+                    "openai",
+                ],
+            )
 
         assert result.exit_code == 0
         assert "Processing 1 model(s) in project" in result.output
@@ -122,27 +140,35 @@ where status = 'active'
         # Create a test dbt project without models
         project_dir = self.create_test_dbt_project(tmp_path)
         (project_dir / "models" / "test_model.sql").unlink()  # Remove the model
-        
+
         runner = CliRunner()
-        with patch("dbt_projects_cli.commands.descriptions.ProjectDiscovery") as mock_discovery, \
-             patch("dbt_projects_cli.commands.descriptions.LLMDescriptionGenerator") as mock_generator:
-            
+        with (
+            patch(
+                "dbt_projects_cli.commands.descriptions.ProjectDiscovery"
+            ) as mock_discovery,
+            patch(
+                "dbt_projects_cli.commands.descriptions.LLMDescriptionGenerator"
+            ) as mock_generator,
+        ):
+
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             from dbt_projects_cli.core.project_discovery import DbtProject
-            dbt_project = DbtProject(name="test_project", path=project_dir, config={}, project_type="package")
+
+            dbt_project = DbtProject(
+                name="test_project", path=project_dir, config={}, project_type="package"
+            )
             mock_instance.get_project_by_name.return_value = dbt_project
             mock_instance.list_models_in_project.return_value = []
-            
+
             # Mock LLM generator
             mock_gen_instance = mock_generator.return_value
             mock_gen_instance.model = "gpt-3.5-turbo"
-            
-            result = runner.invoke(descriptions, [
-                "generate", 
-                "--project", "test_project",
-                "--provider", "openai"
-            ])
+
+            result = runner.invoke(
+                descriptions,
+                ["generate", "--project", "test_project", "--provider", "openai"],
+            )
 
         assert result.exit_code == 0
         assert "Processing 0 model(s) in project" in result.output
@@ -150,11 +176,10 @@ where status = 'active'
     def test_generate_command_invalid_provider(self, tmp_path):
         """Test generate command with invalid provider."""
         runner = CliRunner()
-        result = runner.invoke(descriptions, [
-            "generate", 
-            "--project", "test_project",
-            "--provider", "invalid_provider"
-        ])
+        result = runner.invoke(
+            descriptions,
+            ["generate", "--project", "test_project", "--provider", "invalid_provider"],
+        )
 
         assert result.exit_code != 0
         assert "Invalid value for '--provider'" in result.output
@@ -162,11 +187,15 @@ where status = 'active'
     def test_show_models_command(self, tmp_path):
         """Test show-models command."""
         runner = CliRunner()
-        with patch("dbt_projects_cli.commands.descriptions.LLMDescriptionGenerator") as mock_generator:
+        with patch(
+            "dbt_projects_cli.commands.descriptions.LLMDescriptionGenerator"
+        ) as mock_generator:
             # Mock LLM generator
             mock_gen_instance = mock_generator.return_value
-            mock_gen_instance.config = {"providers": {"openai": {"default_model": "gpt-3.5-turbo"}}}
-            
+            mock_gen_instance.config = {
+                "providers": {"openai": {"default_model": "gpt-3.5-turbo"}}
+            }
+
             result = runner.invoke(descriptions, ["show-models"])
 
         assert result.exit_code == 0
@@ -192,7 +221,13 @@ where status = 'active'
     def test_test_databricks_command_no_project(self, tmp_path):
         """Test test-databricks command without project."""
         runner = CliRunner()
-        result = runner.invoke(descriptions, ["test-databricks"])
+        with patch(
+            "dbt_projects_cli.commands.descriptions.create_databricks_connector"
+        ) as mock_connector:
+            # Mock databricks connector creation failure (no project found)
+            mock_connector.return_value = None
+
+            result = runner.invoke(descriptions, ["test-databricks"])
 
         assert result.exit_code == 0  # Command runs but may fail connection
         assert "Testing Databricks Connection" in result.output
@@ -202,13 +237,17 @@ where status = 'active'
         # Create a test dbt project with profiles.yml
         project_dir = self.create_test_dbt_project(tmp_path)
         profiles_yml = project_dir / "profiles.yml"
-        profiles_yml.write_text("test_profile:\n  target: dev\n  outputs:\n    dev:\n      type: databricks")
-        
+        profiles_yml.write_text(
+            "test_profile:\n  target: dev\n  outputs:\n    dev:\n      type: databricks"
+        )
+
         runner = CliRunner()
-        with patch("dbt_projects_cli.integrations.databricks.create_databricks_connector") as mock_connector:
+        with patch(
+            "dbt_projects_cli.commands.descriptions.create_databricks_connector"
+        ) as mock_connector:
             # Mock databricks connector creation failure
             mock_connector.return_value = None
-            
+
             # Change to the project directory for the command to find it
             with runner.isolated_filesystem(temp_dir=project_dir):
                 result = runner.invoke(descriptions, ["test-databricks"])
@@ -222,7 +261,9 @@ where status = 'active'
         result = runner.invoke(descriptions, ["generate", "--help"])
 
         assert result.exit_code == 0
-        assert "Generate or expand descriptions for dbt models using LLMs" in result.output
+        assert (
+            "Generate or expand descriptions for dbt models using LLMs" in result.output
+        )
         assert "--project" in result.output
         assert "--provider" in result.output
         assert "--dry-run" in result.output
@@ -231,18 +272,27 @@ where status = 'active'
     def test_generate_command_project_not_found(self, tmp_path):
         """Test generate command when project is not found."""
         runner = CliRunner()
-        with patch("dbt_projects_cli.commands.descriptions.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.commands.descriptions.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery to return empty results
             mock_instance = mock_discovery.return_value
             mock_instance.get_project_by_name.return_value = None
-            
-            result = runner.invoke(descriptions, [
-                "generate", 
-                "--project", "nonexistent_project",
-                "--provider", "openai"
-            ])
 
-        assert result.exit_code == 0  # The function returns instead of raising SystemExit
+            result = runner.invoke(
+                descriptions,
+                [
+                    "generate",
+                    "--project",
+                    "nonexistent_project",
+                    "--provider",
+                    "openai",
+                ],
+            )
+
+        assert (
+            result.exit_code == 0
+        )  # The function returns instead of raising SystemExit
         assert "Project nonexistent_project not found" in result.output
 
     def test_models_command_placeholder(self):

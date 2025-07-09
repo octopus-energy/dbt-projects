@@ -229,8 +229,8 @@ class TestFabricDeployer:
         assert dev_output["type"] == "databricks"
         assert dev_output["host"] == "test-workspace.cloud.databricks.com"
         assert (
-            dev_output["catalog"] == "test-fabric_data_prod_test"
-        )  # Auto-generated catalog name
+            dev_output["catalog"] == "test_data_prod_test"
+        )  # Auto-generated catalog name (first component only)
         assert dev_output["schema"] == "test_schema"
         assert dev_output["auth_type"] == "oauth"
 

@@ -4,8 +4,6 @@ Integration tests for models CLI commands.
 Tests the CLI commands end-to-end with real dbt projects.
 """
 
-import tempfile
-from pathlib import Path
 from unittest.mock import patch
 
 import yaml
@@ -21,7 +19,7 @@ class TestModelsCommands:
         """Create a minimal dbt project for testing."""
         project_dir = tmp_path / project_name
         project_dir.mkdir()
-        
+
         # Create dbt_project.yml
         dbt_project = {
             "name": project_name,
@@ -30,14 +28,14 @@ class TestModelsCommands:
             "model-paths": ["models"],
             "target-path": "target",
         }
-        
+
         with open(project_dir / "dbt_project.yml", "w") as f:
             yaml.dump(dbt_project, f)
-        
+
         # Create models directory and test models
         models_dir = project_dir / "models"
         models_dir.mkdir()
-        
+
         # Create multiple test models
         test_model_1 = """
 select
@@ -48,7 +46,7 @@ select
 from {{ source('raw', 'users') }}
 where status = 'active'
 """
-        
+
         test_model_2 = """
 select
     user_id,
@@ -57,13 +55,13 @@ select
 from {{ ref('staging_orders') }}
 where order_date >= '2023-01-01'
 """
-        
+
         with open(models_dir / "users.sql", "w") as f:
             f.write(test_model_1)
-        
+
         with open(models_dir / "orders.sql", "w") as f:
             f.write(test_model_2)
-        
+
         return project_dir
 
     def test_models_command_group(self):
@@ -80,9 +78,11 @@ where order_date >= '2023-01-01'
         """Test listing models for a specific project."""
         # Create a test dbt project
         project_dir = self.create_test_dbt_project(tmp_path, "test_project")
-        
+
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             mock_instance.root_path = tmp_path
@@ -90,7 +90,7 @@ where order_date >= '2023-01-01'
                 project_dir / "models" / "users.sql",
                 project_dir / "models" / "orders.sql",
             ]
-            
+
             result = runner.invoke(models, ["list", "--project", "test_project"])
 
         assert result.exit_code == 0
@@ -101,11 +101,13 @@ where order_date >= '2023-01-01'
     def test_list_models_no_models_found(self, tmp_path):
         """Test listing models when no models are found."""
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             mock_instance.list_models_in_project.return_value = []
-            
+
             result = runner.invoke(models, ["list", "--project", "empty_project"])
 
         assert result.exit_code == 0
@@ -116,32 +118,31 @@ where order_date >= '2023-01-01'
         # Create test dbt projects
         project1_dir = self.create_test_dbt_project(tmp_path, "project1")
         project2_dir = self.create_test_dbt_project(tmp_path, "project2")
-        
+
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             mock_instance.root_path = tmp_path
             mock_instance.discover_all_projects.return_value = {
-                "packages": [
-                    {"name": "project1"},
-                    {"name": "project2"}
-                ],
-                "fabrics": []
+                "packages": [{"name": "project1"}, {"name": "project2"}],
+                "fabrics": [],
             }
-            
+
             def mock_list_models(project_name):
                 if project_name == "project1":
                     return [
                         project1_dir / "models" / "users.sql",
-                        project1_dir / "models" / "orders.sql"
+                        project1_dir / "models" / "orders.sql",
                     ]
                 elif project_name == "project2":
                     return [project2_dir / "models" / "users.sql"]
                 return []
-            
+
             mock_instance.list_models_in_project.side_effect = mock_list_models
-            
+
             result = runner.invoke(models, ["list"])
 
         assert result.exit_code == 0
@@ -166,10 +167,10 @@ group by id, name, email, created_at
 having count(*) > 1
 order by created_at desc
 """
-        
+
         with open(test_model_path, "w") as f:
             f.write(test_model_content)
-        
+
         runner = CliRunner()
         result = runner.invoke(models, ["analyze", str(test_model_path)])
 
@@ -187,7 +188,7 @@ order by created_at desc
     def test_analyze_model_file_not_exists(self, tmp_path):
         """Test analyzing a model file that doesn't exist."""
         nonexistent_path = tmp_path / "nonexistent_model.sql"
-        
+
         runner = CliRunner()
         result = runner.invoke(models, ["analyze", str(nonexistent_path)])
 
@@ -210,10 +211,10 @@ from {{ source('raw', 'users') }} u
 left join {{ ref('products') }} p on p.user_id = u.id
 where u.created_at > '2023-01-01'
 """
-        
+
         with open(test_model_path, "w") as f:
             f.write(test_model_content)
-        
+
         runner = CliRunner()
         result = runner.invoke(models, ["analyze", str(test_model_path)])
 
@@ -231,10 +232,10 @@ where u.created_at > '2023-01-01'
         # Create a very simple model file
         test_model_path = tmp_path / "simple_model.sql"
         test_model_content = "SELECT 1 as simple_column, 'test' as name"
-        
+
         with open(test_model_path, "w") as f:
             f.write(test_model_content)
-        
+
         runner = CliRunner()
         result = runner.invoke(models, ["analyze", str(test_model_path)])
 
@@ -261,7 +262,7 @@ user_orders as (
     from {{ ref('orders') }}
     group by user_id
 )
-select 
+select
     au.id,
     au.name,
     au.email,
@@ -269,10 +270,10 @@ select
 from active_users au
 left join user_orders uo on uo.user_id = au.id
 """
-        
+
         with open(test_model_path, "w") as f:
             f.write(test_model_content)
-        
+
         runner = CliRunner()
         result = runner.invoke(models, ["analyze", str(test_model_path)])
 

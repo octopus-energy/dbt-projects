@@ -89,7 +89,7 @@ class TestScaffoldCommands:
                 "--description",
                 "Test consumer-aligned package",
                 "--team-from-catalog",
-                "marketing",
+                "data_platform",
             ],
         )
 
@@ -198,7 +198,7 @@ class TestScaffoldCommands:
                 "test-data",
                 "--description",
                 "Test duplicate package",
-                "--group-from-catalog",
+                "--team-from-catalog",
                 "data_platform",
             ],
         )

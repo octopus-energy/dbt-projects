@@ -37,6 +37,7 @@ def cli(ctx: click.Context, verbose: bool) -> None:
 
     Use 'dbt-cli <command> --help' for detailed help on any command.
     Use 'dbt-cli scaffold info' to learn about data mesh domain patterns.
+    Use 'dbt-cli scaffold teams' to view and manage the teams catalog.
     """
     ctx.ensure_object(dict)
     ctx.obj["verbose"] = verbose

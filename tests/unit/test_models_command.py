@@ -6,10 +6,11 @@ import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 from click.testing import CliRunner
 
-from dbt_projects_cli.commands.models import analyze, list as list_models, models
+from dbt_projects_cli.commands.models import analyze
+from dbt_projects_cli.commands.models import list as list_models
+from dbt_projects_cli.commands.models import models
 
 
 class TestModelsCommand:
@@ -88,16 +89,18 @@ class TestModelsCommand:
     def test_analyze_model_file_exists(self):
         """Test analyzing a model file that exists."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sql", delete=False) as f:
-            f.write("""
+            f.write(
+                """
 -- Simple test model
-SELECT 
+SELECT
     id,
     name,
     email
 FROM {{ ref('source_table') }}
 WHERE status = 'active'
 GROUP BY id, name, email
-""")
+"""
+            )
             f.flush()
 
             result = self.runner.invoke(analyze, [f.name])
@@ -125,15 +128,17 @@ GROUP BY id, name, email
     def test_analyze_model_with_joins_and_sources(self):
         """Test analyzing a complex model with JOINs and source() functions."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sql", delete=False) as f:
-            f.write("""
-SELECT 
+            f.write(
+                """
+SELECT
     u.id,
     u.name,
     p.title
 FROM {{ source('raw', 'users') }} u
 LEFT JOIN {{ ref('products') }} p ON u.product_id = p.id
 WHERE u.created_at > '2023-01-01'
-""")
+"""
+            )
             f.flush()
 
             result = self.runner.invoke(analyze, [f.name])

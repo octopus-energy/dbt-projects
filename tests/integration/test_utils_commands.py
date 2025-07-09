@@ -4,7 +4,6 @@ Integration tests for utils CLI commands.
 Tests the CLI commands end-to-end with real dbt projects.
 """
 
-from pathlib import Path
 from unittest.mock import patch
 
 import yaml
@@ -20,7 +19,7 @@ class TestUtilsCommands:
         """Create a minimal dbt project for testing."""
         project_dir = tmp_path / project_name
         project_dir.mkdir()
-        
+
         # Create dbt_project.yml
         dbt_project = {
             "name": project_name,
@@ -29,24 +28,24 @@ class TestUtilsCommands:
             "model-paths": ["models"],
             "target-path": "target",
         }
-        
+
         with open(project_dir / "dbt_project.yml", "w") as f:
             yaml.dump(dbt_project, f)
-        
+
         # Create target directory (to be cleaned)
         target_dir = project_dir / "target"
         target_dir.mkdir()
-        
+
         with open(target_dir / "manifest.json", "w") as f:
             f.write('{"version": "1.0.0"}')
-        
+
         # Create dbt_packages directory (to be cleaned)
         packages_dir = project_dir / "dbt_packages"
         packages_dir.mkdir()
-        
+
         with open(packages_dir / "package.yml", "w") as f:
             f.write("name: test_package")
-        
+
         return project_dir
 
     def test_utils_command_group(self):
@@ -62,11 +61,13 @@ class TestUtilsCommands:
     def test_validate_projects_all_valid(self, tmp_path):
         """Test validating projects when all are valid."""
         # Create test projects
-        project1_dir = self.create_test_dbt_project(tmp_path, "project1")
-        project2_dir = self.create_test_dbt_project(tmp_path, "project2")
-        
+        self.create_test_dbt_project(tmp_path, "project1")
+        self.create_test_dbt_project(tmp_path, "project2")
+
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             mock_instance.discover_all_projects.return_value = {
@@ -80,11 +81,11 @@ class TestUtilsCommands:
                         "name": "project2",
                         "model_count": 1,
                         "config": {"profile": "another_profile"},
-                    }
+                    },
                 ],
-                "fabrics": []
+                "fabrics": [],
             }
-            
+
             result = runner.invoke(utils, ["validate"])
 
         assert result.exit_code == 0
@@ -94,7 +95,9 @@ class TestUtilsCommands:
     def test_validate_projects_some_invalid(self, tmp_path):
         """Test validating projects when some are invalid."""
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             mock_instance.discover_all_projects.return_value = {
@@ -113,11 +116,11 @@ class TestUtilsCommands:
                         "name": "no_models_project",
                         "model_count": 0,
                         "config": {"profile": "test_profile"},
-                    }
+                    },
                 ],
-                "fabrics": []
+                "fabrics": [],
             }
-            
+
             result = runner.invoke(utils, ["validate"])
 
         assert result.exit_code == 0
@@ -129,14 +132,16 @@ class TestUtilsCommands:
     def test_validate_projects_empty(self, tmp_path):
         """Test validating when no projects exist."""
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery to return empty results
             mock_instance = mock_discovery.return_value
             mock_instance.discover_all_projects.return_value = {
                 "packages": [],
-                "fabrics": []
+                "fabrics": [],
             }
-            
+
             result = runner.invoke(utils, ["validate"])
 
         assert result.exit_code == 0
@@ -148,9 +153,11 @@ class TestUtilsCommands:
         # Create test projects with directories to clean
         project1_dir = self.create_test_dbt_project(tmp_path, "project1")
         project2_dir = self.create_test_dbt_project(tmp_path, "project2")
-        
+
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             mock_instance.root_path = tmp_path
@@ -159,15 +166,15 @@ class TestUtilsCommands:
                     {"name": "project1", "path": "project1"},
                     {"name": "project2", "path": "project2"},
                 ],
-                "fabrics": []
+                "fabrics": [],
             }
-            
+
             result = runner.invoke(utils, ["clean"])
 
         assert result.exit_code == 0
         assert "Cleaning dbt projects..." in result.output
         assert "Successfully cleaned" in result.output
-        
+
         # Check that directories were actually cleaned
         assert not (project1_dir / "target").exists()
         assert not (project1_dir / "dbt_packages").exists()
@@ -179,19 +186,21 @@ class TestUtilsCommands:
         # Create test projects without target/dbt_packages directories
         project1_dir = tmp_path / "project1"
         project1_dir.mkdir()
-        
+
         # Create dbt_project.yml but no target/dbt_packages directories
         dbt_project = {
             "name": "project1",
             "version": "1.0.0",
             "profile": "test_profile",
         }
-        
+
         with open(project1_dir / "dbt_project.yml", "w") as f:
             yaml.dump(dbt_project, f)
-        
+
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             mock_instance.root_path = tmp_path
@@ -199,9 +208,9 @@ class TestUtilsCommands:
                 "packages": [
                     {"name": "project1", "path": "project1"},
                 ],
-                "fabrics": []
+                "fabrics": [],
             }
-            
+
             result = runner.invoke(utils, ["clean"])
 
         assert result.exit_code == 0
@@ -211,15 +220,17 @@ class TestUtilsCommands:
     def test_clean_projects_empty(self, tmp_path):
         """Test cleaning when no projects exist."""
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery to return empty results
             mock_instance = mock_discovery.return_value
             mock_instance.root_path = tmp_path
             mock_instance.discover_all_projects.return_value = {
                 "packages": [],
-                "fabrics": []
+                "fabrics": [],
             }
-            
+
             result = runner.invoke(utils, ["clean"])
 
         assert result.exit_code == 0
@@ -230,28 +241,30 @@ class TestUtilsCommands:
         """Test cleaning both packages and fabric projects."""
         # Create test package project
         package_dir = self.create_test_dbt_project(tmp_path, "package1")
-        
+
         # Create test fabric project
         fabric_dir = tmp_path / "fabric1"
         fabric_dir.mkdir()
-        
+
         # Create fabric.yml
         fabric_config = {
             "fabric": {"name": "fabric1"},
-            "projects": {"default": {"name": "default"}}
+            "projects": {"default": {"name": "default"}},
         }
-        
+
         with open(fabric_dir / "fabric.yml", "w") as f:
             yaml.dump(fabric_config, f)
-        
+
         # Create directories to clean in fabric
         fabric_target = fabric_dir / "target"
         fabric_target.mkdir()
         with open(fabric_target / "profiles.yml", "w") as f:
             f.write("test: config")
-        
+
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             mock_instance.root_path = tmp_path
@@ -261,15 +274,15 @@ class TestUtilsCommands:
                 ],
                 "fabrics": [
                     {"name": "fabric1", "path": "fabric1"},
-                ]
+                ],
             }
-            
+
             result = runner.invoke(utils, ["clean"])
 
         assert result.exit_code == 0
         assert "Cleaning dbt projects..." in result.output
         assert "Successfully cleaned" in result.output
-        
+
         # Check that directories were cleaned
         assert not (package_dir / "target").exists()
         assert not (package_dir / "dbt_packages").exists()
@@ -278,7 +291,9 @@ class TestUtilsCommands:
     def test_validate_projects_with_fabrics(self, tmp_path):
         """Test validating both packages and fabric projects."""
         runner = CliRunner()
-        with patch("dbt_projects_cli.core.project_discovery.ProjectDiscovery") as mock_discovery:
+        with patch(
+            "dbt_projects_cli.core.project_discovery.ProjectDiscovery"
+        ) as mock_discovery:
             # Mock project discovery
             mock_instance = mock_discovery.return_value
             mock_instance.discover_all_projects.return_value = {
@@ -295,9 +310,9 @@ class TestUtilsCommands:
                         "model_count": 0,
                         "config": {"databricks": {"host": "test.com"}},
                     }
-                ]
+                ],
             }
-            
+
             result = runner.invoke(utils, ["validate"])
 
         assert result.exit_code == 0

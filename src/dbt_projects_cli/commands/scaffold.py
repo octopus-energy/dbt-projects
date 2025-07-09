@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional
 
 import click
 from rich.console import Console
-from rich.prompt import Confirm, Prompt
+from rich.prompt import Prompt
 from rich.table import Table
 
 from dbt_projects_cli.core.team_catalog import TeamCatalog, get_team_config
@@ -158,10 +158,10 @@ def info() -> None:
     type=click.Choice(["source-aligned", "consumer-aligned", "utils"]),
     help="Data mesh alignment type",
 )
-@click.option("--source-system", help="Source system name (for source-aligned domains)")
-@click.option("--business-area", help="Business area (for consumer-aligned domains)")
 @click.option("--domain-name", help="Domain or use case name")
 @click.option("--description", "-d", help="Description of the domain package")
+@click.option("--source-system", help="Source system for source-aligned packages")
+@click.option("--business-area", help="Business area for consumer-aligned packages")
 @click.option("--team-name", help="Name of the team that owns this domain")
 @click.option("--team-description", help="Description of the team")
 @click.option("--team-domains", help="Comma-separated list of domains the team owns")
@@ -171,10 +171,10 @@ def info() -> None:
 @click.option("--team-from-catalog", help="Use existing team from catalog by name")
 def domain(
     alignment: Optional[str],
-    source_system: Optional[str],
-    business_area: Optional[str],
     domain_name: Optional[str],
     description: Optional[str],
+    source_system: Optional[str],
+    business_area: Optional[str],
     team_name: Optional[str],
     team_description: Optional[str],
     team_domains: Optional[str],
@@ -186,7 +186,7 @@ def domain(
     """Create a new domain-aligned package following data mesh principles.
 
     The dbt-cli now supports team-based package creation where each package
-    gets its own unique group configuration, but the team information is 
+    gets its own unique group configuration, but the team information is
     managed through a teams catalog. This ensures domain isolation while
     providing team ownership tracking.
 
@@ -252,67 +252,32 @@ def domain(
         )
 
     # Validate and collect required parameters based on alignment
+    if not domain_name:
+        domain_name = Prompt.ask(
+            "[bold cyan]Domain name[/bold cyan]", default="my_domain"
+        )
+
+    # Handle alignment-specific path generation
     if alignment == "source-aligned":
         if not source_system:
-            console.print(
-                "[yellow]Available source systems:[/yellow] "
-                + ", ".join(SOURCE_SYSTEMS)
+            source_system = Prompt.ask(
+                "[bold cyan]Source system[/bold cyan]", default="databricks"
             )
-            source_system = Prompt.ask("[bold cyan]Source system[/bold cyan]")
-
-            if source_system not in SOURCE_SYSTEMS:
-                add_new = Confirm.ask(
-                    f"'{source_system}' is not in our standard list. Add it anyway?"
-                )
-                if not add_new:
-                    console.print("[red]Cancelled[/red]")
-                    return
-
-        if not domain_name:
-            domain_name = Prompt.ask(
-                "[bold cyan]Domain name (e.g., 'systems-data', "
-                "'customer-data')[/bold cyan]"
-            )
-
-        package_name = f"{source_system}_{domain_name.replace('-', '_')}"
+        package_name = f"{source_system}_{domain_name}".replace("-", "_")
         package_path = (
-            Path("packages/domains/source-aligned") / source_system / domain_name
+            Path(f"packages/domains/{alignment}") / source_system / domain_name
         )
-
     elif alignment == "consumer-aligned":
         if not business_area:
-            console.print(
-                "[yellow]Available business areas:[/yellow] "
-                + ", ".join(BUSINESS_AREAS)
+            business_area = Prompt.ask(
+                "[bold cyan]Business area[/bold cyan]", default="analytics"
             )
-            business_area = Prompt.ask("[bold cyan]Business area[/bold cyan]")
-
-            if business_area not in BUSINESS_AREAS:
-                add_new = Confirm.ask(
-                    f"'{business_area}' is not in our standard list. " "Add it anyway?"
-                )
-                if not add_new:
-                    console.print("[red]Cancelled[/red]")
-                    return
-
-        if not domain_name:
-            domain_name = Prompt.ask(
-                "[bold cyan]Use case name (e.g., 'customer-analytics', "
-                "'revenue-reporting')[/bold cyan]"
-            )
-
-        package_name = f"{business_area}_{domain_name.replace('-', '_')}"
+        package_name = f"{business_area}_{domain_name}".replace("-", "_")
         package_path = (
-            Path("packages/domains/consumer-aligned") / business_area / domain_name
+            Path(f"packages/domains/{alignment}") / business_area / domain_name
         )
-
-    elif alignment == "utils":
-        if not domain_name:
-            domain_name = Prompt.ask(
-                "[bold cyan]Utility type (e.g., 'core', 'pii', 'testing')[/bold cyan]"
-            )
-
-        package_name = f"utils_{domain_name.replace('-', '_')}"
+    else:  # utils
+        package_name = f"utils_{domain_name}".replace("-", "_")
         package_path = Path("packages/utils") / domain_name
 
     if not description:
@@ -326,36 +291,10 @@ def domain(
         console.print(f"[red]Domain package already exists at {package_path}[/red]")
         raise click.ClickException(f"Domain package already exists at {package_path}")
 
-    # Validate naming convention
-    naming_pattern = str(DATA_MESH_ALIGNMENTS[alignment]["naming_pattern"])
-    expected_name = naming_pattern.format(
-        source_system=source_system or "",
-        domain_name=(
-            domain_name.replace("-", "_")
-            if domain_name and alignment != "consumer-aligned"
-            else ""
-        ),
-        business_area=business_area or "",
-        use_case=(
-            domain_name.replace("-", "_")
-            if domain_name and alignment == "consumer-aligned"
-            else ""
-        ),
-        utility_type=(
-            domain_name.replace("-", "_")
-            if domain_name and alignment == "utils"
-            else ""
-        ),
-    )
-
-    if package_name != expected_name:
-        console.print(
-            f"[yellow]⚠️  Package name '{package_name}' doesn't follow "
-            f"expected pattern '{expected_name}'[/yellow]"
-        )
-        if not Confirm.ask("Continue anyway?"):
-            console.print("[red]Cancelled[/red]")
-            return
+    # Check if package already exists
+    if package_path.exists():
+        console.print(f"[red]Domain package already exists at {package_path}[/red]")
+        raise click.ClickException(f"Domain package already exists at {package_path}")
 
     console.print(
         f"[bold green]Creating {alignment} domain package '{package_name}' "
@@ -366,16 +305,19 @@ def domain(
     team_config = get_team_config(
         team_name=team_name,
         team_description=team_description,
-        team_domains=team_domains.split(',') if team_domains else None,
+        team_domains=team_domains.split(",") if team_domains else None,
         team_owner=team_owner,
         team_email=team_email,
         team_contact=team_contact,
         team_from_catalog=team_from_catalog,
         interactive=True,
     )
-    
-    # Generate unique group name for this package (groups are not shared)
-    group_name = package_name
+
+    # Generate group name based on alignment and team configuration
+    if alignment == "utils":
+        group_name = "data_platform"  # Utils packages use data_platform group
+    else:
+        group_name = package_name  # Other packages use unique group per package
 
     # Create the domain package structure with full context for templates
     template_context = {
@@ -395,23 +337,9 @@ def domain(
 
     # Add alignment-specific context
     if alignment == "source-aligned":
-        template_context.update(
-            {
-                "source_system": source_system,
-            }
-        )
+        template_context["source_system"] = source_system or "unknown"
     elif alignment == "consumer-aligned":
-        template_context.update(
-            {
-                "business_area": business_area,
-            }
-        )
-    elif alignment == "utils":
-        template_context.update(
-            {
-                # utils-specific context can be added here if needed
-            }
-        )
+        template_context["business_area"] = business_area or "analytics"
 
     _create_domain_structure(
         package_path,
@@ -493,93 +421,51 @@ def fabric(
 
 @scaffold.command()
 def teams() -> None:
-    """View and manage the teams catalog used for domain ownership tracking.
+    """View and manage the teams catalog for domain ownership tracking.
 
-    The teams catalog allows you to store and manage team configurations that
-    are used for domain ownership tracking. Each package gets its own unique
-    group, but teams are tracked via the meta tag for organizational purposes.
+    The teams catalog stores reusable team configurations used when
+    scaffolding domain packages. Each package gets a unique group, but
+    team information is tracked via meta tags for organizational clarity.
 
-    🏢 TEAM-BASED OWNERSHIP SYSTEM
+    PURPOSE:
+    - Consistent Team Configurations: Standardized across all scaffolded packages
+    - Team Collaboration: Easy sharing through version control
+    - Reduced Manual Work: No need to edit hardcoded content post-scaffolding
+    - Organizational Standards: Enforced naming conventions and contacts
 
-    The dbt-cli supports team-based domain ownership where:
-    - Each package gets its own unique group (not shared)
-    - Teams own multiple domains/packages
-    - Team information is stored in group meta tags
-    - Teams catalog provides persistent team configurations
+    USAGE:
+    - Automatically used when scaffolding new domain packages.
+    - Interactive selection: 'dbt-cli scaffold domain --alignment utils --domain core'
+    - Team from catalog: 'dbt-cli scaffold domain --team-from-catalog data_platform'
 
-    KEY FEATURES:
-    📚 Team Catalog: Persistent storage of team information
-    🔄 Multiple Input Methods: CLI args, catalog selection, or interactive prompts
-    📈 Automatic Catalog Growth: New teams are automatically saved for reuse
-    🎯 Domain Isolation: Each package has unique group, preventing cross-domain access
-    🏢 Team Ownership: Teams are tracked in meta tags for organizational clarity
+    CATALOG LOCATION PRIORITY:
+    1. `teams-catalog.yml` (project level)
+    2. `.dbt/teams.yml` (project .dbt folder)
+    3. `~/dbt-teams.yml` (user level - visible)
+    4. `~/.dbt-cli/teams.yml` (user level - hidden)
 
-    PRIORITY SYSTEM:
-    The system follows this priority order:
-    1. CLI arguments (highest priority) - All required fields provided
-    2. Catalog selection - Use --team-from-catalog <team_name>
-    3. Interactive prompts - Default behavior with team selection menu
-
-    CLI TEAM OPTIONS (for 'scaffold domain' command):
-    --team-name               Name of the team that owns this domain
-    --team-description        Description of the team
-    --team-domains            Comma-separated list of domains the team owns
-    --team-owner              Name of the team owner
-    --team-email              Email of the team owner
-    --team-contact            Contact information for the team (optional)
-    --team-from-catalog       Use existing team from catalog by name
-
-    USAGE EXAMPLES:
-
-    1. Use existing team from catalog:
-       dbt-cli scaffold domain --alignment source-aligned \
-           --source-system databricks --domain-name systems-data \
-           --team-from-catalog data_platform
-
-    2. Create custom team via CLI args:
-       dbt-cli scaffold domain --alignment consumer-aligned \
-           --business-area marketing --domain-name customer-analytics \
-           --team-name marketing \
-           --team-description 'Marketing analytics team' \
-           --team-domains 'marketing,campaigns' \
-           --team-owner 'Marketing Team' \
-           --team-email 'marketing@octopusenergy.com'
-
-    3. Interactive team selection (default):
-       dbt-cli scaffold domain --alignment utils --domain-name core
-       # Will prompt with numbered list of available teams plus
-       # 'Create new team' option
-
-    4. View catalog teams:
-       dbt-cli scaffold teams          # Show detailed team table
-
-    GENERATED _group.yml STRUCTURE:
-    The system generates unique groups per package with team info in meta:
-
-    version: 2
-    groups:
-      - name: marketing_customer_analytics  # Unique to this package
-        owner:
-          name: "Marketing Team"
-          email: "marketing@octopusenergy.com"
-        description: |
-          Consumer-aligned domain for marketing_customer_analytics
-        config:
-          meta:
-            team: "Marketing"
-            team_description: "Marketing analytics team"
-            contact: "Marketing Team Lead"
-            domains: ["marketing", "campaigns"]
+    TEAM SCHEMA:
+    - name: Unique identifier (required)
+    - description: Team description (required)
+    - owner_name: Team or owner name (required)
+    - owner_email: Contact email (required)
+    - domains: List of owned domains (required)
+    - contact: Specific contact person (optional)
 
     BENEFITS:
-    🎯 Domain Isolation: Each package has unique group preventing cross-access
-    🏢 Team Tracking: Clear team ownership via meta tags
-    ♻️ Team Reuse: Teams can be reused across multiple domains
-    📈 Automatic Growth: Catalog grows organically as teams create new domains
-    🔀 Multiple Workflows: Supports both quick CLI usage and interactive exploration
+    1. **Version Control**
+    2. **Collaboration**
+    3. **Visibility**
+    4. **Consistency**
+    5. **Maintenance**
 
-    STORAGE:
-    Teams catalog is stored at: teams-catalog.yml (project level)
+    GENERATED OUTPUT:
+    - Teams generate `groups/_group.yml` files for consistent configurations
+
+    Examples:
+        dbt-cli scaffold teams                    # Show all teams
+        dbt-cli scaffold domain --alignment source-aligned --domain-name my-domain
+        dbt-cli scaffold domain --team-from-catalog data_platform
     """
     # Show the catalog table
     catalog = TeamCatalog()
