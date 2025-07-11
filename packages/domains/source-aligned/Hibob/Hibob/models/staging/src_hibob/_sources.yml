@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: src_hibob
+    catalog: "{{ var( 'source_catalog' ) }}"
+    schema: "{{ var('hib_db', 'src_hibob') }}"
+    tables:
+      - name: employee_latest

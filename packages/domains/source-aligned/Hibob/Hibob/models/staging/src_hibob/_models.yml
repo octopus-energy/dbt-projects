@@ -1,0 +1,119 @@
+version: 2
+
+models:
+  - name: stg_hibob_employee_latest
+    meta:
+      owner: 'jack.williamson@kraken.tech'
+      team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+    description: |
+      Staging table for HiBob data from the org
+    columns:
+      - name: employee_id
+        description: Primary Key of the table
+        tests:
+          - not_null
+          - unique
+      - name: full_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: display_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: postcode_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: manager_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: secondlevel_manager_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: email_address_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+  - name: stg_hibob_employee_latest_pii
+    meta:
+      owner: 'jack.williamson@kraken.tech'
+      team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+      sensitive: true
+    description: |
+      Staging table for HiBob data from the org
+    columns:
+      - name: employee_id
+        description: Primary Key of the table
+        tests:
+          - not_null
+          - unique
+      - name: full_name
+        meta:
+          sensitive: true
+      - name: display_name
+        meta:
+          sensitive: true
+      - name: postcode
+        meta:
+          sensitive: true
+      - name: manager_name
+        meta:
+          sensitive: true
+      - name: secondlevel_manager_name
+        meta:
+          sensitive: true
+      - name: email_address
+        meta:
+          sensitive: true
+  - name: stg_hibob_employee_snapshot
+    meta:
+      owner: 'thomas.williams@octopus.energy'
+      team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+    description: |
+      Staging table for HiBob data from the org
+    columns:
+      - name: hibob_snapshot_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: full_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: display_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: firstlevel_manager_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: secondlevel_manager_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: email_address_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+  - name: stg_hibob_employee_snapshot_pii
+    meta:
+      owner: 'thomas.williams@octopus.energy'
+      team_owner: '!subteam^S02GPV1135F' #@dbt_gatekeepers
+      sensitive: true
+    description: |
+      Staging table for HiBob data from the org
+    columns:
+      - name: hibob_snapshot_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: full_name
+        meta:
+          sensitive: true
+      - name: display_name
+        meta:
+          sensitive: true
+      - name: firstlevel_manager_name
+        meta:
+          sensitive: true
+      - name: secondlevel_manager_name
+        meta:
+          sensitive: true
+      - name: email_address
+        meta:
+          sensitive: true
