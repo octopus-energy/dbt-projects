@@ -1,0 +1,12 @@
+version: 2
+
+# Do not add tests for snapshots here. They are tested in the staging layer.
+snapshots:
+  - name: hibob_employee_snapshot
+    config:
+      tags: ['access:public']
+    description: >
+      Change history of all employee extracted from Hibob
+    columns:
+      - name: dbt_scd_id
+        description: Primary key

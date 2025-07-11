@@ -155,3 +155,7 @@ logs/
 **/dbt_packages/
 
 **/.user.yml
+
+*.bak
+
+coverage.json

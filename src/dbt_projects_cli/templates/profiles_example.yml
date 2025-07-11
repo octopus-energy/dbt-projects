@@ -1,0 +1,12 @@
+my_profile:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      host: your-workspace.cloud.databricks.com
+      http_path: /sql/1.0/warehouses/your-warehouse-id
+      auth_type: oauth
+      client_id: your-client-id
+      client_secret: your-client-secret
+      catalog: your-catalog
+      schema: "{{ env_var('DATABRICKS_SCHEMA') }}"

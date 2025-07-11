@@ -1,0 +1,466 @@
+version: 2
+
+
+models:
+  - name: stg_hubspot_contacts
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains all Contact object information from the Hubspot API with PII hashed.
+      Hubspot is where we capture lead information for both Solar and Heatpump installs.
+      After a lead has been generated, the data pipeline is then transferred to Coconut.
+      The table includes both Hubspot standard fields (which may not be that useful), and ones
+      created by Octopus, such as things specifically to do with Heatpump / Solar eligibility.
+      Hubspot provides a primary id for each record, but it's also worth noting that each record
+      should also be unique by email address.
+    columns:
+      - name: hubspot_contact_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: address_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: email_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: fax_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: firstname_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: lastname_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: phone_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: mobile_phone_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: zip_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: message_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+  - name: stg_hubspot_contacts_pii
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+      sensitive: true
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains all Contact object information from the Hubspot API - PII version.
+      Hubspot is where we capture lead information for both Solar and Heatpump installs.
+      After a lead has been generated, the data pipeline is then transferred to Coconut.
+      The table includes both Hubspot standard fields (which may not be that useful), and ones
+      created by Octopus, such as things specifically to do with Heatpump / Solar eligibility.
+      Hubspot provides a primary id for each record, but it's also worth noting that each record
+      should also be unique by email address.
+    columns:
+      - name: hubspot_contact_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: address
+        meta:
+          sensitive: true
+      - name: email
+        meta:
+          sensitive: true
+      - name: fax
+        meta:
+          sensitive: true
+      - name: firstname
+        meta:
+          sensitive: true
+      - name: lastname
+        meta:
+          sensitive: true
+      - name: phone
+        meta:
+          sensitive: true
+      - name: mobile_phone
+        meta:
+          sensitive: true
+      - name: zip
+        meta:
+          sensitive: true
+      - name: message
+        meta:
+          sensitive: true
+  - name: stg_hubspot_deals
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains all Deals object information from the Hubspot API with PII hashed.
+      In HubSpot, deals represent transactions with contacts or companies. Deals are tracked
+      through sales processes in pipeline stages until they're won or lost.
+      Hubspot is where we capture lead information for both Solar and Heatpump installs.
+      After a lead has been generated, the data pipeline is then transferred to Coconut.
+      The table includes both Hubspot standard fields (which may not be that useful), and ones
+      created by Octopus, such as things specifically to do with Heatpump / Solar eligibility.
+      Hubspot provides a primary id for each record, but it's also worth noting that each record
+      should also be unique by deal name, deal stage and pipeline.
+    columns:
+      - name: hubspot_deals_contacts_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_deals_pii
+    meta:
+      owner: ['calum.gibson1@octoenergy.com', 'katie.gilmour@octopusenergy.services']
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+      sensitive: true
+    config:
+      access: private
+    description: >
+      This table contains all Deals object information from the Hubspot API - PII version.
+      In HubSpot, deals represent transactions with contacts or companies. Deals are tracked
+      through sales processes in pipeline stages until they're won or lost.
+      Hubspot is where we capture lead information for both Solar and Heatpump installs.
+      After a lead has been generated, the data pipeline is then transferred to Coconut.
+      The table includes both Hubspot standard fields (which may not be that useful), and ones
+      created by Octopus, such as things specifically to do with Heatpump / Solar eligibility.
+      Hubspot provides a primary id for each record, but it's also worth noting that each record
+      should also be unique by deal name, deal stage and pipeline.
+    columns:
+      - name: hubspot_deals_contacts_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_hubspot_dealstagehistory
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains the event history of a Deal moving between Deal Stages.
+      The data is extracted via the Hubspot API. In Hubspot, deal stages are used to manage
+      a customer through various sales activities, for instance an account moves from
+      'Sales Consultation' to 'Survey Booked'. In the Deals table, only the latest Deal Stage
+      is extracted and therefore to view the movement between stages, the history is required.
+    columns:
+      - name: deal_stage_history_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_hubspot_email_stats
+    meta:
+      owner: 'charlie.green@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains the details of Hubspot email statistics for all marketing emails.
+      The data is extracted via the Hubspot Marketing Emails API and returns the statistics 
+      for all marketing emails we have made. In Hubspot, email stats are used to track 
+      the performance and engagement of emails sent to customers.
+    columns:
+      - name: email_stats_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_installdatehistory
+    meta:
+      owner: 'katie.gilmour@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains the event history of the ticket install date when it is chnages.
+      The data is extracted via the Hubspot API. In Hubspot, install date is used to see 
+      the date that the install is booked for. In the Tickets table, only the latest install
+      date is extracted and therefore to view the movement between date, the history is required.
+    columns:
+      - name: ticket_install_date_history_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_installstatushistory
+    meta:
+      owner: 'katie.gilmour@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains the event history of the ticket install status when it is chnages.
+      The data is extracted via the Hubspot API. In Hubspot, install status is used for when
+      installed and marked by area manager in the field. In the Tickets table, only the latest install
+      status is extracted and therefore to view the movement between date, the history is required.
+    columns:
+      - name: ticket_install_status_history_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_marketing_emails
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      This sensitive table contains all Marketing Emails sent from Hubspot relating to CHI and NPS.
+      The table includes the time at which the email was delivered to the email address
+      and the campaign id that the email refers to.
+    columns:
+      - name: hubspot_marketing_email_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: email_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+
+  - name: stg_hubspot_marketing_emails_pii
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+      sensitive: true
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      This table contains all Marketing Emails sent from Hubspot relating to CHI and NPS.
+      The table includes the time at which the email was delivered to the email address
+      and the campaign id that the email refers to.
+    columns:
+      - name: hubspot_marketing_email_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: email
+        meta:
+          sensitive: true
+
+  - name: stg_hubspot_owners
+    meta:
+      owner: 'charlie.green@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      This table contains the details of Hubspot owners (sales, onboarding teams etc) 
+      relating their IDs to their actual names and teams. The data is extracted via the 
+      Hubspot Owner API. In Hubspot, owners are assigned as a point fo contact for a the 
+      customer during a particulr stage of the customer journey (e.g. sales, surveys, 
+      installation etc).
+    columns:
+      - name: hubspot_owner_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_hubspot_quotes
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains the details of Hubspot Quotes.
+      The data is extracted via the Hubspot API. In Hubspot, quotes are used to manage
+      a customer's deposit payments for Low Carbon Tech installations.
+    columns:
+      - name: hubspot_quote_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_schemas
+    meta:
+      owner: 'charlie.green@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains Hubspot schemas for all objects. Each row represents a property
+      within an object (such as a contact, deal, ticket etc) and includes all properties
+      (regardless of whether they are used within Hubspot or ingested by the datalake).
+    columns:
+      - name: hubspot_schema_property_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_ticketownerhistory
+    meta:
+      owner: 'katie.gilmour@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains the history of the ticket owner id. In Hubspot each
+      ticket has an owner this can change over time as people leave or move teams,
+      this will allow use to see who has been the owner of the ticket.
+    columns:
+      - name: ticket_owner_history_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_tickets
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains all Tickets object information from the Hubspot API with PII hashed.
+      In HubSpot, tickets represents customer requests for help. Tickets are tracked through the
+      support process in pipeline statuses until they're closed.
+      Hubspot is where we capture lead information for both Solar and Heatpump installs.
+      After a lead has been generated, the data pipeline is then transferred to Coconut.
+      The table includes both Hubspot standard fields (which may not be that useful), and ones
+      created by Octopus, such as things specifically to do with Heatpump / Solar eligibility.
+      Hubspot provides a primary id for each record, but it's also worth noting that each record
+      should also be unique by subject (ticket name) and pipeline.
+    columns:
+      - name: hubspot_ticket_deals_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: first_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: last_name_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: postcode_hash
+        tests:
+          - dbt_expectations.expect_column_to_exist
+  - name: stg_hubspot_tickets_pii
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+      sensitive: true
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains all Tickets object information from the Hubspot API - PII version.
+      In HubSpot, tickets represents customer requests for help. Tickets are tracked through the
+      support process in pipeline statuses until they're closed.
+      Hubspot is where we capture lead information for both Solar and Heatpump installs.
+      After a lead has been generated, the data pipeline is then transferred to Coconut.
+      The table includes both Hubspot standard fields (which may not be that useful), and ones
+      created by Octopus, such as things specifically to do with Heatpump / Solar eligibility.
+      Hubspot provides a primary id for each record, but it's also worth noting that each record
+      should also be unique by subject (ticket name) and pipeline.
+    columns:
+      - name: hubspot_ticket_deals_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        meta:
+          sensitive: true
+      - name: last_name
+        meta:
+          sensitive: true
+      - name: postcode
+        meta:
+          sensitive: true
+  - name: stg_hubspot_ticketstatushistory
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains the event history of a Ticket moving between statuses.
+      The data is extracted via the Hubspot API. In Hubspot, statuses are used to manage
+      a customer through various install activities, for instance an account moves from
+      'Survey Booked' to 'Survey Completed'. In the Tickets table, only the latest status
+      is extracted and therefore to view the movement between statuses, the history is required.
+    columns:
+      - name: ticket_history_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_chi
+    meta:
+      owner: 'katie.gilmour@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains infromation relating to the customer object CHI (Customer Happines Index) 
+      in Hubspot. Within this table the column survey_type is referring to the CHI type,
+      "aftercare" or "closed lost". The Hubspot Contact ID is the assoiated object. 
+    columns:
+      - name: hubspot_chi_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: survey_type
+        description: Respesent if record is for a ticket, deal, survey, ect
+  - name: stg_hubspot_complaints
+    meta:
+      owner: 'charlie.green@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains all the complaints information recieved by a customer from hubspot and
+      is linked to their corresponding contact, deal and ticket IDs. Each row represents a complaint.
+    columns:
+      - name: hubspot_complaints_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_enquiries
+    meta:
+      owner: 'charlie.green@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: >
+      This table contains a record of each enquiry made by a customer in hubspot. A customer can 
+      make more than one enquiry and so better represents a proxy for leads coming into the LCT 
+      pipeline. Each row represents an enquiry made by a customer.
+    columns:
+      - name: hubspot_enquiry_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_hubspot_lineitems
+    access: private
+    meta:
+      owner: 'fred.marlow-prince@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    description: >
+      This table contains a details of each line item and their associated deal IDs from Hubspot.
+    columns:
+      - name: hubspot_line_item_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null

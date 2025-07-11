@@ -1,0 +1,18 @@
+version: 2
+
+
+models:
+  - name: stg_services_hubspotidmapping
+    meta:
+      owner: 'fred.marlow-prince@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    description: |
+      A reference table containing hubspot internal ids and their corresponding pipeline
+      stages
+    columns:
+      - name: internal_value
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+ 

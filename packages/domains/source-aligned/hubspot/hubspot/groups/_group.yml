@@ -1,0 +1,15 @@
+version: 2
+
+groups:
+  - name: hubspot_hubspot
+    owner:
+      name: "jaiopsjd"
+      email: "kspodajkd"
+    description: |
+      source-aligned domain for hubspot_hubspot
+    config:
+      meta:
+        team: "Low Carbon Tech"
+        team_description: "Low Carbon Tech"
+        contact: "kdlpsak"
+        domains: ["hubspot"]

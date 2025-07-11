@@ -1,0 +1,19 @@
+fabrics:
+  octoenergy-data-prod:
+    fabric:
+      name: octoenergy-data-prod
+      description: Lightweight fabric deployment for octoenergy-data-prod
+      version: 1.0.0
+    databricks:
+      host: octoenergy-oeuk.cloud.databricks.com
+      auth_type: oauth
+    projects:
+      core:
+        name: core
+        description: Core data transformations
+        schema: default
+        packages:
+        - package: elementary-data/elementary
+          version: '>=0.16.4'
+        vars:
+          debug_mode: false

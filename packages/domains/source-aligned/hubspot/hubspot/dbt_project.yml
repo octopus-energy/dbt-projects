@@ -1,0 +1,53 @@
+name: hubspot_hubspot
+version: 1.0.0
+config-version: 2
+profile: hubspot_hubspot
+model-paths:
+- models
+- groups
+analysis-paths:
+- analyses
+test-paths:
+- tests
+seed-paths:
+- seeds
+macro-paths:
+- macros
+snapshot-paths:
+- snapshots
+clean-targets:
+- dbt_packages
+- state
+- target
+flags:
+  require_explicit_package_overrides_for_builtin_materializations: false
+  use_materialization_v2: true
+models:
+  +persist_docs:
+    relation: true
+    columns: true
+  +tags:
+  - hubspot_hubspot
+  hubspot_hubspot:
+    +group: hubspot_hubspot
+    +materialized: table
+    +access: public
+    +tags:
+    - hubspot_hubspot
+    - source-aligned
+    staging:
+      +materialized: view
+      +access: private
+      +tags:
+      - hubspot_hubspot
+      - staging
+vars:
+  PROD_CATALOG: octoenergy_data_prod_prod
+  DATABRICKS_WORKSPACE_ID: '337210421809158'
+  disable_dbt_artifacts_autoupload: "{{ target.name != 'prod' }}"
+  disable_dbt_columns_autoupload: "{{ target.name != 'prod' }}"
+  disable_run_results: "{{ target.name != 'prod' }}"
+  disable_tests_results: "{{ target.name != 'prod' }}"
+  disable_dbt_invocation_autoupload: "{{ target.name != 'prod' }}"
+  distant_future_timestamp: to_utc_timestamp('2099-12-31 23:59:59','UTC')
+  local_timezone: UTC

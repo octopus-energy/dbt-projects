@@ -1,0 +1,113 @@
+internal_value,display_label,pipeline_name,display_order,priority_order
+460507596,Quoting,LCT Sales,0,1
+460507597,Order Placed,LCT Sales,1,2
+460507598,Survey Booked,LCT Sales,2,3
+460507599,Survey Complete - Awaiting Survey Audit,LCT Sales,3,4
+460507600,Survey Audit in Progress,LCT Sales,4,5
+460507601,Survey Audit Complete,LCT Sales,5,6
+460507604,Installation Agreement Issued,LCT Sales,6,7
+460507605,Closed Won - Handed over to Install Support,LCT Sales,7,8
+462305749,Quote Archived,LCT Sales,8,0
+197483472,Enquiry Submitted,EV: Domestic,0,1
+213825252,Enquiry Submitted - In Progress,EV: Domestic,1,2
+197483473,Proposal Sent,EV: Domestic,2,3
+197483474,Proposal Accepted,EV: Domestic,3,4
+197483475,Payment Link Sent,EV: Domestic,4,5
+197483477,Closed Won,EV: Domestic,5,6
+197483478,Closed Lost,EV: Domestic,6,0
+293730283,Refund Requested,EV: Domestic,7,7
+282911970,Typeform Responses,OES: No MCS Export,0,1
+282911971,Quote Sent,OES: No MCS Export,1,2
+282911972,Awaiting Document Check,OES: No MCS Export,2,3
+282911973,Document Check in Progress,OES: No MCS Export,3,4
+354992333,Document Check - Awaiting Customer,OES: No MCS Export,4,5
+282911974,MPAN Creation in Progress,OES: No MCS Export,5,6
+316356854,MPAN Application Sent,OES: No MCS Export,6,7
+284530413,Kraken Onboarding,OES: No MCS Export,7,8
+284530414,Complete,OES: No MCS Export,8,9
+284530415,Closed Lost,OES: No MCS Export,9,0
+330603494,Initial Enquiry Submitted,EV: Commercial,0,1
+330603495,Discovery Call Booked,EV: Commercial,1,2
+330603496,Partner Survey Booked,EV: Commercial,2,3
+330603497,Quotation Issued,EV: Commercial,3,4
+330603498,Contract Sent,EV: Commercial,4,5
+368068818,Deposit Received,EV: Commercial,5,6
+368068819,Awaiting Full Payment,EV: Commercial,6,7
+330603499,Closed Won,EV: Commercial,7,8
+330603500,Closed Lost,EV: Commercial,8,0
+277282502,Addressable Lead - Preparing Quote,Which? Multi-Product Pipeline,0,1
+277282503,Quote Issued,Which? Multi-Product Pipeline,1,2
+277282504,Order Placed (£500 Advance),Which? Multi-Product Pipeline,2,3
+277282505,Survey Booked,Which? Multi-Product Pipeline,3,4
+277282506,Survey Complete - Awaiting Tech Checks,Which? Multi-Product Pipeline,4,5
+277282520,Survey Check in Progress,Which? Multi-Product Pipeline,5,6
+277873101,Design Check in Progress,Which? Multi-Product Pipeline,6,7
+277282521,Tech Check Complete,Which? Multi-Product Pipeline,7,8
+277282522,Final Sales Agreement Issued,Which? Multi-Product Pipeline,8,9
+277282507,Closed won,Which? Multi-Product Pipeline,9,10
+277282508,Closed lost,Which? Multi-Product Pipeline,10,0
+170906829,Unqualified P1 Typeform Responses,Solar Training Pipeline,0,1
+170906830,Qualifying team contacted,Solar Training Pipeline,1,2
+170906831,P1: Awaiting info from customer,Solar Training Pipeline,2,3
+170906832,P2 Qualified,Solar Training Pipeline,3,4
+170906833,P1 Qualified,Solar Training Pipeline,4,5
+170906834,Closed won,Solar Training Pipeline,5,6
+170906835,Closed lost,Solar Training Pipeline,6,0
+835033336,Preparing Quote,LCT Aftercare,0,1
+835033532,Quote Sent,LCT Aftercare,1,2
+835033533,Quote Paid,LCT Aftercare,2,3
+835033534,Quote Cancelled,LCT Aftercare,3,0
+993822945,Survey Purchased,Pilot: Cosy Homes,0,0
+994008261,Fee Refunded,Pilot: Cosy Homes,1,1
+1306367190,Quoting,Test 2025 Pipeline,0,1
+1306367191,Order Placed,Test 2025 Pipeline,1,2
+1306367192,Survey Booked,Test 2025 Pipeline,2,3
+1306367193,Finalising System Design,Test 2025 Pipeline,3,4
+1306367195,Order Confirmed,Test 2025 Pipeline,4,5
+1306367196,Quote Archived,Test 2025 Pipeline,5,0
+460507632,Getting Ready for Install,LCT Install Support Pipeline,0,1
+460507633,Scheduling Install,LCT Install Support Pipeline,1,2
+460557031,Install Booked,LCT Install Support Pipeline,2,3
+460557032,Install in Progress,LCT Install Support Pipeline,3,4
+460557033,Install Complete,LCT Install Support Pipeline,4,5
+460557034,Live,LCT Install Support Pipeline,5,6
+460557035,Install Cancelled / Customer Lost,LCT Install Support Pipeline,6,0
+316337894,Triage,LCT Aftercare,0,0
+422373835,Under Investigation,LCT Aftercare,1,1
+316337895,Aftercare - Remote Resolution in Progress,LCT Aftercare,2,2
+330632438,Engineer - Remote Resolution in Progress,LCT Aftercare,3,3
+397225697,Manufacturer Resolution in Progress,LCT Aftercare,4,4
+330604237,Site Visit Booked,LCT Aftercare,5,5
+330604238,Site Visit Complete,LCT Aftercare,6,6
+316337897,Resolved,LCT Aftercare,7,7
+241924087,New Bookings,EV: Scheduling,0,1
+241924088,Awaiting Capacity,EV: Scheduling,1,2
+241924089,Awaiting Works / DNO,EV: Scheduling,2,3
+241924282,Awaiting Vehicle,EV: Scheduling,3,4
+307187691,Date Delay - Customer,EV: Scheduling,4,5
+241924557,Date Offered,EV: Scheduling,5,6
+241924558,Scheduled,EV: Scheduling,6,7
+319334610,Abandoned,EV: Scheduling,7,8
+292251630,Failed Jobs,EV: Scheduling,8,9
+282208501,Live,EV: Scheduling,9,10
+347793386,Cancelled,EV: Scheduling,10,0
+278900410,Awaiting Photos,EV: Smarter Utility,0,0
+279018699,Photos Submitted - Awaiting Review,EV: Smarter Utility,1,1
+397225662,Images Reviewed - Passed to SU,EV: Smarter Utility,2,2
+356578282,Failed,EV: Smarter Utility,3,3
+356578283,Abandoned,EV: Smarter Utility,4,4
+356578284,Live,EV: Smarter Utility,5,5
+278157510,Awaiting Claim,EV: OZEV Grant,0,1
+278157511,Claim Submitted - Awaiting Customer,EV: OZEV Grant,1,2
+369536214,Claim Complete - Awaiting Quote Payment,EV: OZEV Grant,2,3
+278157512,Claim Complete - To be Booked,EV: OZEV Grant,3,4
+422180308,Cancelled,EV: OZEV Grant,4,0
+158093798,Install booked,Logistics test,0,0
+158093800,Pre-install visit complete,Logistics test,1,1
+158093799,BoM check complete,Logistics test,2,2
+158044090,Pick assigned,Logistics test,3,3
+158093801,Pick complete,Logistics test,4,4
+163667675,Loading complete,Logistics test,5,5
+163667676,Driver assigned,Logistics test,6,6
+163667677,Re-run required,Logistics test,7,7
+163667678,Delivery complete,Logistics test,8,8

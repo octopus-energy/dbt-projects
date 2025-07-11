@@ -1,0 +1,15 @@
+version: 2
+
+groups:
+  - name: coconut_coconut
+    owner:
+      name: "jaiopsjd"
+      email: "kspodajkd"
+    description: |
+      source-aligned domain for coconut_coconut
+    config:
+      meta:
+        team: "Low Carbon Tech"
+        team_description: "Low Carbon Tech"
+        contact: "None"
+        domains: ["hubspot"]
