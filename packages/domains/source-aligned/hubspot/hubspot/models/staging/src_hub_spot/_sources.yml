@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: src_hub_spot
+    catalog: "{{ var('source_catalog' ) }}"
+    schema: "{{ var('hub_spot_db', 'src_hub_spot') }}"
+    tables:
+      - name: hubspot_chi
+      - name: hubspot_complaints
+      - name: hubspot_contacts
+      - name: hubspot_deals
+      - name: hubspot_deal_stage_history
+      - name: hubspot_emails
+      - name: hubspot_enquiries
+      - name: hubspot_owners
+      - name: hubspot_quotes
+      - name: hubspot_schemas
+      - name: hubspot_tickets
+      - name: hubspot_ticket_history
+      - name: hubspot_ticket_install_date_history
+
+      - name: hubspot_ticket_owner_history
+      - name: hubspot_install_status
+      - name: hubspot_line_items
