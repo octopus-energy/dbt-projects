@@ -1,0 +1,964 @@
+version: 2
+
+
+models:
+  - name: stg_assets_returnedasset
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES returned assets table
+    columns:
+      - name: returned_asset_id
+        description: Primary key of the table
+        tests:
+            - not_null
+            - unique
+  - name: stg_capacity_isochrone
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Centre location of engineer geographic driving distance (isochrone)
+    columns:
+      - name: polygon_id
+        description: Primary key of the table
+        tests:
+            - not_null
+            - unique
+  - name: stg_capacity_outcode
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Outcode areas linked to 'patches' (see capacity_patch)
+    columns:
+      - name: outcode_id
+        description: Primary key of the table
+        tests:
+            - not_null
+            - unique
+  - name: stg_capacity_patch
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Patches refer to a combination of outcodes that engineers operate in
+    columns:
+      - name: patch_id
+        description: Primary key of the table
+        tests:
+            - not_null
+            - unique
+  - name: stg_capacity_polygon
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Geographic polygons referring to areas that engineers can drive to
+    columns:
+      - name: polygon_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_data_sources_common_actionevent
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Metadata describing the event which happened in Kraken Field.
+      Such as, an event occurred where the appointment status changed to 'Complete'.
+    columns:
+      - name: action_event_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_data_sources_crm_crmlink
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Link between CRM sources (such as Hubspot) and Kraken Field
+    columns:
+      - name: crmlink_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_gbr_metering_existingmeterpointdata
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Meterpoint information from OES metering appointments
+    columns:
+      - name: existingmeterpointdata_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_gbr_meteringoesusergbr
+    meta:
+      owner: 'alex.sheppard@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Linking engineer user ID to bybox ID
+    columns:
+      - name: metering_oes_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_heatpumps_cylindermetadata
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES Heat Pump Cylinder (tank) information
+    columns:
+      - name: cylinder_meta_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_heatpumps_heatpumpmetadata
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES heat pump meta info
+    columns:
+      - name: heat_pump_meta_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_heatpumps_heatpumpquotetariff
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES Heat Pump tariff information
+    columns:
+      - name: heat_pump_quotetariff_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_heatpumps_lineitem
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES costs for a quote
+    columns:
+      - name: line_item_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_heatpumps_materialschedule
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES material schedule
+    columns:
+      - name: schedule_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_heatpumps_materialscheduleevent
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES material schedule events
+    columns:
+      - name: schedule_event_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_heatpumps_radiatormetadata
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES radiator meta info
+    columns:
+      - name: radiator_meta_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_projects_project
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES projects
+    columns:
+      - name: project_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_projects_projectcrmlinks
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Link between project and CRM links table (stg_data_sources_crm_crmlinks).
+    columns:
+      - name: project_crm_link_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_properties_coordinates
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Latitude and Longitude coordinates for properties
+    columns:
+      - name: coordinates_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_properties_customer
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES customers information - hashed
+    columns:
+      - name: customer_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_properties_customer_pii
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+      sensitive: true
+    config:
+      tags: [ 'access:private' ]
+    description: OES customers information - PII table
+    columns:
+      - name: customer_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+      - name: given_name
+        meta:
+          sensitive: true
+      - name: family_name
+        meta:
+          sensitive: true
+      - name: phone
+        meta:
+          sensitive: true
+      - name: email
+        meta:
+          sensitive: true
+  - name: stg_properties_property_oes
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES property information - hashed
+    columns:
+      - name: property_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_properties_property_oes_pii
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+      sensitive: true
+    config:
+      tags: [ 'access:private' ]
+    description: OES heat pump property info - PII table
+    columns:
+      - name: property_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+      - name: address
+        meta:
+          sensitive: true
+  - name: stg_sales_heatpumps_othercostssnapshot
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES other costs for heat pump quotes
+    columns:
+      - name: other_costs_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_sales_heatpumps_quote
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES heat pump quotes - latest table
+    columns:
+      - name: quote_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_sales_heatpumps_quoteversion
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES heat pump quotes - latest table, latest version
+    columns:
+      - name: quote_version_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_sales_heatpumpsperformancedatasnapshot
+    meta:
+      owner: 'charlie.green@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES heat pump performance data
+    columns:
+      - name: performance_data_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_scheduling_appointmentrequirement
+    meta:
+      owner: 'alex.sheppard@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Skill requirements for appointments
+    columns:
+      - name: appointment_requirement_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_scheduling_appointmentscheduling
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Assigned times and engineers to specific appointment
+    columns:
+      - name: appointment_scheduling_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_scheduling_engineerbooking_pii
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+      sensitive: true
+    config:
+      tags: [ 'access:private' ]
+    description: A daily view per engineer of the appointments and activities that have been booked
+    columns:
+      - name: engineer_booking_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+      - name: activities
+        meta:
+          sensitive: true
+  - name: stg_scheduling_engineerbooking
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: A daily view per engineer of the appointments and activities that have been booked
+    columns:
+      - name: engineer_booking_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_scheduling_engineerproperties
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Latest status of an engineer within Kraken Field, i.e. whether they are manually scheduled or not
+    columns:
+      - name: engineer_properties_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_scheduling_historicalengineerproperties
+    access: private
+    meta:
+      owner: 'katie.gilmour@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    description: |
+      history status of an engineer within Kraken Field, i.e. whether they are manually scheduled
+      or not
+    columns:
+      - name: history_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_scheduling_timeoff
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Scheduled time off per engineer
+    columns:
+      - name: timeoff_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_scheduling_workorderrequirement
+    meta:
+      owner: 'alex.sheppard@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: required additional skills per installation
+    columns:
+      - name: work_order_requirement_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_scheduling_workpreference
+    access: private
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    description: |
+      Available working hours per engineer for given time periods.
+      Contains data of previous tables workschedule and startlocation
+      combined.
+    columns:
+      - name: work_preference_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_scheduling_workpreference_isochrones
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Link between work preference and associated isochrone
+    columns:
+      - name: workpreference_isochrone_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_users_oesuserroleassignment
+    access: private
+    meta:
+      owner: 'katie.gilmour@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    description: >
+      User roles are listed in rows with assignment dates and revocation dates (if any)
+    columns:
+      - name: role_event_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+      - name: assigned_by_user_id
+        description: who gave the user the role
+      - name: revoked_by_user_id
+        description: who removed the role from the user
+      - name: role_code
+        description: this is the role name
+      - name: user_id
+        description: This is the user the role is for
+  - name: stg_users_oesusers
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES user details - hashed table
+    columns:
+      - name: user_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+      - name: password_hash
+        tests:
+            - dbt_expectations.expect_column_to_exist
+  - name: stg_users_oesusers_pii
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+      sensitive: true
+    config:
+      tags: [ 'access:private' ]
+    description: OES user details - PII table
+    columns:
+      - name: user_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+      - name: password
+        meta:
+          sensitive: true
+  - name: stg_work_orders_appointment_action_events
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Events, such as 'Completed' or 'In Progress' which correspond to an appointment
+    columns:
+      - name: appointment_event_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_appointmentcancellation
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Kraken Field appointment cancellation tables
+    columns:
+      - name: appointment_cancellation_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_warehouseintegrations_edgecommunication
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Payload table for communication between Minster and Kraken Field
+    columns:
+      - name: warehouse_integration_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_warehousecommon_warehouseitem
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES heat pump warehouse items (materials used in the quote and installation of a heat pump)
+    columns:
+      - name: warehouse_item_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_heatpumpsurveycalculation
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES heat pump survey results
+    columns:
+      - name: heatloss_calculation_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_tasktemplate
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES work order templates
+    columns:
+      - name: template_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_workorder
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES work orders
+    columns:
+      - name: work_order_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_appointmentgroup
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Skills required for a given appointment
+    columns:
+      - name: appointment_group_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_workordercomponent
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES work orders
+    columns:
+      - name: work_order_component_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_appointment
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES work orders
+    columns:
+      - name: appointment_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_workordercrmlink
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES work orders linked to CRM linked ID
+    columns:
+      - name: work_order_crm_link_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_workorderfieldset
+    meta:
+      owner: 'calum.gibson1@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES work orders
+    columns:
+      - name: work_order_fieldset_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_users_oesuser_companies
+    meta:
+      owner: 'ishan.yash@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES user and company info
+    columns:
+      - name: oes_user_companies_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_users_company
+    meta:
+      owner: 'ishan.yash@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: OES company name and timestamp
+    columns:
+      - name: company_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_users_historicaloesuser
+    access: private
+    meta:
+      owner: 'katie.gilmour@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    description: |
+      history of changes to a kraken field users details from users_oesusers.
+    columns:
+      - name: history_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+      - name: history_user_id
+        description: user_id of who made the change.
+  - name: stg_gbr_metering_joboutcomelog
+    meta:
+      owner: 'fred.marlow-prince@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: KF job outcomes log
+    columns:
+      - name: job_outcome_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_assets_assetitemeter
+    meta:
+      owner: 'fred.marlow-prince@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: KF installed and removed assets
+    columns:
+      - name: asset_meter_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_assets_assetorder
+    meta:
+      owner: 'ishan.yash@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Asset orders information
+    columns:
+      - name: asset_order_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_assets_assettype
+    meta:
+      owner: 'ishan.yashe@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Asset types information
+    columns:
+      - name: asset_type_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_assets_assetitemeterevent
+    meta:
+      owner: 'fred.marlow-prince@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Asset types information
+    columns:
+      - name: asset_event_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_assets_assetiteminstallation
+    meta:
+      owner: 'fred.marlow-prince@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Serialised ESME / GSME asset information from KF installs
+      ESME = electricity smart metering equipment
+      GSME = gas smart metering equipment
+    columns:
+      - name: asset_install_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_assets_assettypemetadata
+    meta:
+      owner: 'charlie.green@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Table showing metadata for asset types. Each row represents a different
+      type of metadata per asset.
+    columns:
+      - name: asset_metadata_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_assets_assetinstallcode
+    meta:
+      owner: 'charlie.green@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Table showing the mapping of asset install codes to asset device id.
+    columns:
+      - name: asset_install_code_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_assets_assetitemcomms
+    meta:
+      owner: 'fred.marlow-prince@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Serialised comms asset information from KF installs
+      chf = comms hub function
+      gpf = gas proxy function
+    columns:
+      - name: asset_comms_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_assets_assetitemihdppmid
+    meta:
+      owner: 'fred.marlow-prince@octoes.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Serialised ppmid information from KF installs
+      chts = comms hub technical specification
+      smets = smart metering equipment technical specification
+      ihd / ppmid = in home display
+    columns:
+      - name: asset_in_home_display_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_gbr_work_orders_installerapplication
+    meta:
+      owner: 'harris.douglas@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: ENA LCT connection application information
+    columns:
+      - name: installer_application_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_work_orders_workorderregulatorydocumentation
+    meta:
+      owner: 'harris.douglas@octoenergy.com'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: EIC and NIC regulatory documentation for work orders
+    columns:
+      - name: work_order_regulatory_documentation_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_gbr_asset_management_assetbybox
+    meta:
+      owner: 'fred.marlow-prince@octoenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: |
+      Bybox serialised asset status and IDs.
+      ihdppmid = in home display
+    columns:
+      - name: bybox_asset_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
+  - name: stg_gbr_asset_management_assetbyboxevent
+    meta:
+      owner: 'fred.marlow-prince@octoenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    config:
+      tags: [ 'access:private' ]
+    description: Bybox serialised asset events
+    columns:
+      - name: bybox_event_id
+        description: Primary key of the table
+        tests:
+          - not_null
+          - unique
