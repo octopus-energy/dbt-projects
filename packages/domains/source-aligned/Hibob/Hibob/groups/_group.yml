@@ -1,0 +1,15 @@
+version: 2
+
+groups:
+  - name: Hibob_Hibob
+    owner:
+      name: "data platform team"
+      email: "dsa"
+    description: |
+      source-aligned domain for Hibob_Hibob
+    config:
+      meta:
+        team: "data_platform"
+        team_description: "Data Platform Team"
+        contact: "None"
+        domains: ["hibob"]

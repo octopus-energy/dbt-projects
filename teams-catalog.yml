@@ -8,3 +8,12 @@ teams:
   name: Low Carbon Tech
   owner:
     email: kspodajkd
+- config:
+    meta:
+      data_owner: data platform team
+  description: Data Platform Team
+  domains:
+  - hibob
+  name: data_platform
+  owner:
+    email: dsa

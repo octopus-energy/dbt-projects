@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: fct_hibob_employee_interval
+    meta:
+      owner: katie.gilmnour@octopusenergy.services'
+      team_owner: '!subteam^S7K9CR63D' #@datateam
+    description: |
+      Interval table for employee Hibob data. For operations employees' there is a new
+      column that formats sub_team to match nomenclature of kraken operations teams
+    columns:
+      - name: hibob_snapshot_id
+        description: Primary Key
+        tests:
+          - unique
+          - not_null
